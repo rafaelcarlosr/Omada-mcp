@@ -74,6 +74,17 @@ describe('tools/setApPowerSaving', () => {
         ).rejects.toThrow('AP AA:BB:CC:DD:EE:FF does not support power-saving configuration.');
     });
 
+    it.each([{}, undefined])('treats an empty power-saving read (%j) as unsupported, even in preview', async (empty) => {
+        vi.mocked(mockClient.getSitesApsPowerSaving).mockResolvedValue(empty as never);
+
+        registerSetApPowerSavingTool(mockServer, mockClient);
+
+        await expect(toolHandler({ apMac: 'AA:BB:CC:DD:EE:FF', timeEnable: false, bandEnable: false }, { sessionId: 's1' })).rejects.toThrow(
+            'does not support power-saving configuration'
+        );
+        expect(mockClient.setSitesApsPowerSaving).not.toHaveBeenCalled();
+    });
+
     it('calls the controller when validation succeeds', async () => {
         registerSetApPowerSavingTool(mockServer, mockClient);
 

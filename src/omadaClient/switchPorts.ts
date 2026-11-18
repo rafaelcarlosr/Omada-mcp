@@ -29,6 +29,21 @@ export const switchPortChangeSchema = z.discriminatedUnion('operation', [
 
 export type SwitchPortChange = z.infer<typeof switchPortChangeSchema>;
 
+/**
+ * Body for PATCH switches/{switchMac}/ports/{port} (OswPortSettingVO), limited to what the PoE and
+ * override fallback sends. Controller 6.3 rejects the port without its current name and profileId.
+ */
+export const switchPortPatchSchema = z
+    .object({
+        name: portNameSchema,
+        profileId: z.string().trim().min(1),
+        profileOverrideEnable: z.boolean(),
+        poe: binarySchema.optional(),
+    })
+    .strict();
+
+export type SwitchPortPatch = z.infer<typeof switchPortPatchSchema>;
+
 /** Official PUT routes in 03-device.json. Preflight and verification belong to the tool. */
 export class SwitchPortOperations {
     constructor(
@@ -64,6 +79,27 @@ export class SwitchPortOperations {
 
         // Even a failed response may follow an applied write. Disable transport retries too.
         const response = await this.request.request<OmadaApiResponse<unknown>>({ method: 'PUT', url: path, data: body }, false, customHeaders);
+        return this.request.ensureSuccess(response);
+    }
+
+    /** Modify one port through the general port route; used when 6.3 rejects the dedicated PoE/override routes. */
+    public async patchSwitchPort(
+        switchMac: string,
+        port: number,
+        body: SwitchPortPatch,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        if (!/^[0-9a-f]{2}([:-][0-9a-f]{2}){5}$/i.test(switchMac)) {
+            throw new Error('A valid switch MAC address must be provided.');
+        }
+        switchPortListSchema.parse([port]);
+        const data = switchPortPatchSchema.parse(body);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(
+            `/sites/${encodeURIComponent(resolvedSiteId)}/switches/${encodeURIComponent(switchMac)}/ports/${encodeURIComponent(String(port))}`
+        );
+        const response = await this.request.request<OmadaApiResponse<unknown>>({ method: 'PATCH', url: path, data }, false, customHeaders);
         return this.request.ensureSuccess(response);
     }
 }

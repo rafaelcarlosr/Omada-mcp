@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { NetworkOperations, parseSsidBasicConfig, type SsidBasicConfig } from '../../src/omadaClient/network.js';
+import { NetworkOperations, parseSsidBasicConfig, type SsidBasicConfig, withOpenSsidDefaults } from '../../src/omadaClient/network.js';
 import { OmadaApiError, type RequestHandler } from '../../src/omadaClient/request.js';
 import type { SiteOperations } from '../../src/omadaClient/site.js';
 import type { OmadaApiResponse, PaginatedResult } from '../../src/types/index.js';
@@ -116,6 +116,16 @@ describe('NetworkOperations', () => {
             expect(() => parseSsidBasicConfig({ ...payload, ...changes })).toThrow(message);
         });
 
+        it('fills only the PMF and 802.11r fields the controller omits for open SSIDs', () => {
+            const { pmfMode: _pmf, enable11r: _r, ...open } = { ...payload, security: 0 as const };
+            expect(parseSsidBasicConfig(open)).toMatchObject({ security: 0, pmfMode: 3, enable11r: false });
+            expect(withOpenSsidDefaults({ security: 0, pmfMode: 2 })).toEqual({ security: 0, pmfMode: 2, enable11r: false });
+            const personal = { security: 3 };
+            expect(withOpenSsidDefaults(personal)).toBe(personal);
+            expect(withOpenSsidDefaults(null)).toBeNull();
+            expect(() => parseSsidBasicConfig({ ...open, security: 3 })).toThrow();
+        });
+
         it('preserves valid enterprise, personal, PPSK and VLAN configurations', () => {
             expect(parseSsidBasicConfig({ ...payload, security: 3, pskSetting, vlanEnable: true, vlanId: 10 })).toMatchObject({
                 security: 3,
@@ -129,6 +139,13 @@ describe('NetworkOperations', () => {
                     entSetting: { radiusProfileId: 'radius', versionEnt: 2, encryptionEnt: 3, gikRekeyEntEnable: false },
                 }).security
             ).toBe(2);
+            expect(parseSsidBasicConfig({ ...payload, vlanSetting: { mode: 0, customConfig: {} } }).vlanSetting).toEqual({ mode: 0 });
+            expect(parseSsidBasicConfig({ ...payload, vlanSetting: { mode: 1, customConfig: { customMode: 0 } } }).vlanSetting).toEqual({
+                mode: 1,
+                customConfig: { customMode: 0 },
+            });
+            expect(parseSsidBasicConfig({ ...payload, vlanSetting: { mode: 0 } }).vlanSetting).toEqual({ mode: 0 });
+            expect(() => parseSsidBasicConfig({ ...payload, vlanSetting: { mode: 1, customConfig: { vlanPoolIds: 'x' } } })).toThrow();
             expect(parseSsidBasicConfig({ ...payload, security: 4, pskSetting, ppskSetting: { ppskProfileId: 'ppsk' } }).security).toBe(4);
             expect(parseSsidBasicConfig({ ...payload, security: 5, pskSetting, ppskSetting: { radiusProfileId: 'radius' } }).security).toBe(5);
         });

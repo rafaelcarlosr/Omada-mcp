@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import { DeviceOperations } from '../../src/omadaClient/device.js';
+import { OmadaApiError } from '../../src/omadaClient/request.js';
 import { type SwitchPortChange, SwitchPortOperations } from '../../src/omadaClient/switchPorts.js';
 import type { ToolExtra } from '../../src/server/common.js';
 import { registerSetSwitchPortsTool } from '../../src/tools/setSwitchPorts.js';
@@ -24,7 +25,7 @@ const port = (id: number, extra: Record<string, unknown> = {}) => ({
 const detail = (...ports: unknown[]) => ({ mac, portList: ports });
 
 describe('tools/setSwitchPorts', () => {
-    const client = { getSwitchDetail: vi.fn(), setSwitchPorts: vi.fn() };
+    const client = { getSwitchDetail: vi.fn(), setSwitchPorts: vi.fn(), patchSwitchPort: vi.fn() };
     let handler: (args: Record<string, unknown>, extra: ToolExtra) => Promise<CallToolResult>;
     let registration: { description: string; inputSchema: z.ZodRawShape; annotations: unknown };
     const server = {
@@ -45,6 +46,7 @@ describe('tools/setSwitchPorts', () => {
         vi.resetAllMocks();
         client.getSwitchDetail.mockResolvedValue(detail(port(1), port(2)));
         client.setSwitchPorts.mockResolvedValue(undefined);
+        client.patchSwitchPort.mockResolvedValue(undefined);
         registerSetSwitchPortsTool(server, client);
     });
 
@@ -240,6 +242,64 @@ describe('tools/setSwitchPorts', () => {
         expect(client.setSwitchPorts.mock.calls.map((args) => args[1])).toEqual([[1], [2]]);
         expect(result.outcomes.map((o: { requestStatus: string }) => o.requestStatus)).toEqual(['submitted', 'unknown', 'not-attempted']);
         expect(result.partialCompletion).toBe(true);
+    });
+
+    it('falls back to PATCH ports/{port} when 6.3 rejects the override route with -1001', async () => {
+        client.setSwitchPorts.mockRejectedValueOnce(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        client.getSwitchDetail
+            .mockResolvedValueOnce(detail(port(1), port(2)))
+            .mockResolvedValue(detail(port(1, { profileOverrideEnable: true }), port(2, { profileOverrideEnable: true })));
+        const result = (await call({ change: { operation: 'profile-override', profileOverrideEnable: true }, dryRun: false })).result;
+        expect(client.patchSwitchPort.mock.calls.map((args) => args.slice(0, 3))).toEqual([
+            [mac, 1, { name: 'Port 1', profileId: 'old', profileOverrideEnable: true }],
+            [mac, 2, { name: 'Port 2', profileId: 'old', profileOverrideEnable: true }],
+        ]);
+        expect(result.verification.status).toBe('verified');
+        expect(result.outcomes[0]).toMatchObject({ requestStatus: 'submitted', route: 'port-patch-fallback' });
+        expect(result.warnings.join(' ')).toContain('PATCH ports/{port}');
+    });
+
+    it('sends PoE through the fallback with the override kept on', async () => {
+        client.getSwitchDetail
+            .mockResolvedValueOnce(detail(port(1, { profileOverrideEnable: true })))
+            .mockResolvedValue(detail(port(1, { profileOverrideEnable: true, poeMode: 0 })));
+        client.setSwitchPorts.mockRejectedValueOnce(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        const result = (await call({ ports: [1], change: { operation: 'poe-mode', poeMode: 0 }, dryRun: false })).result;
+        expect(client.patchSwitchPort).toHaveBeenCalledWith(
+            mac,
+            1,
+            { name: 'Port 1', profileId: 'old', profileOverrideEnable: true, poe: 0 },
+            undefined,
+            undefined
+        );
+        expect(result.verification.status).toBe('verified');
+    });
+
+    it('reports the controller error when the fallback write is rejected and stops', async () => {
+        client.setSwitchPorts.mockRejectedValueOnce(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        client.patchSwitchPort.mockRejectedValueOnce(new OmadaApiError(-39855, 'The length of the port or LAG name is invalid.'));
+        const result = (await call({ change: { operation: 'profile-override', profileOverrideEnable: true }, dryRun: false })).result;
+        expect(client.patchSwitchPort).toHaveBeenCalledTimes(1);
+        expect(result.outcomes[0]).toMatchObject({ requestStatus: 'unknown', requestError: expect.stringContaining('errorCode -39855') });
+        expect(result.outcomes[1].requestStatus).toBe('unknown');
+        expect(result.outcomes[1].requestError).toContain('errorCode -1001');
+    });
+
+    it('does not fall back without the port name and profile, or for other errors and operations', async () => {
+        client.getSwitchDetail.mockResolvedValue(detail(port(1, { name: undefined }), port(2)));
+        client.setSwitchPorts.mockRejectedValueOnce(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        const missing = (await call({ change: { operation: 'profile-override', profileOverrideEnable: true }, dryRun: false })).result;
+        expect(client.patchSwitchPort).not.toHaveBeenCalled();
+        expect(missing.outcomes[0]).toMatchObject({ requestStatus: 'not-attempted', requestError: expect.stringContaining('fallback') });
+
+        client.getSwitchDetail.mockResolvedValue(detail(port(1), port(2)));
+        client.setSwitchPorts.mockRejectedValueOnce(new OmadaApiError(-39701, 'This port does not exist'));
+        const other = (await call({ change: { operation: 'profile-override', profileOverrideEnable: true }, dryRun: false })).result;
+        client.setSwitchPorts.mockRejectedValueOnce(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        const named = (await call({ change: { operation: 'name', name: 'Cam' }, dryRun: false })).result;
+        expect(client.patchSwitchPort).not.toHaveBeenCalled();
+        expect(other.outcomes[0].requestError).toContain('errorCode -39701');
+        expect(named.outcomes[0].requestError).toContain('errorCode -1001');
     });
 
     it('keeps profile override distinct from profile assignment', async () => {
