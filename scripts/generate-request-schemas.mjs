@@ -41,7 +41,17 @@ const TARGETS = [
     {
         file: '03-device.json',
         suffix: '03',
-        names: ['ApUpdateWlanGroupOpenApiVO', 'LocateDeviceRequest', 'AdoptDeviceRequest', 'OswPoeRecoverOpenApiVO'],
+        names: [
+            'ApUpdateWlanGroupOpenApiVO',
+            'LocateDeviceRequest',
+            'AdoptDeviceRequest',
+            'OswPoeRecoverOpenApiVO',
+            'CreatePortTagOpenApiVO',
+            'PortTagOpenApiVO',
+            'OswCableTestTestingPortOpenApiVO',
+            'ClearCountersVO',
+            'SwitchGeneralConfig',
+        ],
     },
     {
         file: '04.2-site-network-setting-general.json',

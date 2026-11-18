@@ -264,6 +264,13 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `adoptDevice` | Adopt a pending (discovered, not yet managed) device into this site using its default login; devices with changed credentials must be adopted in the controller UI. The controller then provisions it with site configuration, which can reboot it. | `devices-general:rw` |
 | `startDeviceOnlineUpgrade` | Upgrade one adopted device to the latest firmware the controller offers online. Refused when getFirmwareInfo reports no newer version. The device reboots and its clients lose connectivity for several minutes. | `devices-general:rw` |
 | `recoverSwitchPortPoe` | Power-cycle PoE on switch ports (PoE recovery) to reboot powered devices such as cameras or APs. Connected devices lose power and connectivity until they boot. | `devices-switch:rw` |
+| `createSwitchPortTag` | Create a switch port label. | `devices-switch:rw` |
+| `updateSwitchPortTag` | Rename a switch port label. | `devices-switch:rw` |
+| `deleteSwitchPortTag` | Delete a switch port label; it is removed from every port. | `devices-switch:rw` |
+| `setSwitchGeneralConfig` | Change a switch name, LED, device tags, location, jumbo frame or LAG hash settings (not the SDM template). | `devices-switch:rw` |
+| `startSwitchCableTest` | Start a cable diagnostic; the uplink and ports with devices are refused unless allowDisruption is true. | `devices-switch:rw` |
+| `cancelSwitchCableTest` | Cancel a running cable test. | `devices-switch:rw` |
+| `clearSwitchPortCounters` | Reset the traffic and error counters of switch ports. | `devices-switch:rw` |
 | `setClientName` | Rename a client (its display name in the controller). Does not affect connectivity. | `clients:rw` |
 | `setClientLockToAp` | Pin a wireless client to specific APs (lock to AP) or remove the pin, e.g. to keep a static IoT device on its nearest AP. Locking to APs out of its range disconnects the client. | `clients:rw` |
 | `authorizeHotspotClient` | Authorize a client on a hotspot (captive portal) network without it completing the portal, granting it internet access. The API reports acceptance only. | `clients:rw` |
@@ -342,6 +349,21 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `listDevicesStats` | Queries statistics for global adopted devices with pagination and filtering. |
 | `getSwitchStackDetail` | Retrieves detailed configuration and status for a switch stack.                   |
 | `getSwitchDetail` | Fetches detailed configuration and status for a specific switch. |
+| `listSwitchPortPoeInfo` | List PoE state, power, voltage, current and PD class for every switch port in the site. |
+| `listSwitchPortOverview` | List every switch port in the site with link, speed, duplex, profile and STP state. |
+| `listSwitchPortCounters` | List traffic, error and drop counters for every switch port in the site. |
+| `getSwitchPortView` | Get the per-switch summary of the controller ports view. |
+| `listSwitchLldpNeighbors` | List LLDP neighbors per port of a switch (uplinks, APs). |
+| `listSwitchInterfaces` | List the VLAN interfaces of a switch. |
+| `getSwitchInterfacesBrief` | Get the brief list of a switch's VLAN interfaces. |
+| `listSwitchPortLagNetworks` | List the networks used on a switch's ports and LAGs. |
+| `listSwitchNetworksDetail` | List each network on a switch with its native, tagged and untagged ports and LAGs. |
+| `getSwitchExistingNetworks` | Get the networks that exist on a switch. |
+| `listSwitchDhcpUsers` | List DHCP users seen by a switch. |
+| `getSwitchDdmInfo` | Get SFP digital diagnostics (DDM) of a switch. |
+| `getSwitchHealthDetail` | Get switch health (CPU, memory, ports) for a time range in epoch milliseconds. |
+| `getSwitchHealthTimeline` | Get the switch health score timeline for a time range in epoch milliseconds. |
+| `listSwitchPortTags` | List the switch port labels of the site. |
 | `getGatewayDetail` | Fetches detailed configuration and status for a specific gateway. |
 | `getGatewayWanStatus` | Gets WAN port status for a specific gateway. |
 | `getGatewayLanStatus` | Gets LAN port status for a specific gateway. |

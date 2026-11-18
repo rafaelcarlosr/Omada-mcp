@@ -11,7 +11,7 @@
  *
  * Implementation status is derived statically from src/omadaClient: every
  * this.buildPath(...) template (with the HTTP helper that follows it) and the
- * site-scoped send()/list() helpers of siteConfig.ts and vpn.ts. A bare `${identifier}`
+ * site-scoped send()/list() helpers of siteConfig.ts, switches.ts and vpn.ts. A bare `${identifier}`
  * segment that is not a URI-encoded parameter is treated as a wildcard that
  * may span several segments (switchPorts builds `ports/{port}/<operation>`).
  *
@@ -208,10 +208,10 @@ function versionsOf(arg) {
 }
 
 const clientDir = join(root, 'src', 'omadaClient');
-const SITE_HELPER_FILES = new Set(['siteConfig.ts', 'vpn.ts']);
+const SITE_HELPER_FILES = new Set(['siteConfig.ts', 'switches.ts', 'vpn.ts']);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
-    // siteConfig.ts and vpn.ts build every path through their send()/list() helpers, handled below.
+    // siteConfig.ts, switches.ts and vpn.ts build every path through their send()/list() helpers, handled below.
     if (!SITE_HELPER_FILES.has(file)) {
         for (const match of text.matchAll(/this\.buildPath\(/g)) {
             const open = match.index + match[0].length - 1;
