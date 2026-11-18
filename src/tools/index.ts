@@ -16,6 +16,8 @@ import { registerCreateEapAclTool } from './createEapAcl.js';
 import { registerCreateExternalUserGroupTool } from './createExternalUserGroup.js';
 import { registerCreateGatewayAclTool } from './createGatewayAcl.js';
 import { registerCreateGroupProfileTool } from './createGroupProfile.js';
+import { registerCreateHotspotLocalUserTool } from './createHotspotLocalUser.js';
+import { registerCreateHotspotOperatorTool } from './createHotspotOperator.js';
 import { registerCreateLanDnsRuleTool } from './createLanDnsRule.js';
 import { registerCreateLanNetworkTool } from './createLanNetwork.js';
 import { registerCreateLanProfileTool } from './createLanProfile.js';
@@ -24,11 +26,13 @@ import { registerCreateMdnsRuleTool } from './createMdnsRule.js';
 import { registerCreateOneToOneNatTool } from './createOneToOneNat.js';
 import { registerCreatePolicyRouteTool } from './createPolicyRoute.js';
 import { registerCreatePortForwardingRuleTool } from './createPortForwardingRule.js';
+import { registerCreatePortScheduleTool } from './createPortSchedule.js';
 import { registerCreateRoleTool } from './createRole.js';
 import { registerCreateSamlIdpTool } from './createSamlIdp.js';
 import { registerCreateSsidTool } from './createSsid.js';
 import { registerCreateStaticRouteTool } from './createStaticRoute.js';
 import { registerCreateSwitchAclTool } from './createSwitchAcl.js';
+import { registerCreateTimeRangeProfileTool } from './createTimeRangeProfile.js';
 import { registerCreateUrlFilterRuleTool } from './createUrlFilterRule.js';
 import { registerCreateVoucherGroupTool } from './createVoucherGroup.js';
 import { registerCreateWlanGroupTool } from './createWlanGroup.js';
@@ -41,6 +45,8 @@ import { registerDeleteDdnsEntryTool } from './deleteDdnsEntry.js';
 import { registerDeleteDhcpReservationTool } from './deleteDhcpReservation.js';
 import { registerDeleteExternalUserGroupTool } from './deleteExternalUserGroup.js';
 import { registerDeleteGroupProfileTool } from './deleteGroupProfile.js';
+import { registerDeleteHotspotLocalUserTool } from './deleteHotspotLocalUser.js';
+import { registerDeleteHotspotOperatorTool } from './deleteHotspotOperator.js';
 import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
 import { registerDeleteLanNetworkTool } from './deleteLanNetwork.js';
 import { registerDeleteLanProfileTool } from './deleteLanProfile.js';
@@ -49,11 +55,13 @@ import { registerDeleteMdnsRuleTool } from './deleteMdnsRule.js';
 import { registerDeleteOneToOneNatTool } from './deleteOneToOneNat.js';
 import { registerDeletePolicyRouteTool } from './deletePolicyRoute.js';
 import { registerDeletePortForwardingRuleTool } from './deletePortForwardingRule.js';
+import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
 import { registerDeleteRoleTool } from './deleteRole.js';
 import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
 import { registerDeleteStaticRouteTool } from './deleteStaticRoute.js';
+import { registerDeleteTimeRangeProfileTool } from './deleteTimeRangeProfile.js';
 import { registerDeleteUrlFilterRuleTool } from './deleteUrlFilterRule.js';
 import { registerDeleteVoucherGroupTool } from './deleteVoucherGroup.js';
 import { registerDeleteWireguardTool } from './deleteWireguard.js';
@@ -63,6 +71,7 @@ import { registerDiagnoseCameraConnectivityTool } from './diagnoseCameraConnecti
 import { registerDiagnoseClientTool } from './diagnoseClient.js';
 import { registerDiagnoseLogsTool } from './diagnoseLogs.js';
 import { registerDisableClientRateLimitTool } from './disableClientRateLimit.js';
+import { registerDisconnectHotspotAuthRecordTool } from './disconnectHotspotAuthRecord.js';
 import { registerForceProvisionDeviceTool } from './forceProvisionDevice.js';
 import { registerGetAccessControlTool } from './getAccessControl.js';
 import { registerGetAclConfigTypeSettingTool } from './getAclConfigTypeSetting.js';
@@ -178,6 +187,7 @@ import { registerGetGridStaticRoutingTool } from './getGridStaticRouting.js';
 import { registerGetGridVirtualWanTool } from './getGridVirtualWan.js';
 import { registerGetGroupPolicyDetailTool } from './getGroupPolicyDetail.js';
 import { registerGetGroupProfilesByTypeTool } from './getGroupProfilesByType.js';
+import { registerGetHotspotStatisticsTool } from './getHotspotStatistics.js';
 import { registerGetIgmpTool } from './getIgmp.js';
 import { registerGetInterfaceLanNetworkTool } from './getInterfaceLanNetwork.js';
 import { registerGetInterfaceLanNetworkV2Tool } from './getInterfaceLanNetworkV2.js';
@@ -334,6 +344,7 @@ import { registerGetUrlFilterWhitelistTool } from './getUrlFilterWhitelist.js';
 import { registerGetUrlGroupProfileTool } from './getUrlGroupProfile.js';
 import { registerGetUserRoleProfileTool } from './getUserRoleProfile.js';
 import { registerGetVlanProfileTool } from './getVlanProfile.js';
+import { registerGetVoucherSummaryTool } from './getVoucherSummary.js';
 import { registerGetVpnClientStatusTool } from './getVpnClientStatus.js';
 import { registerGetVpnRouteConfigTool } from './getVpnRouteConfig.js';
 import { registerGetVpnSettingsTool } from './getVpnSettings.js';
@@ -370,6 +381,9 @@ import { registerListExternalUsersTool } from './listExternalUsers.js';
 import { registerListGlobalAlertsTool } from './listGlobalAlerts.js';
 import { registerListGlobalEventsTool } from './listGlobalEvents.js';
 import { registerListGroupProfilesTool } from './listGroupProfiles.js';
+import { registerListHotspotAuthRecordsTool } from './listHotspotAuthRecords.js';
+import { registerListHotspotLocalUsersTool } from './listHotspotLocalUsers.js';
+import { registerListHotspotOperatorsTool } from './listHotspotOperators.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
 import { registerListMdnsRulesTool } from './listMdnsRules.js';
 import { registerListMostActiveClientsTool } from './listMostActiveClients.js';
@@ -442,6 +456,8 @@ import { registerUpdateEapAclTool } from './updateEapAcl.js';
 import { registerUpdateExternalUserGroupTool } from './updateExternalUserGroup.js';
 import { registerUpdateGatewayAclTool } from './updateGatewayAcl.js';
 import { registerUpdateGroupProfileTool } from './updateGroupProfile.js';
+import { registerUpdateHotspotLocalUserTool } from './updateHotspotLocalUser.js';
+import { registerUpdateHotspotOperatorTool } from './updateHotspotOperator.js';
 import { registerUpdateLanDnsRuleTool } from './updateLanDnsRule.js';
 import { registerUpdateLanNetworkTool } from './updateLanNetwork.js';
 import { registerUpdateLanProfileTool } from './updateLanProfile.js';
@@ -450,12 +466,14 @@ import { registerUpdateMdnsRuleTool } from './updateMdnsRule.js';
 import { registerUpdateOneToOneNatTool } from './updateOneToOneNat.js';
 import { registerUpdatePolicyRouteTool } from './updatePolicyRoute.js';
 import { registerUpdatePortForwardingRuleTool } from './updatePortForwardingRule.js';
+import { registerUpdatePortScheduleTool } from './updatePortSchedule.js';
 import { registerUpdateRoleTool } from './updateRole.js';
 import { registerUpdateSamlIdpTool } from './updateSamlIdp.js';
 import { registerUpdateSiteToSiteVpnTool } from './updateSiteToSiteVpn.js';
 import { registerUpdateSsidTool } from './updateSsid.js';
 import { registerUpdateStaticRouteTool } from './updateStaticRoute.js';
 import { registerUpdateSwitchAclTool } from './updateSwitchAcl.js';
+import { registerUpdateTimeRangeProfileTool } from './updateTimeRangeProfile.js';
 import { registerUpdateUrlFilterRuleTool } from './updateUrlFilterRule.js';
 import { registerUpdateWireguardTool } from './updateWireguard.js';
 import { registerUpdateWlanGroupTool } from './updateWlanGroup.js';
@@ -790,6 +808,9 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerListMdnsProfileTool, category: 'profiles', permission: 'read' },
     { fn: registerListGroupProfilesTool, category: 'profiles', permission: 'read' },
     { fn: registerListTimeRangeProfilesTool, category: 'profiles', permission: 'read' },
+    { fn: registerCreateTimeRangeProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateTimeRangeProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteTimeRangeProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerGetRateLimitProfilesTool, category: 'profiles', permission: 'read' },
     { fn: registerGetGoogleLdapProfileTool, category: 'profiles', permission: 'read' },
     { fn: registerGetBuiltinRadiusUsersTool, category: 'profiles', permission: 'read' },
@@ -900,6 +921,9 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetRebootScheduleListTool, category: 'schedules', permission: 'read' },
     { fn: registerGetPoeScheduleListTool, category: 'schedules', permission: 'read' },
     { fn: registerGetPortScheduleListTool, category: 'schedules', permission: 'read' },
+    { fn: registerCreatePortScheduleTool, category: 'schedules', permission: 'write' },
+    { fn: registerUpdatePortScheduleTool, category: 'schedules', permission: 'write' },
+    { fn: registerDeletePortScheduleTool, category: 'schedules', permission: 'write' },
     { fn: registerGetPortSchedulePortsTool, category: 'schedules', permission: 'read' },
 
     // --- Site templates ---
@@ -976,6 +1000,18 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerUnauthorizeHotspotClientTool, category: 'clients', permission: 'write' },
     { fn: registerListMdnsRulesTool, category: 'network-services', permission: 'read' },
     { fn: registerListVoucherGroupsTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherSummaryTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerListHotspotAuthRecordsTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerGetHotspotStatisticsTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerDisconnectHotspotAuthRecordTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerListHotspotLocalUsersTool, category: 'hotspot-users', permission: 'read' },
+    { fn: registerCreateHotspotLocalUserTool, category: 'hotspot-users', permission: 'write' },
+    { fn: registerUpdateHotspotLocalUserTool, category: 'hotspot-users', permission: 'write' },
+    { fn: registerDeleteHotspotLocalUserTool, category: 'hotspot-users', permission: 'write' },
+    { fn: registerListHotspotOperatorsTool, category: 'hotspot-users', permission: 'read' },
+    { fn: registerCreateHotspotOperatorTool, category: 'hotspot-users', permission: 'write' },
+    { fn: registerUpdateHotspotOperatorTool, category: 'hotspot-users', permission: 'write' },
+    { fn: registerDeleteHotspotOperatorTool, category: 'hotspot-users', permission: 'write' },
 
     // --- Composite / troubleshooting tools ---
     { fn: registerGetNetworkHealthSummaryTool, category: 'dashboard', permission: 'read' },

@@ -260,6 +260,34 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `createVoucherGroup` | Create a batch of hotspot guest vouchers. | `hotspot-vouchers:rw` |
 | `deleteVoucherGroup` | Delete a voucher group and revoke its unused vouchers. | `hotspot-vouchers:rw` |
 | `listVoucherGroups` | List hotspot voucher groups with their code counts, limits and validity. Returns every page. | `hotspot-vouchers:r` |
+| `getVoucherSummary` | All-time voucher counts, revenue and duration (current, in use, expired, unused, created). | `hotspot-vouchers:r` |
+
+#### Hotspot users, operators and sessions
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `listHotspotLocalUsers` | List hotspot local users. The controller returns passwords in clear text; this tool redacts them. | `hotspot-users:r` |
+| `createHotspotLocalUser` | Create a hotspot local user for portal logins. The password is write-only and not verified by readback. | `hotspot-users:rw` |
+| `updateHotspotLocalUser` | Replace a local user (enable, expiry, password, limits, portals); the username cannot change and at least one portal ID is required. | `hotspot-users:rw` |
+| `deleteHotspotLocalUser` | Delete a hotspot local user. | `hotspot-users:rw` |
+| `listHotspotOperators` | List hotspot operator accounts (passwords redacted). | `hotspot-users:r` |
+| `createHotspotOperator` | Create a hotspot operator; the controller requires a complex password (e.g. with a special character). | `hotspot-users:rw` |
+| `updateHotspotOperator` | Replace a hotspot operator (password, role, sites). | `hotspot-users:rw` |
+| `deleteHotspotOperator` | Delete a hotspot operator. | `hotspot-users:rw` |
+| `listHotspotAuthRecords` | List hotspot authentication records (client, auth type, traffic, session times). | `hotspot-portal:r` |
+| `disconnectHotspotAuthRecord` | Disconnect a hotspot-authenticated session; the client must pass the portal again. The API reports acceptance only. | `hotspot-portal:rw` |
+| `getHotspotStatistics` | Hotspot dashboard statistics: recent connections and authentication-type distribution. | `hotspot-portal:r` |
+
+#### Time ranges and port schedules
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `createTimeRangeProfile` | Create a time range profile used by port/PoE schedules and rules. | `profiles:rw` |
+| `updateTimeRangeProfile` | Replace a time range profile; everything referencing it follows the new windows. | `profiles:rw` |
+| `deleteTimeRangeProfile` | Delete a time range profile not referenced by schedules or rules. | `profiles:rw` |
+| `createPortSchedule` | Turn switch ports on only inside a time range profile. | `schedules:rw` |
+| `updatePortSchedule` | Replace a port schedule (status, time range, ports). | `schedules:rw` |
+| `deletePortSchedule` | Delete a port schedule. | `schedules:rw` |
 ### Site & Client
 
 | Tool                         | Description                                                                  |

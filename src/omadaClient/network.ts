@@ -569,7 +569,8 @@ export class NetworkOperations {
     public async listTimeRangeProfiles(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/time-range-profiles`);
-        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
+        // Controller 6.3 returns a bare array here; older releases page it.
+        return await this.request.fetchCollection<unknown>(path, customHeaders);
     }
 
     /**

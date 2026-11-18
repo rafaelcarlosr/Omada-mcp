@@ -5,7 +5,7 @@ import type { RequestHandler } from './request.js';
 import * as schemas from './requestSchemas.js';
 import type { SiteOperations } from './site.js';
 
-type Method = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type Input<S extends z.ZodTypeAny> = z.input<S>;
 
 export const urlFilterTypeSchema = z.enum(['gateway', 'eap']);
@@ -13,6 +13,7 @@ export const macFilterListSchema = z.enum(['allow', 'deny']);
 export const groupProfileTypeSchema = z.string().regex(/^\d+$/, 'groupType must be the numeric group profile type, e.g. "0" for IP groups.');
 const macPathSchema = z.string().regex(/^[0-9a-f]{2}([:-][0-9a-f]{2}){5}$/i, 'A valid MAC address is required.');
 const idSchema = z.string().trim().min(1, 'An identifier is required.');
+const epochSeconds = z.number().int().nonnegative();
 
 /**
  * Site configuration writes and their complete-collection readbacks.
@@ -479,6 +480,111 @@ export class SiteConfigOperations {
     }
     public async deleteVoucherGroup(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.send('DELETE', siteId, `/hotspot/voucher-groups/${seg(groupId)}`, undefined, h);
+    }
+    public async getVoucherSummary(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/hotspot/vouchers/statistics/summary', undefined, h);
+    }
+
+    // ---- Hotspot dashboard and authentication records ----
+    public async getHotspotStatistics(range: { start?: number; end?: number }, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        const query = new URLSearchParams();
+        if (range.start !== undefined) query.set('start', String(epochSeconds.parse(range.start)));
+        if (range.end !== undefined) query.set('end', String(epochSeconds.parse(range.end)));
+        const suffix = query.size ? `?${query.toString()}` : '';
+        return await this.send('GET', siteId, `/hotspot/dashboard/statistics${suffix}`, undefined, h);
+    }
+    public async listHotspotAuthRecords(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/hotspot/authed-records', h);
+    }
+    public async disconnectHotspotAuthRecord(recordId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('POST', siteId, `/hotspot/authed-records/${seg(recordId)}/disconnect`, undefined, h);
+    }
+
+    // ---- Hotspot local users ----
+    public async listHotspotLocalUsers(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/hotspot/localusers', h);
+    }
+    public async createHotspotLocalUser(
+        payload: Input<typeof schemas.createLocalUserOpenApiVO06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send('POST', siteId, '/hotspot/localusers', schemas.createLocalUserOpenApiVO06Schema.parse(payload), h);
+    }
+    public async updateHotspotLocalUser(
+        userId: string,
+        payload: Input<typeof schemas.modifyLocalUserOpenApiVO06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        // The Open API modifies local users with POST on the item path.
+        return await this.send('POST', siteId, `/hotspot/localusers/${seg(userId)}`, schemas.modifyLocalUserOpenApiVO06Schema.parse(payload), h);
+    }
+    public async deleteHotspotLocalUser(userId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('DELETE', siteId, `/hotspot/localusers/${seg(userId)}`, undefined, h);
+    }
+
+    // ---- Hotspot operators ----
+    public async listHotspotOperators(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/hotspot/operators', h);
+    }
+    public async createHotspotOperator(payload: Input<typeof schemas.hotspotOperator06Schema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('POST', siteId, '/hotspot/operators', schemas.hotspotOperator06Schema.parse(payload), h);
+    }
+    public async updateHotspotOperator(
+        operatorId: string,
+        payload: Input<typeof schemas.hotspotOperator06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send('PATCH', siteId, `/hotspot/operators/${seg(operatorId)}`, schemas.hotspotOperator06Schema.parse(payload), h);
+    }
+    public async deleteHotspotOperator(operatorId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('DELETE', siteId, `/hotspot/operators/${seg(operatorId)}`, undefined, h);
+    }
+
+    // ---- Time range profiles and port schedules ----
+    public async createTimeRangeProfile(
+        payload: Input<typeof schemas.createTimeRangeProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send('POST', siteId, '/time-range-profiles', schemas.createTimeRangeProfileOpenApiVOSchema.parse(payload), h);
+    }
+    public async updateTimeRangeProfile(
+        profileId: string,
+        payload: Input<typeof schemas.updateTimeRangeProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send(
+            'PUT',
+            siteId,
+            `/time-range-profile/${seg(profileId)}`,
+            schemas.updateTimeRangeProfileOpenApiVOSchema.parse(payload),
+            h
+        );
+    }
+    public async deleteTimeRangeProfile(profileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('DELETE', siteId, `/time-range-profile/${seg(profileId)}`, undefined, h);
+    }
+    public async createPortSchedule(
+        payload: Input<typeof schemas.portScheduleOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send('POST', siteId, '/port-schedules', schemas.portScheduleOpenApiVOSchema.parse(payload), h);
+    }
+    public async updatePortSchedule(
+        scheduleId: string,
+        payload: Input<typeof schemas.portScheduleOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send('PUT', siteId, `/port-schedules/${seg(scheduleId)}`, schemas.portScheduleOpenApiVOSchema.parse(payload), h);
+    }
+    public async deletePortSchedule(scheduleId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('DELETE', siteId, `/port-schedules/${seg(scheduleId)}`, undefined, h);
     }
 }
 

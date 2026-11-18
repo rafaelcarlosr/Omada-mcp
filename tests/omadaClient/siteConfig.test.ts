@@ -636,6 +636,141 @@ const cases: RouteCase[] = [
         url: '/hotspot/voucher-groups/vg1',
         sendsBody: false,
     },
+    {
+        method: 'getVoucherSummary',
+        args: [],
+        http: 'GET',
+        spec: '07-hotspot',
+        route: '/hotspot/vouchers/statistics/summary',
+        url: '/hotspot/vouchers/statistics/summary',
+        sendsBody: false,
+    },
+    {
+        method: 'getHotspotStatistics',
+        args: [{}],
+        http: 'GET',
+        spec: '07-hotspot',
+        route: '/hotspot/dashboard/statistics',
+        url: '/hotspot/dashboard/statistics',
+        sendsBody: false,
+    },
+    {
+        method: 'disconnectHotspotAuthRecord',
+        args: ['ar1'],
+        http: 'POST',
+        spec: '07-hotspot',
+        route: '/hotspot/authed-records/{id}/disconnect',
+        url: '/hotspot/authed-records/ar1/disconnect',
+        sendsBody: false,
+    },
+    {
+        method: 'createHotspotLocalUser',
+        args: [body],
+        http: 'POST',
+        spec: '07-hotspot',
+        route: '/hotspot/localusers',
+        url: '/hotspot/localusers',
+        sendsBody: true,
+    },
+    {
+        method: 'updateHotspotLocalUser',
+        args: ['lu1', body],
+        http: 'POST',
+        spec: '07-hotspot',
+        route: '/hotspot/localusers/{id}',
+        url: '/hotspot/localusers/lu1',
+        sendsBody: true,
+    },
+    {
+        method: 'deleteHotspotLocalUser',
+        args: ['lu1'],
+        http: 'DELETE',
+        spec: '07-hotspot',
+        route: '/hotspot/localusers/{id}',
+        url: '/hotspot/localusers/lu1',
+        sendsBody: false,
+    },
+    {
+        method: 'createHotspotOperator',
+        args: [body],
+        http: 'POST',
+        spec: '07-hotspot',
+        route: '/hotspot/operators',
+        url: '/hotspot/operators',
+        sendsBody: true,
+    },
+    {
+        method: 'updateHotspotOperator',
+        args: ['op1', body],
+        http: 'PATCH',
+        spec: '07-hotspot',
+        route: '/hotspot/operators/{id}',
+        url: '/hotspot/operators/op1',
+        sendsBody: true,
+    },
+    {
+        method: 'deleteHotspotOperator',
+        args: ['op1'],
+        http: 'DELETE',
+        spec: '07-hotspot',
+        route: '/hotspot/operators/{id}',
+        url: '/hotspot/operators/op1',
+        sendsBody: false,
+    },
+    {
+        method: 'createTimeRangeProfile',
+        args: [body],
+        http: 'POST',
+        spec: '04.4-site-network-setting-profiles',
+        route: '/time-range-profiles',
+        url: '/time-range-profiles',
+        sendsBody: true,
+    },
+    {
+        method: 'updateTimeRangeProfile',
+        args: ['tr1', body],
+        http: 'PUT',
+        spec: '04.4-site-network-setting-profiles',
+        route: '/time-range-profile/{profileId}',
+        url: '/time-range-profile/tr1',
+        sendsBody: true,
+    },
+    {
+        method: 'deleteTimeRangeProfile',
+        args: ['tr1'],
+        http: 'DELETE',
+        spec: '04.4-site-network-setting-profiles',
+        route: '/time-range-profile/{profileId}',
+        url: '/time-range-profile/tr1',
+        sendsBody: false,
+    },
+    {
+        method: 'createPortSchedule',
+        args: [body],
+        http: 'POST',
+        spec: '04.2-site-network-setting-general',
+        route: '/port-schedules',
+        url: '/port-schedules',
+        sendsBody: true,
+    },
+    {
+        method: 'updatePortSchedule',
+        args: ['ps1', body],
+        http: 'PUT',
+        spec: '04.2-site-network-setting-general',
+        route: '/port-schedules/{portScheduleId}',
+        url: '/port-schedules/ps1',
+        sendsBody: true,
+    },
+    {
+        method: 'deletePortSchedule',
+        args: ['ps1'],
+        http: 'DELETE',
+        spec: '04.2-site-network-setting-general',
+        route: '/port-schedules/{portScheduleId}',
+        url: '/port-schedules/ps1',
+        sendsBody: false,
+    },
 ];
 
 const listCases: { method: keyof Ops; args: unknown[]; spec: string; route: string; expected?: unknown[] }[] = [
@@ -650,6 +785,9 @@ const listCases: { method: keyof Ops; args: unknown[]; spec: string; route: stri
     { method: 'listWireguardTunnels', args: [], spec: '04.8-site-network-setting-vpn', route: '/vpn/wireguards' },
     { method: 'listWireguardPeerEntries', args: [], spec: '04.8-site-network-setting-vpn', route: '/vpn/wireguard-peers' },
     { method: 'listVoucherGroups', args: [], spec: '07-hotspot', route: '/hotspot/voucher-groups' },
+    { method: 'listHotspotAuthRecords', args: [], spec: '07-hotspot', route: '/hotspot/authed-records' },
+    { method: 'listHotspotLocalUsers', args: [], spec: '07-hotspot', route: '/hotspot/localusers' },
+    { method: 'listHotspotOperators', args: [], spec: '07-hotspot', route: '/hotspot/operators' },
 ];
 
 function documented(spec: string, version: string, route: string, http: string): boolean {
@@ -692,6 +830,16 @@ describe('omadaClient/siteConfig', () => {
         const fn = operations[method] as (...input: unknown[]) => Promise<unknown>;
         await expect(fn.call(operations, ...args)).resolves.toEqual(expected ?? [{ id: 'x' }]);
         expect(request.fetchPaginated).toHaveBeenCalledWith(`/openapi/v1/cid/sites/site-1${route}`, {}, undefined);
+    });
+
+    it('passes hotspot statistics bounds as epoch-second query parameters', async () => {
+        await operations.getHotspotStatistics({ start: 1700000000, end: 1700086400 });
+        expect(request.request).toHaveBeenCalledWith(
+            { method: 'GET', url: '/openapi/v1/cid/sites/site-1/hotspot/dashboard/statistics?start=1700000000&end=1700086400' },
+            true,
+            undefined
+        );
+        await expect(operations.getHotspotStatistics({ start: -1 })).rejects.toThrow();
     });
 
     it('labels MAC filter entries with the list they were read from', async () => {
