@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import type {
     ActiveClientInfo,
     ClientActivity,
@@ -14,7 +15,22 @@ import type {
 } from '../types/index.js';
 
 import type { RequestHandler } from './request.js';
+import * as schemas from './requestSchemas.js';
 import type { SiteOperations } from './site.js';
+
+const clientMacSchema = z.string().regex(/^[0-9a-f]{2}([:-][0-9a-f]{2}){5}$/i, 'A valid client MAC address is required.');
+/** Client insight ranges are epoch milliseconds, like the switch and client health routes. */
+export const msRangeSchema = z
+    .object({ start: z.number().int().nonnegative(), end: z.number().int().nonnegative() })
+    .strict()
+    .refine((range) => range.start < range.end, 'start must be before end.');
+export const clientStatGranularitySchema = z.enum(['5Min', 'hourly', 'daily']);
+/** 0 connection, 1 association, 2 roaming, 3 disconnection. */
+export const clientTimelineTypeSchema = z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]);
+
+function clientMac(value: string): string {
+    return encodeURIComponent(clientMacSchema.parse(value));
+}
 
 function normalizeMac(value: string): string | undefined {
     const mac = value.trim();
@@ -31,7 +47,7 @@ export class ClientOperations {
     constructor(
         private readonly request: RequestHandler,
         private readonly site: SiteOperations,
-        private readonly buildPath: (path: string) => string
+        private readonly buildPath: (path: string, version?: string) => string
     ) {}
 
     /**
@@ -356,5 +372,106 @@ export class ClientOperations {
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/dashboard/past-client-num`);
         const response = await this.request.get<OmadaApiResponse<unknown>>(path, { start, end }, customHeaders);
         return this.request.ensureSuccess(response);
+    }
+
+    /** Connection and roaming history of one client (docs/openapi/06-client.json, getClientConnectionHistory). */
+    public async getClientConnectionHistory(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        const { start, end } = msRangeSchema.parse(range);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/${clientMac(mac)}/client-connection`);
+        return this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, { start, end }, customHeaders));
+    }
+
+    /** Timeline events of one client, filtered by type. */
+    public async getClientTimeline(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        type: z.input<typeof clientTimelineTypeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        const { start, end } = msRangeSchema.parse(range);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/${clientMac(mac)}/client-timeline`);
+        const params = { start, end, type: clientTimelineTypeSchema.parse(type) };
+        return this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, params, customHeaders));
+    }
+
+    /** Client health detail (V2) for a range. */
+    public async getClientHealthDetail(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        const { start, end } = msRangeSchema.parse(range);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/${clientMac(mac)}/health/detail`, 'v2');
+        return this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, { start, end }, customHeaders));
+    }
+
+    /** Client health score timeline for a range. */
+    public async getClientHealthTimeline(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        const { start, end } = msRangeSchema.parse(range);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/${clientMac(mac)}/health/timeline`);
+        return this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, { start, end }, customHeaders));
+    }
+
+    /** Values available for the client list filters (device types, vendors, ...). */
+    public async getClientSearchFieldOptions(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/search-fields-options`);
+        return this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders));
+    }
+
+    /** Controller-wide list of client type corrections that can be applied to a client. */
+    public async getClientCorrectionOptions(customHeaders?: CustomHeaders): Promise<unknown> {
+        const path = this.buildPath('/correction-list');
+        return this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders));
+    }
+
+    /** Path from the client through APs and switches to the gateway. */
+    public async getClientLinkTopology(mac: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/${clientMac(mac)}/client-link-topology`);
+        return this.request.ensureSuccess(await this.request.post<OmadaApiResponse<unknown>>(path, {}, customHeaders));
+    }
+
+    /** Traffic and signal statistics of one client at 5-minute, hourly or daily granularity (epoch seconds). */
+    public async getClientStats(
+        mac: string,
+        granularity: z.input<typeof clientStatGranularitySchema>,
+        query: z.input<typeof schemas.clientStatQuery05Schema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        const interval = clientStatGranularitySchema.parse(granularity);
+        const body = schemas.clientStatQuery05Schema.parse(query);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/client-stat-detail/${clientMac(mac)}/${interval}`);
+        return this.request.ensureSuccess(await this.request.post<OmadaApiResponse<unknown>>(path, body, customHeaders));
+    }
+
+    /** Incident counts for a set of clients. */
+    public async getClientIncidentCounts(
+        payload: z.input<typeof schemas.clientIncidentCountRequestOpenApiVO05Schema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        const body = schemas.clientIncidentCountRequestOpenApiVO05Schema.parse(payload);
+        const resolvedSiteId = await this.site.resolveSiteId(siteId);
+        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/clients/incidents`);
+        return this.request.ensureSuccess(await this.request.post<OmadaApiResponse<unknown>>(path, body, customHeaders));
     }
 }
