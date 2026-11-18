@@ -15,7 +15,7 @@ describe('tools/listVpnUsers', () => {
     let client: Record<string, ReturnType<typeof vi.fn>>;
 
     beforeEach(() => {
-        client = { listVpnUsers: vi.fn().mockResolvedValue([{ id: 'row-1', name: 'first' }]) };
+        client = { listVpnUsers: vi.fn().mockResolvedValue([{ id: 'row-1', name: 'first', password: 'clear-text' }]) };
         server = { registerTool: vi.fn((_name, _def, fn) => (handler = fn)) } as unknown as McpServer;
         registerListVpnUsersTool(server, client as unknown as OmadaClient);
     });
@@ -29,7 +29,7 @@ describe('tools/listVpnUsers', () => {
             expect.any(Function)
         );
         expect(client.listVpnUsers).toHaveBeenCalledWith('site-1', undefined);
-        expect(JSON.parse(result.content[0].text)).toEqual([{ id: 'row-1', name: 'first' }]);
+        expect(JSON.parse(result.content[0].text)).toEqual([{ id: 'row-1', name: 'first', password: '[redacted]' }]);
     });
 
     it('propagates read failures', async () => {

@@ -16,7 +16,7 @@ describe('tools/listSslVpnUserGroupUsers', () => {
     let client: Record<string, ReturnType<typeof vi.fn>>;
 
     beforeEach(() => {
-        client = { listSslVpnUserGroupUsers: vi.fn().mockResolvedValue([{ id: 'row-1', name: 'first' }]) };
+        client = { listSslVpnUserGroupUsers: vi.fn().mockResolvedValue([{ id: 'row-1', name: 'first', password: 'clear-text' }]) };
         server = {
             registerTool: vi.fn((_name, def, fn) => {
                 definition = def;
@@ -35,7 +35,7 @@ describe('tools/listSslVpnUserGroupUsers', () => {
             expect.any(Function)
         );
         expect(client.listSslVpnUserGroupUsers).toHaveBeenCalledWith('ug-1', 'site-1', undefined);
-        expect(JSON.parse(result.content[0].text)).toEqual([{ id: 'row-1', name: 'first' }]);
+        expect(JSON.parse(result.content[0].text)).toEqual([{ id: 'row-1', name: 'first', password: '[redacted]' }]);
     });
 
     it('validates the id', () => {

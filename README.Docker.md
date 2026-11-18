@@ -589,11 +589,11 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `getVpnUserDetail` | Get users for a specific client-to-site VPN server. |
 | `getVpnClientStatus` | Get status of client-to-site VPN clients. Alias for `listClientToSiteVpnClients`. |
 | `getVpnRouteConfig` | [DEPRECATED] Use `getGridPolicyRouting` instead. This tool aggregates all pages; getGridPolicyRouting is paginated. |
-| `listVpnUsers` | List every VPN user account (all protocols, v2 route). Passwords are masked. |
+| `listVpnUsers` | List every VPN user account (all protocols, v2 route). Passwords are redacted. |
 | `listSslVpnResources` | List SSL VPN resources and the resource groups that use them. |
 | `listSslVpnResourceGroups` | List SSL VPN resource groups, including the built-in Group_ALL and Group_LAN. |
 | `listSslVpnUserGroups` | List SSL VPN user groups with their resource groups and members. |
-| `listSslVpnUserGroupUsers` | List the SSL VPN users of one user group. Passwords are masked. |
+| `listSslVpnUserGroupUsers` | List the SSL VPN users of one user group. Passwords are redacted. |
 | `listSslVpnLocks` | List SSL VPN username and IP locks with remaining lock time. |
 | `getEoGreTunnelConfig` | Get the site EoGRE tunnel settings. |
 | `listVpnServerStatus` | List client-to-site VPN server status for one VPN type. |
