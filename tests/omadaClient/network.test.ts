@@ -1210,11 +1210,12 @@ describe('NetworkOperations', () => {
     describe('listTimeRangeProfiles', () => {
         it('should list time range profiles', async () => {
             const mockData = [{ id: 'tr-1', name: 'Business Hours' }];
-            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue(mockData);
+            vi.mocked(mockRequest.fetchCollection).mockResolvedValue(mockData);
 
             const result = await networkOps.listTimeRangeProfiles('site-123');
 
-            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/time-range-profiles', {}, undefined);
+            // Controller 6.3 returns a bare array, so the read goes through fetchCollection.
+            expect(mockRequest.fetchCollection).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/time-range-profiles', undefined);
             expect(result).toEqual(mockData);
         });
     });

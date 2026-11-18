@@ -43,7 +43,11 @@ const TARGETS = [
         suffix: '03',
         names: ['ApUpdateWlanGroupOpenApiVO', 'LocateDeviceRequest', 'AdoptDeviceRequest', 'OswPoeRecoverOpenApiVO'],
     },
-    { file: '04.2-site-network-setting-general.json', suffix: '', names: ['CreateMdnsRuleOpenApiVO', 'SnmpSettingOpenApiVO'] },
+    {
+        file: '04.2-site-network-setting-general.json',
+        suffix: '',
+        names: ['CreateMdnsRuleOpenApiVO', 'SnmpSettingOpenApiVO', 'PortScheduleOpenApiVO'],
+    },
     {
         file: '04.3-site-network-setting-network.json',
         suffix: '',
@@ -56,7 +60,11 @@ const TARGETS = [
             'LanDnsOpenApiVO',
         ],
     },
-    { file: '04.4-site-network-setting-profiles.json', suffix: '', names: ['CreateGroupOpenApiVO'] },
+    {
+        file: '04.4-site-network-setting-profiles.json',
+        suffix: '',
+        names: ['CreateGroupOpenApiVO', 'CreateTimeRangeProfileOpenApiVO', 'UpdateTimeRangeProfileOpenApiVO'],
+    },
     { file: '04.6-site-network-setting-security.json', suffix: '', names: ['UrlFilteringOpenApiVO', 'AttackDefenseSetting', 'IpsInfo'] },
     {
         file: '04.7-site-network-setting-transmission.json',
@@ -70,7 +78,11 @@ const TARGETS = [
     },
     { file: '05-site-device-config.json', suffix: '', names: ['CreateDdnsOpenApiVO', 'UpnpSettingOpenApiVO', 'MacFiltering'] },
     { file: '06-client.json', suffix: '05', names: ['Client Name Setting', 'Client Lock To AP Setting'] },
-    { file: '07-hotspot.json', suffix: '06', names: ['CreateVoucherGroupOpenApiVO'] },
+    {
+        file: '07-hotspot.json',
+        suffix: '06',
+        names: ['CreateVoucherGroupOpenApiVO', 'CreateLocalUserOpenApiVO', 'ModifyLocalUserOpenApiVO', 'Hotspot Operator'],
+    },
     { file: '14-maintenance.json', suffix: '08', names: ['AutoBackupOpenApiVO'] },
 ];
 

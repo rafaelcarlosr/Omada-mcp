@@ -2343,4 +2343,108 @@ export class OmadaClient {
     public async deleteVoucherGroup(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.siteConfigOps.deleteVoucherGroup(groupId, siteId, h);
     }
+
+    public async getVoucherSummary(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.getVoucherSummary(siteId, h);
+    }
+
+    public async getHotspotStatistics(range: { start?: number; end?: number }, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.getHotspotStatistics(range, siteId, h);
+    }
+
+    public async listHotspotAuthRecords(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.siteConfigOps.listHotspotAuthRecords(siteId, h);
+    }
+
+    public async disconnectHotspotAuthRecord(recordId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.disconnectHotspotAuthRecord(recordId, siteId, h);
+    }
+
+    public async listHotspotLocalUsers(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.siteConfigOps.listHotspotLocalUsers(siteId, h);
+    }
+
+    public async createHotspotLocalUser(
+        payload: Input<typeof schemas.createLocalUserOpenApiVO06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.createHotspotLocalUser(payload, siteId, h);
+    }
+
+    public async updateHotspotLocalUser(
+        userId: string,
+        payload: Input<typeof schemas.modifyLocalUserOpenApiVO06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.updateHotspotLocalUser(userId, payload, siteId, h);
+    }
+
+    public async deleteHotspotLocalUser(userId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.deleteHotspotLocalUser(userId, siteId, h);
+    }
+
+    public async listHotspotOperators(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.siteConfigOps.listHotspotOperators(siteId, h);
+    }
+
+    public async createHotspotOperator(payload: Input<typeof schemas.hotspotOperator06Schema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.createHotspotOperator(payload, siteId, h);
+    }
+
+    public async updateHotspotOperator(
+        operatorId: string,
+        payload: Input<typeof schemas.hotspotOperator06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.updateHotspotOperator(operatorId, payload, siteId, h);
+    }
+
+    public async deleteHotspotOperator(operatorId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.deleteHotspotOperator(operatorId, siteId, h);
+    }
+
+    public async createTimeRangeProfile(
+        payload: Input<typeof schemas.createTimeRangeProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.createTimeRangeProfile(payload, siteId, h);
+    }
+
+    public async updateTimeRangeProfile(
+        profileId: string,
+        payload: Input<typeof schemas.updateTimeRangeProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.updateTimeRangeProfile(profileId, payload, siteId, h);
+    }
+
+    public async deleteTimeRangeProfile(profileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.deleteTimeRangeProfile(profileId, siteId, h);
+    }
+
+    public async createPortSchedule(
+        payload: Input<typeof schemas.portScheduleOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.createPortSchedule(payload, siteId, h);
+    }
+
+    public async updatePortSchedule(
+        scheduleId: string,
+        payload: Input<typeof schemas.portScheduleOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteConfigOps.updatePortSchedule(scheduleId, payload, siteId, h);
+    }
+
+    public async deletePortSchedule(scheduleId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteConfigOps.deletePortSchedule(scheduleId, siteId, h);
+    }
 }
