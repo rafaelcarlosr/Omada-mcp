@@ -30,11 +30,16 @@ import { registerCreatePortScheduleTool } from './createPortSchedule.js';
 import { registerCreateRoleTool } from './createRole.js';
 import { registerCreateSamlIdpTool } from './createSamlIdp.js';
 import { registerCreateSsidTool } from './createSsid.js';
+import { registerCreateSslVpnLockTool } from './createSslVpnLock.js';
+import { registerCreateSslVpnResourceTool } from './createSslVpnResource.js';
+import { registerCreateSslVpnResourceGroupTool } from './createSslVpnResourceGroup.js';
+import { registerCreateSslVpnUserGroupTool } from './createSslVpnUserGroup.js';
 import { registerCreateStaticRouteTool } from './createStaticRoute.js';
 import { registerCreateSwitchAclTool } from './createSwitchAcl.js';
 import { registerCreateTimeRangeProfileTool } from './createTimeRangeProfile.js';
 import { registerCreateUrlFilterRuleTool } from './createUrlFilterRule.js';
 import { registerCreateVoucherGroupTool } from './createVoucherGroup.js';
+import { registerCreateVpnUserTool } from './createVpnUser.js';
 import { registerCreateWlanGroupTool } from './createWlanGroup.js';
 import { registerDeleteAclTool } from './deleteAcl.js';
 import { registerDeleteAppControlRuleTool } from './deleteAppControlRule.js';
@@ -60,10 +65,15 @@ import { registerDeleteRoleTool } from './deleteRole.js';
 import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
+import { registerDeleteSslVpnLockTool } from './deleteSslVpnLock.js';
+import { registerDeleteSslVpnResourceTool } from './deleteSslVpnResource.js';
+import { registerDeleteSslVpnResourceGroupTool } from './deleteSslVpnResourceGroup.js';
+import { registerDeleteSslVpnUserGroupTool } from './deleteSslVpnUserGroup.js';
 import { registerDeleteStaticRouteTool } from './deleteStaticRoute.js';
 import { registerDeleteTimeRangeProfileTool } from './deleteTimeRangeProfile.js';
 import { registerDeleteUrlFilterRuleTool } from './deleteUrlFilterRule.js';
 import { registerDeleteVoucherGroupTool } from './deleteVoucherGroup.js';
+import { registerDeleteVpnUserTool } from './deleteVpnUser.js';
 import { registerDeleteWireguardTool } from './deleteWireguard.js';
 import { registerDeleteWireguardPeerTool } from './deleteWireguardPeer.js';
 import { registerDeleteWlanGroupTool } from './deleteWlanGroup.js';
@@ -150,6 +160,7 @@ import { registerGetDot1xConfigTool } from './getDot1xConfig.js';
 import { registerGetDownlinkWiredDevicesTool } from './getDownlinkWiredDevices.js';
 import { registerGetDscpConfigTool } from './getDscpConfig.js';
 import { registerGetEapDot1xSettingTool } from './getEapDot1xSetting.js';
+import { registerGetEoGreTunnelConfigTool } from './getEoGreTunnelConfig.js';
 import { registerGetExperienceImprovementTool } from './getExperienceImprovement.js';
 import { registerGetFirewallSettingTool } from './getFirewallSetting.js';
 import { registerGetFirmwareInfoTool } from './getFirmwareInfo.js';
@@ -404,13 +415,24 @@ import { registerListSitesCableTestSwitchesPortsTool } from './listSitesCableTes
 import { registerListSitesSettingIotDevicesTool } from './listSitesSettingIotDevices.js';
 import { registerListSitesStacksTool } from './listSitesStacks.js';
 import { registerListSiteThreatManagementTool } from './listSiteThreatManagement.js';
+import { registerListSiteToSiteVpnPeerStatusTool } from './listSiteToSiteVpnPeerStatus.js';
+import { registerListSiteToSiteVpnStatusTool } from './listSiteToSiteVpnStatus.js';
 import { registerListSiteToSiteVpnsTool } from './listSiteToSiteVpns.js';
+import { registerListSslVpnLocksTool } from './listSslVpnLocks.js';
+import { registerListSslVpnResourceGroupsTool } from './listSslVpnResourceGroups.js';
+import { registerListSslVpnResourcesTool } from './listSslVpnResources.js';
+import { registerListSslVpnUserGroupsTool } from './listSslVpnUserGroups.js';
+import { registerListSslVpnUserGroupUsersTool } from './listSslVpnUserGroupUsers.js';
 import { registerListStaticRoutesTool } from './listStaticRoutes.js';
 import { registerListSwitchNetworksTool } from './listSwitchNetworks.js';
 import { registerListTimeRangeProfilesTool } from './listTimeRangeProfiles.js';
 import { registerListUpgradeFirmwaresTool } from './listUpgradeFirmwares.js';
 import { registerListUpgradeOverviewFirmwaresTool } from './listUpgradeOverviewFirmwares.js';
 import { registerListVoucherGroupsTool } from './listVoucherGroups.js';
+import { registerListVpnClientStatusTool } from './listVpnClientStatus.js';
+import { registerListVpnServerClientStatusTool } from './listVpnServerClientStatus.js';
+import { registerListVpnServerStatusTool } from './listVpnServerStatus.js';
+import { registerListVpnUsersTool } from './listVpnUsers.js';
 import { registerListWireguardTool } from './listWireguard.js';
 import { registerListWireguardPeersTool } from './listWireguardPeers.js';
 import { registerLocateDeviceTool } from './locateDevice.js';
@@ -438,6 +460,7 @@ import { registerSetClientNameTool } from './setClientName.js';
 import { registerSetClientRateLimitTool } from './setClientRateLimit.js';
 import { registerSetClientRateLimitProfileTool } from './setClientRateLimitProfile.js';
 import { registerSetDeviceLedTool } from './setDeviceLed.js';
+import { registerSetEoGreTunnelConfigTool } from './setEoGreTunnelConfig.js';
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
 import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
@@ -471,10 +494,15 @@ import { registerUpdateRoleTool } from './updateRole.js';
 import { registerUpdateSamlIdpTool } from './updateSamlIdp.js';
 import { registerUpdateSiteToSiteVpnTool } from './updateSiteToSiteVpn.js';
 import { registerUpdateSsidTool } from './updateSsid.js';
+import { registerUpdateSslVpnLockTool } from './updateSslVpnLock.js';
+import { registerUpdateSslVpnResourceTool } from './updateSslVpnResource.js';
+import { registerUpdateSslVpnResourceGroupTool } from './updateSslVpnResourceGroup.js';
+import { registerUpdateSslVpnUserGroupTool } from './updateSslVpnUserGroup.js';
 import { registerUpdateStaticRouteTool } from './updateStaticRoute.js';
 import { registerUpdateSwitchAclTool } from './updateSwitchAcl.js';
 import { registerUpdateTimeRangeProfileTool } from './updateTimeRangeProfile.js';
 import { registerUpdateUrlFilterRuleTool } from './updateUrlFilterRule.js';
+import { registerUpdateVpnUserTool } from './updateVpnUser.js';
 import { registerUpdateWireguardTool } from './updateWireguard.js';
 import { registerUpdateWlanGroupTool } from './updateWlanGroup.js';
 
@@ -789,6 +817,18 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetGridIpsecFailoverTool, category: 'vpn', permission: 'read' },
     { fn: registerGetVpnTunnelStatsTool, category: 'vpn', permission: 'read' },
     { fn: registerGetIpsecVpnStatsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnUsersTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnResourcesTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnResourceGroupsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnUserGroupsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnUserGroupUsersTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnLocksTool, category: 'vpn', permission: 'read' },
+    { fn: registerGetEoGreTunnelConfigTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnServerStatusTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnServerClientStatusTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnClientStatusTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSiteToSiteVpnStatusTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSiteToSiteVpnPeerStatusTool, category: 'vpn', permission: 'read' },
     { fn: registerGetGridDashboardTunnelStatsTool, category: 'vpn', permission: 'read' },
     { fn: registerGetGridDashboardIpsecTunnelStatsTool, category: 'vpn', permission: 'read' },
     { fn: registerGetGridDashboardOpenVpnTunnelStatsTool, category: 'vpn', permission: 'read' },
@@ -980,6 +1020,22 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerUpdateClientToSiteVpnClientTool, category: 'vpn', permission: 'write' },
     { fn: registerDeleteClientToSiteVpnClientTool, category: 'vpn', permission: 'write' },
     { fn: registerUpdateWireguardTool, category: 'vpn', permission: 'write' },
+    { fn: registerCreateVpnUserTool, category: 'vpn', permission: 'write' },
+    { fn: registerUpdateVpnUserTool, category: 'vpn', permission: 'write' },
+    { fn: registerDeleteVpnUserTool, category: 'vpn', permission: 'write' },
+    { fn: registerCreateSslVpnResourceTool, category: 'vpn', permission: 'write' },
+    { fn: registerUpdateSslVpnResourceTool, category: 'vpn', permission: 'write' },
+    { fn: registerDeleteSslVpnResourceTool, category: 'vpn', permission: 'write' },
+    { fn: registerCreateSslVpnResourceGroupTool, category: 'vpn', permission: 'write' },
+    { fn: registerUpdateSslVpnResourceGroupTool, category: 'vpn', permission: 'write' },
+    { fn: registerDeleteSslVpnResourceGroupTool, category: 'vpn', permission: 'write' },
+    { fn: registerCreateSslVpnUserGroupTool, category: 'vpn', permission: 'write' },
+    { fn: registerUpdateSslVpnUserGroupTool, category: 'vpn', permission: 'write' },
+    { fn: registerDeleteSslVpnUserGroupTool, category: 'vpn', permission: 'write' },
+    { fn: registerCreateSslVpnLockTool, category: 'vpn', permission: 'write' },
+    { fn: registerUpdateSslVpnLockTool, category: 'vpn', permission: 'write' },
+    { fn: registerDeleteSslVpnLockTool, category: 'vpn', permission: 'write' },
+    { fn: registerSetEoGreTunnelConfigTool, category: 'vpn', permission: 'write' },
     { fn: registerDeleteWireguardTool, category: 'vpn', permission: 'write' },
     { fn: registerDeleteWireguardPeerTool, category: 'vpn', permission: 'write' },
     { fn: registerCreateVoucherGroupTool, category: 'hotspot-vouchers', permission: 'write' },

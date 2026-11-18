@@ -43,6 +43,7 @@ import { SecurityOperations } from './security.js';
 import { SiteOperations } from './site.js';
 import { type Input, type macFilterListSchema, SiteConfigOperations, type urlFilterTypeSchema } from './siteConfig.js';
 import { type SwitchPortChange, SwitchPortOperations } from './switchPorts.js';
+import { VpnOperations } from './vpn.js';
 
 export type { LogQueryOptions, SiteThreatListOptions };
 
@@ -83,6 +84,7 @@ export class OmadaClient {
     private readonly maintenanceOps: MaintenanceOperations;
 
     private readonly accountOps: AccountOperations;
+    private readonly vpnOps: VpnOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -125,6 +127,7 @@ export class OmadaClient {
         this.controllerOps = new ControllerOperations(this.request, this.buildOmadaPath.bind(this));
         this.maintenanceOps = new MaintenanceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.accountOps = new AccountOperations(this.request, this.buildOmadaPath.bind(this));
+        this.vpnOps = new VpnOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -2446,5 +2449,162 @@ export class OmadaClient {
 
     public async deletePortSchedule(scheduleId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.siteConfigOps.deletePortSchedule(scheduleId, siteId, h);
+    }
+
+    public async listVpnUsers(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnUsers(siteId, h);
+    }
+
+    public async createVpnUser(payload: Input<typeof schemas.vpnUserConfigVOSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.createVpnUser(payload, siteId, h);
+    }
+
+    public async updateVpnUser(
+        userId: string,
+        payload: Input<typeof schemas.vpnUserConfigVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.updateVpnUser(userId, payload, siteId, h);
+    }
+
+    public async deleteVpnUser(userId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteVpnUser(userId, siteId, h);
+    }
+
+    public async listSslVpnResources(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSslVpnResources(siteId, h);
+    }
+
+    public async createSslVpnResource(
+        payload: Input<typeof schemas.sslVpnResourceConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.createSslVpnResource(payload, siteId, h);
+    }
+
+    public async updateSslVpnResource(
+        resourceId: string,
+        payload: Input<typeof schemas.sslVpnResourceModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.updateSslVpnResource(resourceId, payload, siteId, h);
+    }
+
+    public async deleteSslVpnResource(resourceId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteSslVpnResource(resourceId, siteId, h);
+    }
+
+    public async listSslVpnResourceGroups(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSslVpnResourceGroups(siteId, h);
+    }
+
+    public async createSslVpnResourceGroup(
+        payload: Input<typeof schemas.sslVpnResourceGroupConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.createSslVpnResourceGroup(payload, siteId, h);
+    }
+
+    public async updateSslVpnResourceGroup(
+        groupId: string,
+        payload: Input<typeof schemas.sslVpnResourceGroupModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.updateSslVpnResourceGroup(groupId, payload, siteId, h);
+    }
+
+    public async deleteSslVpnResourceGroup(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteSslVpnResourceGroup(groupId, siteId, h);
+    }
+
+    public async listSslVpnUserGroups(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSslVpnUserGroups(siteId, h);
+    }
+
+    public async listSslVpnUserGroupUsers(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSslVpnUserGroupUsers(groupId, siteId, h);
+    }
+
+    public async createSslVpnUserGroup(
+        payload: Input<typeof schemas.sslVpnUserGroupConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.createSslVpnUserGroup(payload, siteId, h);
+    }
+
+    public async updateSslVpnUserGroup(
+        groupId: string,
+        payload: Input<typeof schemas.sslVpnUserGroupModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.updateSslVpnUserGroup(groupId, payload, siteId, h);
+    }
+
+    public async deleteSslVpnUserGroup(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteSslVpnUserGroup(groupId, siteId, h);
+    }
+
+    public async listSslVpnLocks(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSslVpnLocks(siteId, h);
+    }
+
+    public async createSslVpnLock(
+        payload: Input<typeof schemas.sslVpnLockConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.createSslVpnLock(payload, siteId, h);
+    }
+
+    public async updateSslVpnLock(
+        lockId: string,
+        payload: Input<typeof schemas.sslVpnLockModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.updateSslVpnLock(lockId, payload, siteId, h);
+    }
+
+    public async deleteSslVpnLock(lockId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteSslVpnLock(lockId, siteId, h);
+    }
+
+    public async getEoGreTunnelConfig(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.getEoGreTunnelConfig(siteId, h);
+    }
+
+    public async setEoGreTunnelConfig(
+        payload: Input<typeof schemas.updateEoGreTunnelSettingOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.setEoGreTunnelConfig(payload, siteId, h);
+    }
+
+    public async listVpnServerStatus(vpnType: number, clientMode: number | undefined, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnServerStatus(vpnType, clientMode, siteId, h);
+    }
+
+    public async listVpnServerClientStatus(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnServerClientStatus(vpnId, siteId, h);
+    }
+
+    public async listVpnClientStatus(vpnType: number, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnClientStatus(vpnType, siteId, h);
+    }
+
+    public async listSiteToSiteVpnStatus(vpnType: number, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSiteToSiteVpnStatus(vpnType, siteId, h);
+    }
+
+    public async listSiteToSiteVpnPeerStatus(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSiteToSiteVpnPeerStatus(vpnId, siteId, h);
     }
 }
