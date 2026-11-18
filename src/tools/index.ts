@@ -10,6 +10,8 @@ import { registerBackupControllerToFileServerTool } from './backupControllerToFi
 import { registerBackupSitesTool } from './backupSites.js';
 import { registerBackupSitesToFileServerTool } from './backupSitesToFileServer.js';
 import { registerBlockClientTool } from './blockClient.js';
+import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
+import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
 import { registerCreateDdnsEntryTool } from './createDdnsEntry.js';
 import { registerCreateDhcpReservationTool } from './createDhcpReservation.js';
 import { registerCreateEapAclTool } from './createEapAcl.js';
@@ -36,6 +38,7 @@ import { registerCreateSslVpnResourceGroupTool } from './createSslVpnResourceGro
 import { registerCreateSslVpnUserGroupTool } from './createSslVpnUserGroup.js';
 import { registerCreateStaticRouteTool } from './createStaticRoute.js';
 import { registerCreateSwitchAclTool } from './createSwitchAcl.js';
+import { registerCreateSwitchPortTagTool } from './createSwitchPortTag.js';
 import { registerCreateTimeRangeProfileTool } from './createTimeRangeProfile.js';
 import { registerCreateUrlFilterRuleTool } from './createUrlFilterRule.js';
 import { registerCreateVoucherGroupTool } from './createVoucherGroup.js';
@@ -70,6 +73,7 @@ import { registerDeleteSslVpnResourceTool } from './deleteSslVpnResource.js';
 import { registerDeleteSslVpnResourceGroupTool } from './deleteSslVpnResourceGroup.js';
 import { registerDeleteSslVpnUserGroupTool } from './deleteSslVpnUserGroup.js';
 import { registerDeleteStaticRouteTool } from './deleteStaticRoute.js';
+import { registerDeleteSwitchPortTagTool } from './deleteSwitchPortTag.js';
 import { registerDeleteTimeRangeProfileTool } from './deleteTimeRangeProfile.js';
 import { registerDeleteUrlFilterRuleTool } from './deleteUrlFilterRule.js';
 import { registerDeleteVoucherGroupTool } from './deleteVoucherGroup.js';
@@ -328,9 +332,15 @@ import { registerGetSslVpnServerSettingTool } from './getSslVpnServerSetting.js'
 import { registerGetStackNetworkListTool } from './getStackNetworkList.js';
 import { registerGetStackPortsTool } from './getStackPorts.js';
 import { registerGetStaticRoutingInterfaceListTool } from './getStaticRoutingInterfaceList.js';
+import { registerGetSwitchDdmInfoTool } from './getSwitchDdmInfo.js';
 import { registerGetSwitchDetailTool } from './getSwitchDetail.js';
 import { registerGetSwitchDot1xSettingTool } from './getSwitchDot1xSetting.js';
+import { registerGetSwitchExistingNetworksTool } from './getSwitchExistingNetworks.js';
 import { registerGetSwitchGeneralConfigTool } from './getSwitchGeneralConfig.js';
+import { registerGetSwitchHealthDetailTool } from './getSwitchHealthDetail.js';
+import { registerGetSwitchHealthTimelineTool } from './getSwitchHealthTimeline.js';
+import { registerGetSwitchInterfacesBriefTool } from './getSwitchInterfacesBrief.js';
+import { registerGetSwitchPortViewTool } from './getSwitchPortView.js';
 import { registerGetSwitchStackDetailTool } from './getSwitchStackDetail.js';
 import { registerGetSwitchVlanInterfaceTool } from './getSwitchVlanInterface.js';
 import { registerGetSyslogConfigTool } from './getSyslogConfig.js';
@@ -424,7 +434,16 @@ import { registerListSslVpnResourcesTool } from './listSslVpnResources.js';
 import { registerListSslVpnUserGroupsTool } from './listSslVpnUserGroups.js';
 import { registerListSslVpnUserGroupUsersTool } from './listSslVpnUserGroupUsers.js';
 import { registerListStaticRoutesTool } from './listStaticRoutes.js';
+import { registerListSwitchDhcpUsersTool } from './listSwitchDhcpUsers.js';
+import { registerListSwitchInterfacesTool } from './listSwitchInterfaces.js';
+import { registerListSwitchLldpNeighborsTool } from './listSwitchLldpNeighbors.js';
 import { registerListSwitchNetworksTool } from './listSwitchNetworks.js';
+import { registerListSwitchNetworksDetailTool } from './listSwitchNetworksDetail.js';
+import { registerListSwitchPortCountersTool } from './listSwitchPortCounters.js';
+import { registerListSwitchPortLagNetworksTool } from './listSwitchPortLagNetworks.js';
+import { registerListSwitchPortOverviewTool } from './listSwitchPortOverview.js';
+import { registerListSwitchPortPoeInfoTool } from './listSwitchPortPoeInfo.js';
+import { registerListSwitchPortTagsTool } from './listSwitchPortTags.js';
 import { registerListTimeRangeProfilesTool } from './listTimeRangeProfiles.js';
 import { registerListUpgradeFirmwaresTool } from './listUpgradeFirmwares.js';
 import { registerListUpgradeOverviewFirmwaresTool } from './listUpgradeOverviewFirmwares.js';
@@ -466,9 +485,11 @@ import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
 import { registerSetMfaStatusTool } from './setMfaStatus.js';
 import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
+import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
+import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
 import { registerUnblockClientTool } from './unblockClient.js';
 import { registerUpdateClientToSiteVpnClientTool } from './updateClientToSiteVpnClient.js';
@@ -500,6 +521,7 @@ import { registerUpdateSslVpnResourceGroupTool } from './updateSslVpnResourceGro
 import { registerUpdateSslVpnUserGroupTool } from './updateSslVpnUserGroup.js';
 import { registerUpdateStaticRouteTool } from './updateStaticRoute.js';
 import { registerUpdateSwitchAclTool } from './updateSwitchAcl.js';
+import { registerUpdateSwitchPortTagTool } from './updateSwitchPortTag.js';
 import { registerUpdateTimeRangeProfileTool } from './updateTimeRangeProfile.js';
 import { registerUpdateUrlFilterRuleTool } from './updateUrlFilterRule.js';
 import { registerUpdateVpnUserTool } from './updateVpnUser.js';
@@ -560,6 +582,21 @@ const TOOL_REGISTRY: ToolEntry[] = [
     // --- Devices (switch) ---
     { fn: registerGetSwitchStackDetailTool, category: 'devices-switch', permission: 'read' },
     { fn: registerGetSwitchDetailTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchPortPoeInfoTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchPortOverviewTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchPortCountersTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerGetSwitchPortViewTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchLldpNeighborsTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchInterfacesTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerGetSwitchInterfacesBriefTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchPortLagNetworksTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchNetworksDetailTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerGetSwitchExistingNetworksTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchDhcpUsersTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerGetSwitchDdmInfoTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerGetSwitchHealthDetailTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerGetSwitchHealthTimelineTool, category: 'devices-switch', permission: 'read' },
+    { fn: registerListSwitchPortTagsTool, category: 'devices-switch', permission: 'read' },
     { fn: registerGetStackPortsTool, category: 'devices-switch', permission: 'read' },
     { fn: registerListSwitchNetworksTool, category: 'devices-switch', permission: 'read' },
     { fn: registerGetSwitchGeneralConfigTool, category: 'devices-switch', permission: 'read' },
@@ -1050,6 +1087,13 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerAdoptDeviceTool, category: 'devices-general', permission: 'write' },
     { fn: registerStartDeviceOnlineUpgradeTool, category: 'devices-general', permission: 'write' },
     { fn: registerRecoverSwitchPortPoeTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerCreateSwitchPortTagTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerUpdateSwitchPortTagTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerDeleteSwitchPortTagTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerSetSwitchGeneralConfigTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerStartSwitchCableTestTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerCancelSwitchCableTestTool, category: 'devices-switch', permission: 'write' },
+    { fn: registerClearSwitchPortCountersTool, category: 'devices-switch', permission: 'write' },
     { fn: registerSetClientNameTool, category: 'clients', permission: 'write' },
     { fn: registerSetClientLockToApTool, category: 'clients', permission: 'write' },
     { fn: registerAuthorizeHotspotClientTool, category: 'clients', permission: 'write' },

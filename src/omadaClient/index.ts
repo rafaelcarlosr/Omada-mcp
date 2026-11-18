@@ -42,6 +42,7 @@ import { ScheduleOperations } from './schedules.js';
 import { SecurityOperations } from './security.js';
 import { SiteOperations } from './site.js';
 import { type Input, type macFilterListSchema, SiteConfigOperations, type urlFilterTypeSchema } from './siteConfig.js';
+import { type healthRangeSchema, SwitchOperations, type switchGeneralSettingsSchema } from './switches.js';
 import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
 import { VpnOperations } from './vpn.js';
 
@@ -85,6 +86,7 @@ export class OmadaClient {
 
     private readonly accountOps: AccountOperations;
     private readonly vpnOps: VpnOperations;
+    private readonly switchOps: SwitchOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -128,6 +130,7 @@ export class OmadaClient {
         this.maintenanceOps = new MaintenanceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.accountOps = new AccountOperations(this.request, this.buildOmadaPath.bind(this));
         this.vpnOps = new VpnOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.switchOps = new SwitchOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -2616,5 +2619,116 @@ export class OmadaClient {
 
     public async listSiteToSiteVpnPeerStatus(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
         return await this.vpnOps.listSiteToSiteVpnPeerStatus(vpnId, siteId, h);
+    }
+
+    public async listSwitchPortPoeInfo(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchPortPoeInfo(siteId, h);
+    }
+
+    public async listSwitchPortOverview(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchPortOverview(siteId, h);
+    }
+
+    public async listSwitchPortCounters(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchPortCounters(siteId, h);
+    }
+
+    public async getSwitchPortView(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.getSwitchPortView(siteId, h);
+    }
+
+    public async listSwitchLldpNeighbors(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchLldpNeighbors(switchMac, siteId, h);
+    }
+
+    public async listSwitchInterfaces(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchInterfaces(switchMac, siteId, h);
+    }
+
+    public async getSwitchInterfacesBrief(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.getSwitchInterfacesBrief(switchMac, siteId, h);
+    }
+
+    public async listSwitchPortLagNetworks(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchPortLagNetworks(switchMac, siteId, h);
+    }
+
+    public async listSwitchNetworksDetail(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchNetworksDetail(switchMac, siteId, h);
+    }
+
+    public async getSwitchExistingNetworks(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.getSwitchExistingNetworks(switchMac, siteId, h);
+    }
+
+    public async listSwitchDhcpUsers(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.switchOps.listSwitchDhcpUsers(switchMac, siteId, h);
+    }
+
+    public async getSwitchDdmInfo(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.getSwitchDdmInfo(switchMac, siteId, h);
+    }
+
+    public async getSwitchHealthDetail(
+        switchMac: string,
+        range: z.input<typeof healthRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.switchOps.getSwitchHealthDetail(switchMac, range, siteId, h);
+    }
+
+    public async getSwitchHealthTimeline(
+        switchMac: string,
+        range: z.input<typeof healthRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.switchOps.getSwitchHealthTimeline(switchMac, range, siteId, h);
+    }
+
+    public async listSwitchPortTags(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.listSwitchPortTags(siteId, h);
+    }
+
+    public async createSwitchPortTag(
+        payload: Input<typeof schemas.createPortTagOpenApiVO03Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.switchOps.createSwitchPortTag(payload, siteId, h);
+    }
+
+    public async updateSwitchPortTag(payload: Input<typeof schemas.portTagOpenApiVO03Schema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.updateSwitchPortTag(payload, siteId, h);
+    }
+
+    public async deleteSwitchPortTag(tagId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.deleteSwitchPortTag(tagId, siteId, h);
+    }
+
+    public async setSwitchGeneralConfig(
+        switchMac: string,
+        payload: Input<typeof switchGeneralSettingsSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.switchOps.setSwitchGeneralConfig(switchMac, payload, siteId, h);
+    }
+
+    public async startSwitchCableTest(switchMac: string, ports: number[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.startSwitchCableTest(switchMac, ports, siteId, h);
+    }
+
+    public async cancelSwitchCableTest(switchMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.switchOps.cancelSwitchCableTest(switchMac, siteId, h);
+    }
+
+    public async clearSwitchPortCounters(
+        payload: Input<typeof schemas.clearCountersVO03Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.switchOps.clearSwitchPortCounters(payload, siteId, h);
     }
 }
