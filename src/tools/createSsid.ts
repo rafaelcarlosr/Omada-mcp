@@ -2,6 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
+import { withOpenSsidDefaults } from '../omadaClient/network.js';
 import { siteInputSchema, wrapMutationToolHandler } from '../server/common.js';
 import { ssidPayloadSchema } from './payloadRequirements.js';
 import { dryRunSchema, mutationSummary, runCreate } from './resourceMutationShared.js';
@@ -35,6 +36,7 @@ export function registerCreateSsidTool(server: McpServer, client: Client): void 
                         list: () => client.getSsidList(wlanId, siteId, customHeaders),
                         detail: (ssidId) => client.getSsidDetail(wlanId, ssidId, siteId, customHeaders),
                         idKeys: ['ssidId', 'id'],
+                        normalize: withOpenSsidDefaults,
                         writeOnly: ['pskSetting', 'entSetting', 'ppskSetting', 'hidePwd'],
                     },
                     payload,

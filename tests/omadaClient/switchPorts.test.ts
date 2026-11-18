@@ -96,6 +96,29 @@ describe('omadaClient/switchPorts', () => {
         expect(request.request).not.toHaveBeenCalled();
     });
 
+    it('patches one port through the documented OswPortSettingVO route without retries', async () => {
+        expect(spec.paths[`${prefix}/ports/{port}`].patch.requestBody.content['application/json'].schema.$ref).toBe(
+            '#/components/schemas/OswPortSettingVO'
+        );
+        const body = { name: 'Port 3', profileId: 'p1', profileOverrideEnable: true, poe: 0 as const };
+        for (const key of Object.keys(body)) expect(spec.components.schemas.OswPortSettingVO.properties).toHaveProperty(key);
+        await operations.patchSwitchPort(mac, 3, body, 'site-1', { 'X-Trace': 't' });
+        expect(request.request).toHaveBeenCalledExactlyOnceWith(
+            { method: 'PATCH', url: '/api/sites/site-1/switches/AA%3ABB%3ACC%3ADD%3AEE%3AFF/ports/3', data: body },
+            false,
+            { 'X-Trace': 't' }
+        );
+    });
+
+    it('validates the port patch before sending', async () => {
+        await expect(operations.patchSwitchPort('*', 1, { name: 'P', profileId: 'p', profileOverrideEnable: true })).rejects.toThrow('MAC');
+        await expect(operations.patchSwitchPort(mac, 0, { name: 'P', profileId: 'p', profileOverrideEnable: true })).rejects.toThrow();
+        await expect(
+            operations.patchSwitchPort(mac, 1, { name: 'P', profileId: 'p', profileOverrideEnable: true, extra: 1 } as never)
+        ).rejects.toThrow();
+        expect(request.request).not.toHaveBeenCalled();
+    });
+
     it('preserves controller rejection and transport failures without retry', async () => {
         request.ensureSuccess.mockImplementationOnce(() => {
             throw new Error('Port does not exist (-39701)');

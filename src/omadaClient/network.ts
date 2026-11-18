@@ -55,12 +55,21 @@ const ssidVlanCustomSettingOpenApiVOSchema = z
         vlanPoolIds: z.string().optional(),
     })
     .strip();
-const ssidVlanSettingOpenApiVOSchema = z
-    .object({
-        mode: z.number().int().min(0).max(1),
-        customConfig: ssidVlanCustomSettingOpenApiVOSchema.optional(),
-    })
-    .strip();
+const ssidVlanSettingOpenApiVOSchema = z.preprocess(
+    // Controller 6.3 reads back `customConfig: {}` (no customMode) when the SSID has no custom VLAN; treat it as absent.
+    (value) => {
+        if (typeof value !== 'object' || value === null || !('customConfig' in value)) return value;
+        const { customConfig, ...rest } = value as { customConfig?: unknown };
+        const empty = typeof customConfig === 'object' && customConfig !== null && Object.keys(customConfig).length === 0;
+        return empty ? rest : value;
+    },
+    z
+        .object({
+            mode: z.number().int().min(0).max(1),
+            customConfig: ssidVlanCustomSettingOpenApiVOSchema.optional(),
+        })
+        .strip()
+);
 export const updateSsidBasicConfigOpenApiVOSchema = z
     .object({
         name: z
@@ -89,9 +98,18 @@ export const updateSsidBasicConfigOpenApiVOSchema = z
 
 export type SsidBasicConfig = z.infer<typeof updateSsidBasicConfigOpenApiVOSchema>;
 
+/**
+ * Controller 6.3 omits pmfMode and enable11r when reading back an open SSID (security 0). Both need WPA, so an
+ * open SSID always has PMF disabled (3) and 802.11r off; fill only what the controller left out.
+ */
+export function withOpenSsidDefaults<T>(value: T): T {
+    if (typeof value !== 'object' || value === null || (value as { security?: unknown }).security !== 0) return value;
+    return { pmfMode: 3, enable11r: false, ...value };
+}
+
 /** Validate a complete basic-config request after projecting the documented GET fields. */
 export function parseSsidBasicConfig(value: unknown): SsidBasicConfig {
-    const config = updateSsidBasicConfigOpenApiVOSchema.parse(value);
+    const config = updateSsidBasicConfigOpenApiVOSchema.parse(withOpenSsidDefaults(value));
     if (config.vlanEnable && config.vlanId === undefined) throw new Error('Enabled VLAN requires vlanId.');
     if (config.security === 2 && !config.entSetting) throw new Error('Enterprise security requires entSetting.');
     if (config.security >= 3 && !config.pskSetting) throw new Error('Personal/PPSK security requires pskSetting.');

@@ -2,10 +2,17 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
-import { type SwitchPortChange, type SwitchPortOperations, switchPortChangeSchema, switchPortListSchema } from '../omadaClient/switchPorts.js';
+import { OmadaApiError } from '../omadaClient/request.js';
+import {
+    type SwitchPortChange,
+    type SwitchPortOperations,
+    type SwitchPortPatch,
+    switchPortChangeSchema,
+    switchPortListSchema,
+} from '../omadaClient/switchPorts.js';
 import { deviceMacSchema, siteInputSchema, wrapMutationToolHandler } from '../server/common.js';
 
-type SwitchPortsClient = Pick<OmadaClient, 'getSwitchDetail'> & Pick<SwitchPortOperations, 'setSwitchPorts'>;
+type SwitchPortsClient = Pick<OmadaClient, 'getSwitchDetail'> & Pick<SwitchPortOperations, 'patchSwitchPort' | 'setSwitchPorts'>;
 
 const inputSchema = siteInputSchema.extend({
     switchMac: deviceMacSchema.describe('Explicit switch MAC address.'),
@@ -45,6 +52,7 @@ interface Outcome {
     verification: Verification;
     requestError?: string;
     readbackIssue?: string;
+    route?: 'port-patch-fallback';
 }
 
 function requestedChange(change: SwitchPortChange): [Field, string | number | boolean] {
@@ -78,6 +86,34 @@ function readPorts(value: unknown, switchMac: string): Map<number, Port> {
     const ports = new Map(detail.data.portList.map((port) => [port.port, port]));
     if (ports.size !== detail.data.portList.length) throw new Error('Switch detail contains ambiguous duplicate port IDs.');
     return ports;
+}
+
+const UNCERTAIN = 'it may have applied. No retry or rollback was attempted.';
+
+function describeError(error: unknown): string {
+    // Only controller rejections are echoed; transport errors can carry URLs or tokens.
+    if (error instanceof OmadaApiError) return `errorCode ${error.errorCode}: ${error.message}`;
+    return 'no controller error code';
+}
+
+/**
+ * Controller 6.3 rejects the dedicated poe-mode and profile-override PUT routes with -1001 (observed on an
+ * SG2008P v3.20) while PATCH ports/{port} applies the same change. -1001 is a validation rejection, so
+ * nothing was applied and one fallback write per port is safe.
+ */
+function fallbackBody(change: SwitchPortChange, before: Port): SwitchPortPatch | undefined {
+    if (before.name === undefined || before.profileId === undefined) return undefined;
+    if (change.operation === 'poe-mode') return { name: before.name, profileId: before.profileId, profileOverrideEnable: true, poe: change.poeMode };
+    if (change.operation === 'profile-override') {
+        return { name: before.name, profileId: before.profileId, profileOverrideEnable: change.profileOverrideEnable };
+    }
+    return undefined;
+}
+
+function canFallBack(change: SwitchPortChange, error: unknown): boolean {
+    return (
+        (change.operation === 'poe-mode' || change.operation === 'profile-override') && error instanceof OmadaApiError && error.errorCode === -1001
+    );
 }
 
 async function run(client: SwitchPortsClient, args: Input): Promise<unknown> {
@@ -146,10 +182,13 @@ async function run(client: SwitchPortsClient, args: Input): Promise<unknown> {
                 customHeaders
             );
             for (const outcome of group) outcome.requestStatus = 'submitted';
-        } catch {
+        } catch (error) {
+            if (canFallBack(change, error) && (await applyFallback(client, args, group, warnings))) continue;
             for (const outcome of group) {
+                // Ports the fallback already settled keep their own status and error.
+                if (outcome.requestStatus === 'submitted' || outcome.requestError) continue;
                 outcome.requestStatus = 'unknown';
-                outcome.requestError = 'Write failed or was rejected; it may have applied. No retry or rollback was attempted.';
+                outcome.requestError = `Write failed or was rejected (${describeError(error)}); ${UNCERTAIN}`;
             }
             // Stop later profile writes after an uncertain outcome, but always attempt readback.
             break;
@@ -194,6 +233,31 @@ async function run(client: SwitchPortsClient, args: Input): Promise<unknown> {
         verification: { status, attempts, verified, total: outcomes.length },
         completion: verified === outcomes.length ? 'complete' : verified > 0 ? 'partial' : 'unconfirmed',
     };
+}
+
+/** Apply the change port by port through PATCH ports/{port}; false after the first port that is not confirmed. */
+async function applyFallback(client: SwitchPortsClient, args: Input, group: Outcome[], warnings: string[]): Promise<boolean> {
+    warnings.push(
+        "The controller rejected the dedicated route with -1001 (nothing applied); the change was sent through PATCH ports/{port} with each port's current name and profile."
+    );
+    for (const outcome of group) {
+        const body = fallbackBody(args.change, outcome.before);
+        if (!body) {
+            outcome.requestStatus = 'not-attempted';
+            outcome.requestError = 'The controller rejected the dedicated route and the port name or profile needed for the fallback is unknown.';
+            return false;
+        }
+        try {
+            await client.patchSwitchPort(args.switchMac, outcome.port, body, args.siteId, args.customHeaders);
+            outcome.requestStatus = 'submitted';
+            outcome.route = 'port-patch-fallback';
+        } catch (error) {
+            outcome.requestStatus = 'unknown';
+            outcome.requestError = `Fallback write failed or was rejected (${describeError(error)}); ${UNCERTAIN}`;
+            return false;
+        }
+    }
+    return true;
 }
 
 export function registerSetSwitchPortsTool(server: McpServer, client: SwitchPortsClient): void {

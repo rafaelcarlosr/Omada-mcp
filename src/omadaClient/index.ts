@@ -42,7 +42,7 @@ import { ScheduleOperations } from './schedules.js';
 import { SecurityOperations } from './security.js';
 import { SiteOperations } from './site.js';
 import { type Input, type macFilterListSchema, SiteConfigOperations, type urlFilterTypeSchema } from './siteConfig.js';
-import { type SwitchPortChange, SwitchPortOperations } from './switchPorts.js';
+import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
 
 export type { LogQueryOptions, SiteThreatListOptions };
 
@@ -157,6 +157,16 @@ export class OmadaClient {
         customHeaders?: CustomHeaders
     ): Promise<unknown> {
         return await this.switchPortOps.setSwitchPorts(switchMac, ports, change, siteId, customHeaders);
+    }
+
+    public async patchSwitchPort(
+        switchMac: string,
+        port: number,
+        body: SwitchPortPatch,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.switchPortOps.patchSwitchPort(switchMac, port, body, siteId, customHeaders);
     }
 
     public async listDevices(siteId?: string, customHeaders?: CustomHeaders): Promise<OmadaDeviceInfo[]> {

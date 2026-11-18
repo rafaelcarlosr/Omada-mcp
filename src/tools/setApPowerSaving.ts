@@ -84,8 +84,9 @@ export function registerSetApPowerSavingTool(server: McpServer, client: OmadaCli
                     bands: args.bands,
                     idleDuration: args.idleDuration,
                 };
-                const current = (await client.getSitesApsPowerSaving(apMac, siteId, customHeaders)) as { supportPowerSaving?: boolean };
-                if (current.supportPowerSaving === false) {
+                const current = (await client.getSitesApsPowerSaving(apMac, siteId, customHeaders)) as { supportPowerSaving?: boolean } | undefined;
+                // Controller 6.3 returns no result at all for APs without the feature (observed on an EAP610 v3).
+                if (!current || current.supportPowerSaving === false || Object.keys(current).length === 0) {
                     throw new Error(`AP ${apMac} does not support power-saving configuration.`);
                 }
 
