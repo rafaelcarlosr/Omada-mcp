@@ -234,7 +234,15 @@ export class RequestHandler {
     /**
      * Fetch all pages of a paginated API endpoint.
      */
-    public async fetchPaginated<T>(path: string, params: Record<string, unknown> = {}, customHeaders?: CustomHeaders): Promise<T[]> {
+    public async fetchPaginated<T>(
+        path: string,
+        params: Record<string, unknown> = {},
+        customHeaders?: CustomHeaders,
+        pageSize: number = DEFAULT_PAGE_SIZE
+    ): Promise<T[]> {
+        if (!Number.isSafeInteger(pageSize) || pageSize < 1 || pageSize > DEFAULT_PAGE_SIZE) {
+            throw new Error(`Pagination page size must be an integer from 1 to ${DEFAULT_PAGE_SIZE}`);
+        }
         const records: T[] = [];
         let totalRows: number | undefined;
         const seenPages = new Set<string>();
@@ -246,7 +254,7 @@ export class RequestHandler {
                 {
                     ...params,
                     page,
-                    pageSize: DEFAULT_PAGE_SIZE,
+                    pageSize,
                 },
                 customHeaders
             );
@@ -282,7 +290,7 @@ export class RequestHandler {
                 throw new Error(`Missing or malformed pagination data on page ${page}`);
             }
             const pageData = result.data;
-            if (pageData.length > DEFAULT_PAGE_SIZE || records.length + pageData.length > this.options.maxRecords) {
+            if (pageData.length > pageSize || records.length + pageData.length > this.options.maxRecords) {
                 throw new Error(`Pagination record limit exceeded (${this.options.maxRecords}) or oversized page ${page}`);
             }
             if (pageData.length === 0) {
