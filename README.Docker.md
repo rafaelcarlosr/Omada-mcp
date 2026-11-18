@@ -238,6 +238,22 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWireguard` | Replace a WireGuard interface, e.g. to enable/disable it or change its listen port. Peers reconnect. | `vpn:rw` |
 | `deleteWireguard` | Delete a WireGuard interface. Its peers can no longer connect. | `vpn:rw` |
 | `deleteWireguardPeer` | Delete a WireGuard peer. That remote device can no longer connect. | `vpn:rw` |
+| `createVpnUser` | Create a VPN user account for L2TP/PPTP, OpenVPN or SSL VPN (v3 route; servers optional). The password is write-only. | `vpn:rw` |
+| `updateVpnUser` | Replace a VPN user account. The controller needs the complete account, including the password. | `vpn:rw` |
+| `deleteVpnUser` | Delete a VPN user account; its active VPN sessions end. | `vpn:rw` |
+| `createSslVpnResource` | Create an SSL VPN resource (IP subnet or domain, with optional protocol and ports). | `vpn:rw` |
+| `updateSslVpnResource` | Modify an SSL VPN resource address, protocol or ports. Name and type cannot change. | `vpn:rw` |
+| `deleteSslVpnResource` | Delete an SSL VPN resource; it leaves every resource group. | `vpn:rw` |
+| `createSslVpnResourceGroup` | Create an SSL VPN resource group from resource IDs. | `vpn:rw` |
+| `updateSslVpnResourceGroup` | Replace the resources of an SSL VPN resource group. Built-in Group_ALL/Group_LAN are refused. | `vpn:rw` |
+| `deleteSslVpnResourceGroup` | Delete an SSL VPN resource group. Built-in Group_ALL/Group_LAN are refused. | `vpn:rw` |
+| `createSslVpnUserGroup` | Create an SSL VPN user group that grants resource groups to its users. | `vpn:rw` |
+| `updateSslVpnUserGroup` | Replace the resource groups or RADIUS/LDAP attribute of an SSL VPN user group. Name cannot change. | `vpn:rw` |
+| `deleteSslVpnUserGroup` | Delete an SSL VPN user group. Omada 6.3 accepts this even while users belong to it. | `vpn:rw` |
+| `createSslVpnLock` | Lock an SSL VPN username or source IP out for 1-1080 minutes. | `vpn:rw` |
+| `updateSslVpnLock` | Change the lock time or target of an SSL VPN lock. | `vpn:rw` |
+| `deleteSslVpnLock` | Remove an SSL VPN lock so the username or IP can connect again. | `vpn:rw` |
+| `setEoGreTunnelConfig` | Enable, disable or change the site EoGRE tunnel. Fields left out are cleared. | `vpn:rw` |
 
 #### Devices and clients
 
@@ -573,6 +589,18 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `getVpnUserDetail` | Get users for a specific client-to-site VPN server. |
 | `getVpnClientStatus` | Get status of client-to-site VPN clients. Alias for `listClientToSiteVpnClients`. |
 | `getVpnRouteConfig` | [DEPRECATED] Use `getGridPolicyRouting` instead. This tool aggregates all pages; getGridPolicyRouting is paginated. |
+| `listVpnUsers` | List every VPN user account (all protocols, v2 route). Passwords are masked. |
+| `listSslVpnResources` | List SSL VPN resources and the resource groups that use them. |
+| `listSslVpnResourceGroups` | List SSL VPN resource groups, including the built-in Group_ALL and Group_LAN. |
+| `listSslVpnUserGroups` | List SSL VPN user groups with their resource groups and members. |
+| `listSslVpnUserGroupUsers` | List the SSL VPN users of one user group. Passwords are masked. |
+| `listSslVpnLocks` | List SSL VPN username and IP locks with remaining lock time. |
+| `getEoGreTunnelConfig` | Get the site EoGRE tunnel settings. |
+| `listVpnServerStatus` | List client-to-site VPN server status for one VPN type. |
+| `listVpnServerClientStatus` | List the clients connected to one client-to-site VPN server. |
+| `listVpnClientStatus` | List client-to-site VPN client tunnel status for one VPN type (L2TP, PPTP, OpenVPN, WireGuard). |
+| `listSiteToSiteVpnStatus` | List site-to-site VPN status for IPsec or WireGuard tunnels. |
+| `listSiteToSiteVpnPeerStatus` | List the peer status of one site-to-site VPN. |
 ### Profiles
 
 | Tool                          | Description                                                                              |

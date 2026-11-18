@@ -355,6 +355,20 @@ describe('RequestHandler', () => {
                 })
             );
         });
+        it('honours a smaller page size for routes that cap it', async () => {
+            pages({ data: [{ id: 1 }], totalRows: 1, currentPage: 1 });
+            await expect(settle(handler.fetchPaginated('/items', {}, undefined, 100))).resolves.toEqual([{ id: 1 }]);
+            expect(http.request).toHaveBeenCalledWith(expect.objectContaining({ params: { page: 1, pageSize: 100 } }));
+        });
+        it('rejects oversized pages for the requested page size', async () => {
+            pages({ data: [{ id: 1 }, { id: 2 }, { id: 3 }], totalRows: 3, currentPage: 1 });
+            await expect(settle(handler.fetchPaginated('/items', {}, undefined, 2))).rejects.toThrow('oversized page 1');
+        });
+        it.each([0, 201, 1.5])('rejects page size %s before sending', async (pageSize) => {
+            http.request.mockReset();
+            await expect(settle(handler.fetchPaginated('/items', {}, undefined, pageSize))).rejects.toThrow('page size must be an integer');
+            expect(http.request).not.toHaveBeenCalled();
+        });
         it('reads to an explicit empty page without totalRows, even after a short page', async () => {
             pages({ data: [{ id: 1 }] }, { data: [{ id: 2 }] }, { data: [] });
             await expect(settle(handler.fetchPaginated('/items'))).resolves.toEqual([{ id: 1 }, { id: 2 }]);

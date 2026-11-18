@@ -11,7 +11,7 @@
  *
  * Implementation status is derived statically from src/omadaClient: every
  * this.buildPath(...) template (with the HTTP helper that follows it) and the
- * site-scoped send()/list() helpers of siteConfig.ts. A bare `${identifier}`
+ * site-scoped send()/list() helpers of siteConfig.ts and vpn.ts. A bare `${identifier}`
  * segment that is not a URI-encoded parameter is treated as a wildcard that
  * may span several segments (switchPorts builds `ports/{port}/<operation>`).
  *
@@ -208,10 +208,11 @@ function versionsOf(arg) {
 }
 
 const clientDir = join(root, 'src', 'omadaClient');
+const SITE_HELPER_FILES = new Set(['siteConfig.ts', 'vpn.ts']);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
-    // siteConfig.ts builds every path through its send()/list() helpers, handled below.
-    if (file !== 'siteConfig.ts') {
+    // siteConfig.ts and vpn.ts build every path through their send()/list() helpers, handled below.
+    if (!SITE_HELPER_FILES.has(file)) {
         for (const match of text.matchAll(/this\.buildPath\(/g)) {
             const open = match.index + match[0].length - 1;
             const { args, end } = callArguments(text, open);
@@ -234,7 +235,7 @@ for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') 
     for (const match of text.matchAll(/this\.(send|list)\(/g)) {
         const { args } = callArguments(text, match.index + match[0].length - 1);
         const consts = localConsts(text, match.index);
-        const [method, suffixArg, versionArg] = match[1] === 'send' ? [args[0].slice(1, -1), args[2], args[5]] : ['GET', args[1], undefined];
+        const [method, suffixArg, versionArg] = match[1] === 'send' ? [args[0].slice(1, -1), args[2], args[5]] : ['GET', args[1], args[3]];
         const templates = candidates(suffixArg ?? '', consts).map((suffix) => `/sites/\${siteId}${suffix}`);
         addRoute(method.toUpperCase(), versionsOf(versionArg), templates, file, consts);
     }
