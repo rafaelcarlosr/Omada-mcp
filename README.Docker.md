@@ -331,6 +331,15 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `listMostActiveClients` | Gets the most active clients sorted by traffic usage. |
 | `listClientsActivity` | Gets client activity statistics over time. |
 | `listClientsPastConnections` | Gets past connection history for clients.                                    |
+| `getClientConnectionHistory` | Get the connection and roaming history of one client (epoch milliseconds). |
+| `getClientTimeline` | Get timeline events of one client: connection, association, roaming or disconnection. |
+| `getClientHealthDetail` | Get the health of one client for a time range (epoch milliseconds). |
+| `getClientHealthTimeline` | Get the health score timeline of one client (epoch milliseconds). |
+| `getClientSearchFieldOptions` | Get the values available for the client list filters. |
+| `getClientCorrectionOptions` | Get the client device types a client can be corrected to. |
+| `getClientLinkTopology` | Get the path from one client through APs and switches to the gateway. |
+| `getClientStats` | Get traffic and signal statistics of one client at 5-minute, hourly or daily granularity (epoch seconds). |
+| `getClientIncidentCounts` | Get incident counts for a set of clients. |
 | `setClientRateLimit` | Sets custom bandwidth limits for a specific client. |
 | `setClientRateLimitProfile` | Applies a predefined rate limit profile to a specific client. |
 | `disableClientRateLimit` | Disables bandwidth rate limiting for a specific client. |
@@ -404,11 +413,23 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `getSitesApsOfdma` | Get OFDMA configuration for an AP. Requires `apMac`. |
 | `getSitesApsPowerSaving` | Get power saving configuration for an AP. Requires `apMac`. |
 | `setApPowerSaving` | Updates AP power saving configuration with support checks and dry-run preview. Requires `apMac`. |
+| `setApSsidOverrides` | Override SSIDs on one AP only (disable, rename, password, VLAN), verified against the effective SSID state. Requires `apMac`. |
+| `startApRfScan` | Start an RF scan on an AP; clients on the scanned bands lose service while it runs. Requires `apMac`. |
 | `setApChannelLimit` | Updates AP channel-limit configuration with support checks and dry-run preview. Requires `apMac`. |
 | `setApConfig` | Updates documented AP configuration families with dry-run preview. Covers AP general, IP, IPv6, QoS, radio, service, load-balance, OFDMA, trunk, bridge, WLAN group, port, channel, AFC, and antenna settings. Setter-only families return planned payloads and an explicit warning when controller readback is unavailable. Requires `apMac`. |
 | `getSitesApsTrunkSetting` | Get trunk port setting for an AP. Requires `apMac`. |
 | `getSitesApsBridge` | Get bridge configuration for an AP. Requires `apMac`. |
 | `listSitesApsPorts` | List ports for an AP. Requires `apMac`. |
+| `getApAfcStatus` | Get the AFC (6 GHz standard power) status of an AP. Requires `apMac`. |
+| `getApLanTraffic` | Get the wired LAN traffic counters of an AP. Requires `apMac`. |
+| `getApInterferenceDetectionStatus` | Get the interference detection status of an AP. Requires `apMac`. |
+| `getApL3Access` | Get the L3 access setting of an AP. Requires `apMac`. |
+| `getApLagConfig` | Get the uplink LAG setting of an AP, or whether it is unsupported. Requires `apMac`. |
+| `getApManagementWlan` | Get the management SSID of an AP. Requires `apMac`. |
+| `listApPortVlans` | List the VLANs on the LAN ports of an AP. Requires `apMac`. |
+| `getApSsidOverrides` | Get the per-AP SSID overrides of an AP, with the ssidEntryId values for `setApSsidOverrides`. Requires `apMac`. |
+| `getApRfScanResult` | Get the latest RF scan result of an AP. Requires `apMac`. |
+| `listLockToApAps` | List the APs that clients can be locked to. |
 | `getSitesSwitchesEs` | Get ES switch details. Requires `switchMac`. |
 | `getSitesSwitchesEsGeneralConfig` | Get ES switch general configuration. Requires `switchMac`. |
 | `listSitesCableTestSwitchesPorts` | List cable test port info for a switch. Requires `switchMac`. |

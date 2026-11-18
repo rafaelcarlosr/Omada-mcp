@@ -26,8 +26,9 @@ import type {
 
 import { AccountOperations } from './account.js';
 import { ActionOperations } from './actions.js';
+import { ApOperations } from './aps.js';
 import { AuthManager } from './auth.js';
-import { ClientOperations } from './client.js';
+import { ClientOperations, type clientStatGranularitySchema, type clientTimelineTypeSchema, type msRangeSchema } from './client.js';
 import { ControllerOperations } from './controller.js';
 import { DeviceOperations } from './device.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
@@ -87,6 +88,7 @@ export class OmadaClient {
     private readonly accountOps: AccountOperations;
     private readonly vpnOps: VpnOperations;
     private readonly switchOps: SwitchOperations;
+    private readonly apOps: ApOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -131,6 +133,7 @@ export class OmadaClient {
         this.accountOps = new AccountOperations(this.request, this.buildOmadaPath.bind(this));
         this.vpnOps = new VpnOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.switchOps = new SwitchOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.apOps = new ApOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -2730,5 +2733,130 @@ export class OmadaClient {
         h?: CustomHeaders
     ): Promise<unknown> {
         return await this.switchOps.clearSwitchPortCounters(payload, siteId, h);
+    }
+
+    public async getApAfcStatus(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApAfcStatus(apMac, siteId, h);
+    }
+
+    public async getApLanTraffic(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApLanTraffic(apMac, siteId, h);
+    }
+
+    public async getApInterferenceDetectionStatus(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApInterferenceDetectionStatus(apMac, siteId, h);
+    }
+
+    public async getApL3Access(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApL3Access(apMac, siteId, h);
+    }
+
+    public async getApLagConfig(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApLagConfig(apMac, siteId, h);
+    }
+
+    public async getApManagementWlan(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApManagementWlan(apMac, siteId, h);
+    }
+
+    public async listApPortVlans(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.apOps.listApPortVlans(apMac, siteId, h);
+    }
+
+    public async getApSsidOverrides(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApSsidOverrides(apMac, siteId, h);
+    }
+
+    public async setApSsidOverrides(
+        apMac: string,
+        payload: Input<typeof schemas.apSsidOverrideOpenApiV2VO03Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.apOps.setApSsidOverrides(apMac, payload, siteId, h);
+    }
+
+    public async getApRfScanResult(apMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.getApRfScanResult(apMac, siteId, h);
+    }
+
+    public async startApRfScan(
+        apMac: string,
+        payload: Input<typeof schemas.rFScanCommand03Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.apOps.startApRfScan(apMac, payload, siteId, h);
+    }
+
+    public async listLockToApAps(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.apOps.listLockToApAps(siteId, h);
+    }
+
+    public async getClientConnectionHistory(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.clientOps.getClientConnectionHistory(mac, range, siteId, customHeaders);
+    }
+
+    public async getClientTimeline(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        type: z.input<typeof clientTimelineTypeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.clientOps.getClientTimeline(mac, range, type, siteId, customHeaders);
+    }
+
+    public async getClientHealthDetail(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.clientOps.getClientHealthDetail(mac, range, siteId, customHeaders);
+    }
+
+    public async getClientHealthTimeline(
+        mac: string,
+        range: z.input<typeof msRangeSchema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.clientOps.getClientHealthTimeline(mac, range, siteId, customHeaders);
+    }
+
+    public async getClientSearchFieldOptions(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+        return await this.clientOps.getClientSearchFieldOptions(siteId, customHeaders);
+    }
+
+    public async getClientCorrectionOptions(customHeaders?: CustomHeaders): Promise<unknown> {
+        return await this.clientOps.getClientCorrectionOptions(customHeaders);
+    }
+
+    public async getClientLinkTopology(mac: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+        return await this.clientOps.getClientLinkTopology(mac, siteId, customHeaders);
+    }
+
+    public async getClientStats(
+        mac: string,
+        granularity: z.input<typeof clientStatGranularitySchema>,
+        query: z.input<typeof schemas.clientStatQuery05Schema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.clientOps.getClientStats(mac, granularity, query, siteId, customHeaders);
+    }
+
+    public async getClientIncidentCounts(
+        payload: z.input<typeof schemas.clientIncidentCountRequestOpenApiVO05Schema>,
+        siteId?: string,
+        customHeaders?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.clientOps.getClientIncidentCounts(payload, siteId, customHeaders);
     }
 }

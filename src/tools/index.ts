@@ -96,11 +96,17 @@ import { registerGetAllDeviceBySiteTool } from './getAllDeviceBySite.js';
 import { registerGetAllLocalUsersTool } from './getAllLocalUsers.js';
 import { registerGetAllRolesTool } from './getAllRoles.js';
 import { registerGetAllUsersAppTool } from './getAllUsersApp.js';
+import { registerGetApAfcStatusTool } from './getApAfcStatus.js';
 import { registerGetApDetailTool } from './getApDetail.js';
 import { registerGetApGeneralConfigTool } from './getApGeneralConfig.js';
+import { registerGetApInterferenceDetectionStatusTool } from './getApInterferenceDetectionStatus.js';
 import { registerGetApIpv6ConfigTool } from './getApIpv6Config.js';
+import { registerGetApL3AccessTool } from './getApL3Access.js';
+import { registerGetApLagConfigTool } from './getApLagConfig.js';
+import { registerGetApLanTrafficTool } from './getApLanTraffic.js';
 import { registerGetApLldpConfigTool } from './getApLldpConfig.js';
 import { registerGetApLoadBalanceTool } from './getApLoadBalance.js';
+import { registerGetApManagementWlanTool } from './getApManagementWlan.js';
 import { registerGetApOfdmaConfigTool } from './getApOfdmaConfig.js';
 import { registerGetAppControlCategoriesTool } from './getAppControlCategories.js';
 import { registerGetAppControlRulesTool } from './getAppControlRules.js';
@@ -109,7 +115,9 @@ import { registerGetApplicationAclTool } from './getApplicationAcl.js';
 import { registerGetApplicationControlStatusTool } from './getApplicationControlStatus.js';
 import { registerGetApQosConfigTool } from './getApQosConfig.js';
 import { registerGetApRadiosTool } from './getApRadios.js';
+import { registerGetApRfScanResultTool } from './getApRfScanResult.js';
 import { registerGetApSnmpConfigTool } from './getApSnmpConfig.js';
+import { registerGetApSsidOverridesTool } from './getApSsidOverrides.js';
 import { registerGetApUplinkConfigTool } from './getApUplinkConfig.js';
 import { registerGetApVlanConfigTool } from './getApVlanConfig.js';
 import { registerGetAttackDefenseSettingTool } from './getAttackDefenseSetting.js';
@@ -133,9 +141,18 @@ import { registerGetChannelLimitSettingTool } from './getChannelLimitSetting.js'
 import { registerGetChannelsTool } from './getChannels.js';
 import { registerGetClientTool } from './getClient.js';
 import { registerGetClientActiveTimeoutTool } from './getClientActiveTimeout.js';
+import { registerGetClientConnectionHistoryTool } from './getClientConnectionHistory.js';
+import { registerGetClientCorrectionOptionsTool } from './getClientCorrectionOptions.js';
 import { registerGetClientDetailTool } from './getClientDetail.js';
+import { registerGetClientHealthDetailTool } from './getClientHealthDetail.js';
+import { registerGetClientHealthTimelineTool } from './getClientHealthTimeline.js';
 import { registerGetClientHistoryDataEnableTool } from './getClientHistoryDataEnable.js';
+import { registerGetClientIncidentCountsTool } from './getClientIncidentCounts.js';
+import { registerGetClientLinkTopologyTool } from './getClientLinkTopology.js';
+import { registerGetClientSearchFieldOptionsTool } from './getClientSearchFieldOptions.js';
+import { registerGetClientStatsTool } from './getClientStats.js';
 import { registerGetClientsDistributionTool } from './getClientsDistribution.js';
+import { registerGetClientTimelineTool } from './getClientTimeline.js';
 import { registerGetClientToSiteVpnServerInfoTool } from './getClientToSiteVpnServerInfo.js';
 import { registerGetCloudAccessStatusTool } from './getCloudAccessStatus.js';
 import { registerGetCloudUserInfoTool } from './getCloudUserInfo.js';
@@ -389,6 +406,7 @@ import { registerGetWifiHealthSummaryTool } from './getWifiHealthSummary.js';
 import { registerGetWireguardSummaryTool } from './getWireguardSummary.js';
 import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
+import { registerListApPortVlansTool } from './listApPortVlans.js';
 import { registerListClientsTool } from './listClients.js';
 import { registerListClientsActivityTool } from './listClientsActivity.js';
 import { registerListClientsPastConnectionsTool } from './listClientsPastConnections.js';
@@ -405,6 +423,7 @@ import { registerListGroupProfilesTool } from './listGroupProfiles.js';
 import { registerListHotspotAuthRecordsTool } from './listHotspotAuthRecords.js';
 import { registerListHotspotLocalUsersTool } from './listHotspotLocalUsers.js';
 import { registerListHotspotOperatorsTool } from './listHotspotOperators.js';
+import { registerListLockToApApsTool } from './listLockToApAps.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
 import { registerListMdnsRulesTool } from './listMdnsRules.js';
 import { registerListMostActiveClientsTool } from './listMostActiveClients.js';
@@ -471,6 +490,7 @@ import { registerSetApConfigTool } from './setApConfig.js';
 import { registerSetApPowerSavingTool } from './setApPowerSaving.js';
 import { registerSetAppControlRuleTool } from './setAppControlRule.js';
 import { registerSetApRadioTool } from './setApRadio.js';
+import { registerSetApSsidOverridesTool } from './setApSsidOverrides.js';
 import { registerSetAttackDefenseSettingTool } from './setAttackDefenseSetting.js';
 import { registerSetBackupScheduleTool } from './setBackupSchedule.js';
 import { registerSetBandwidthControlRuleTool } from './setBandwidthControlRule.js';
@@ -488,6 +508,7 @@ import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
 import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
+import { registerStartApRfScanTool } from './startApRfScan.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
 import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
@@ -632,9 +653,21 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetSitesApsTrunkSettingTool, category: 'devices-ap', permission: 'read' },
     { fn: registerGetSitesApsBridgeTool, category: 'devices-ap', permission: 'read' },
     { fn: registerListSitesApsPortsTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApAfcStatusTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApLanTrafficTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApInterferenceDetectionStatusTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApL3AccessTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApLagConfigTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApManagementWlanTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerListApPortVlansTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApSsidOverridesTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerGetApRfScanResultTool, category: 'devices-ap', permission: 'read' },
+    { fn: registerListLockToApApsTool, category: 'devices-ap', permission: 'read' },
     { fn: registerSetApChannelLimitTool, category: 'devices-ap', permission: 'write' },
     { fn: registerSetApConfigTool, category: 'devices-ap', permission: 'write' },
     { fn: registerSetApPowerSavingTool, category: 'devices-ap', permission: 'write' },
+    { fn: registerStartApRfScanTool, category: 'devices-ap', permission: 'write' },
+    { fn: registerSetApSsidOverridesTool, category: 'devices-ap', permission: 'write' },
 
     // --- Devices (gateway) ---
     { fn: registerGetGatewayDetailTool, category: 'devices-gateway', permission: 'read' },
@@ -655,6 +688,15 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetClientDetailTool, category: 'clients', permission: 'read' },
     { fn: registerGetGridKnownClientsTool, category: 'clients', permission: 'read' },
     { fn: registerGetGridClientHistoryTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientConnectionHistoryTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientTimelineTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientHealthDetailTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientHealthTimelineTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientSearchFieldOptionsTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientCorrectionOptionsTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientLinkTopologyTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientStatsTool, category: 'clients', permission: 'read' },
+    { fn: registerGetClientIncidentCountsTool, category: 'clients', permission: 'read' },
     { fn: registerBlockClientTool, category: 'clients', permission: 'write' },
     { fn: registerUnblockClientTool, category: 'clients', permission: 'write' },
     { fn: registerReconnectClientTool, category: 'clients', permission: 'write' },

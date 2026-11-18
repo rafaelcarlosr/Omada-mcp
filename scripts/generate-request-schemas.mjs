@@ -51,6 +51,8 @@ const TARGETS = [
             'OswCableTestTestingPortOpenApiVO',
             'ClearCountersVO',
             'SwitchGeneralConfig',
+            'RFScanCommand',
+            'ApSsidOverrideOpenApiV2VO',
         ],
     },
     {
@@ -102,7 +104,11 @@ const TARGETS = [
         ],
     },
     { file: '05-site-device-config.json', suffix: '', names: ['CreateDdnsOpenApiVO', 'UpnpSettingOpenApiVO', 'MacFiltering'] },
-    { file: '06-client.json', suffix: '05', names: ['Client Name Setting', 'Client Lock To AP Setting'] },
+    {
+        file: '06-client.json',
+        suffix: '05',
+        names: ['Client Name Setting', 'Client Lock To AP Setting', 'Client Stat Query', 'ClientIncidentCountRequestOpenApiVO'],
+    },
     {
         file: '07-hotspot.json',
         suffix: '06',

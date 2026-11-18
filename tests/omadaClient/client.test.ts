@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ClientOperations } from '../../src/omadaClient/client.js';
 import { RequestHandler } from '../../src/omadaClient/request.js';
@@ -805,6 +807,84 @@ describe('omadaClient/client', () => {
                 undefined
             );
             expect(result).toEqual(mockData);
+        });
+    });
+
+    describe('client insight reads', () => {
+        const spec = JSON.parse(readFileSync(new URL('../../docs/openapi/06-client.json', import.meta.url), 'utf8')) as {
+            paths: Record<string, Record<string, unknown>>;
+        };
+        const insight = JSON.parse(readFileSync(new URL('../../docs/openapi/15-insight.json', import.meta.url), 'utf8')) as {
+            paths: Record<string, Record<string, unknown>>;
+        };
+        const mac = 'AA-BB-CC-DD-EE-03';
+        const range = { start: 1000, end: 2000 };
+        let post: ReturnType<typeof vi.fn>;
+        let versioned: ClientOperations;
+
+        beforeEach(() => {
+            post = vi.fn().mockResolvedValue({ result: { ok: true } });
+            (mockRequest as unknown as { post: unknown }).post = post;
+            (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue({ result: { ok: true } });
+            versioned = new ClientOperations(mockRequest, mockSite, (path: string, version = 'v1') => `/api/${version}${path}`);
+        });
+
+        it.each([
+            ['getClientConnectionHistory', 'client-connection', { start: 1000, end: 2000 }],
+            ['getClientHealthTimeline', 'health/timeline', { start: 1000, end: 2000 }],
+        ] as const)('%s reads the documented route with a millisecond range', async (method, suffix, params) => {
+            const docs = suffix.startsWith('health') ? insight : spec;
+            expect(docs.paths[`/openapi/v1/{omadacId}/sites/{siteId}/clients/{clientMac}/${suffix}`]?.get).toBeTruthy();
+            await expect(versioned[method](mac, range, 's1')).resolves.toEqual({ ok: true });
+            expect(mockRequest.get).toHaveBeenCalledWith(`/api/v1/sites/s1/clients/${mac}/${suffix}`, params, undefined);
+        });
+
+        it('reads the timeline with its type and the v2 health detail', async () => {
+            await versioned.getClientTimeline(mac, range, 2);
+            expect(mockRequest.get).toHaveBeenCalledWith(
+                `/api/v1/sites/default-site/clients/${mac}/client-timeline`,
+                { start: 1000, end: 2000, type: 2 },
+                undefined
+            );
+            expect(insight.paths['/openapi/v2/{omadacId}/sites/{siteId}/clients/{clientMac}/health/detail']?.get).toBeTruthy();
+            await versioned.getClientHealthDetail(mac, range);
+            expect(mockRequest.get).toHaveBeenCalledWith(
+                `/api/v2/sites/default-site/clients/${mac}/health/detail`,
+                { start: 1000, end: 2000 },
+                undefined
+            );
+            await expect(versioned.getClientTimeline(mac, range, 5 as never)).rejects.toThrow();
+        });
+
+        it('reads filter options and the global correction list', async () => {
+            await versioned.getClientSearchFieldOptions('s1');
+            expect(mockRequest.get).toHaveBeenCalledWith('/api/v1/sites/s1/clients/search-fields-options', undefined, undefined);
+            expect(spec.paths['/openapi/v1/{omadacId}/correction-list']?.get).toBeTruthy();
+            await versioned.getClientCorrectionOptions({ 'X-Request-ID': 'r1' });
+            expect(mockRequest.get).toHaveBeenCalledWith('/api/v1/correction-list', undefined, { 'X-Request-ID': 'r1' });
+        });
+
+        it('posts the link topology, stats and incident queries to the documented routes', async () => {
+            await versioned.getClientLinkTopology(mac);
+            expect(post).toHaveBeenCalledWith(`/api/v1/sites/default-site/clients/${mac}/client-link-topology`, {}, undefined);
+            for (const interval of ['5Min', 'hourly', 'daily'] as const) {
+                expect(spec.paths[`/openapi/v1/{omadacId}/sites/{siteId}/client-stat-detail/{clientMac}/${interval}`]?.post).toBeTruthy();
+                await versioned.getClientStats(mac, interval, { startSec: 1, endSec: 2 });
+                expect(post).toHaveBeenCalledWith(
+                    `/api/v1/sites/default-site/client-stat-detail/${mac}/${interval}`,
+                    { startSec: 1, endSec: 2 },
+                    undefined
+                );
+            }
+            await versioned.getClientIncidentCounts({ clientList: [mac] }, 's1');
+            expect(post).toHaveBeenCalledWith('/api/v1/sites/s1/clients/incidents', { clientList: [mac] }, undefined);
+        });
+
+        it('rejects malformed MACs, ranges and intervals before sending', async () => {
+            await expect(versioned.getClientLinkTopology('nope')).rejects.toThrow('A valid client MAC address is required.');
+            await expect(versioned.getClientConnectionHistory(mac, { start: 5, end: 1 })).rejects.toThrow('start must be before end');
+            await expect(versioned.getClientStats(mac, 'weekly' as never, { startSec: 1, endSec: 2 })).rejects.toThrow();
+            expect(post).not.toHaveBeenCalled();
         });
     });
 });
