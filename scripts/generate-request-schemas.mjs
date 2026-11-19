@@ -58,7 +58,16 @@ const TARGETS = [
     {
         file: '04.2-site-network-setting-general.json',
         suffix: '',
-        names: ['CreateMdnsRuleOpenApiVO', 'SnmpSettingOpenApiVO', 'PortScheduleOpenApiVO'],
+        names: [
+            'CreateMdnsRuleOpenApiVO',
+            'SnmpSettingOpenApiVO',
+            'PortScheduleOpenApiVO',
+            'PoeScheduleOpenApiVO',
+            'SiteLedSetting',
+            'SiteRememberDeviceSetting',
+            'PortalLogoutConfigOpenApiVO',
+            'SiteMulticastRateLimitSetting',
+        ],
     },
     {
         file: '04.3-site-network-setting-network.json',
@@ -70,6 +79,8 @@ const TARGETS = [
             'UpdateWlanGroupOpenApiVO',
             'CreateSsidOpenApiVO',
             'LanDnsOpenApiVO',
+            'MailServerOpenApiVO',
+            'ModifySpeedTestV2SettingOpenApiVO',
         ],
     },
     {
@@ -115,7 +126,19 @@ const TARGETS = [
             'UpdateEoGreTunnelSettingOpenApiVO',
         ],
     },
-    { file: '05-site-device-config.json', suffix: '', names: ['CreateDdnsOpenApiVO', 'UpnpSettingOpenApiVO', 'MacFiltering'] },
+    {
+        file: '05-site-device-config.json',
+        suffix: '',
+        names: [
+            'CreateDdnsOpenApiVO',
+            'UpnpSettingOpenApiVO',
+            'MacFiltering',
+            'IPMacBinding',
+            'ConfigIotServerOpenApiVO',
+            'MldOpenApiVO',
+            'IotRadioSettingOpenApiVO',
+        ],
+    },
     {
         file: '06-client.json',
         suffix: '05',
@@ -127,6 +150,7 @@ const TARGETS = [
         names: ['CreateVoucherGroupOpenApiVO', 'CreateLocalUserOpenApiVO', 'ModifyLocalUserOpenApiVO', 'Hotspot Operator'],
     },
     { file: '14-maintenance.json', suffix: '08', names: ['AutoBackupOpenApiVO'] },
+    { file: '18-intelli-recover.json', suffix: '', names: ['IntelliRecoverSetting'] },
 ];
 
 const MAX_DESCRIPTION = 240;

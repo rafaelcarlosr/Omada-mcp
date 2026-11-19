@@ -22,6 +22,8 @@ import { registerCreateGatewayAclTool } from './createGatewayAcl.js';
 import { registerCreateGroupProfileTool } from './createGroupProfile.js';
 import { registerCreateHotspotLocalUserTool } from './createHotspotLocalUser.js';
 import { registerCreateHotspotOperatorTool } from './createHotspotOperator.js';
+import { registerCreateIotServerTool } from './createIotServer.js';
+import { registerCreateIpMacBindingTool } from './createIpMacBinding.js';
 import { registerCreateLanDnsRuleTool } from './createLanDnsRule.js';
 import { registerCreateLanNetworkTool } from './createLanNetwork.js';
 import { registerCreateLanProfileTool } from './createLanProfile.js';
@@ -30,6 +32,7 @@ import { registerCreateMdnsProfileTool } from './createMdnsProfile.js';
 import { registerCreateMdnsRuleTool } from './createMdnsRule.js';
 import { registerCreateOneToOneNatTool } from './createOneToOneNat.js';
 import { registerCreateOuiProfileTool } from './createOuiProfile.js';
+import { registerCreatePoeScheduleTool } from './createPoeSchedule.js';
 import { registerCreatePolicyRouteTool } from './createPolicyRoute.js';
 import { registerCreatePortForwardingRuleTool } from './createPortForwardingRule.js';
 import { registerCreatePortScheduleTool } from './createPortSchedule.js';
@@ -63,6 +66,8 @@ import { registerDeleteExternalUserGroupTool } from './deleteExternalUserGroup.j
 import { registerDeleteGroupProfileTool } from './deleteGroupProfile.js';
 import { registerDeleteHotspotLocalUserTool } from './deleteHotspotLocalUser.js';
 import { registerDeleteHotspotOperatorTool } from './deleteHotspotOperator.js';
+import { registerDeleteIotServerTool } from './deleteIotServer.js';
+import { registerDeleteIpMacBindingTool } from './deleteIpMacBinding.js';
 import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
 import { registerDeleteLanNetworkTool } from './deleteLanNetwork.js';
 import { registerDeleteLanProfileTool } from './deleteLanProfile.js';
@@ -71,6 +76,7 @@ import { registerDeleteMdnsProfileTool } from './deleteMdnsProfile.js';
 import { registerDeleteMdnsRuleTool } from './deleteMdnsRule.js';
 import { registerDeleteOneToOneNatTool } from './deleteOneToOneNat.js';
 import { registerDeleteOuiProfileTool } from './deleteOuiProfile.js';
+import { registerDeletePoeScheduleTool } from './deletePoeSchedule.js';
 import { registerDeletePolicyRouteTool } from './deletePolicyRoute.js';
 import { registerDeletePortForwardingRuleTool } from './deletePortForwardingRule.js';
 import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
@@ -234,6 +240,7 @@ import { registerGetGroupPolicyDetailTool } from './getGroupPolicyDetail.js';
 import { registerGetGroupProfilesByTypeTool } from './getGroupProfilesByType.js';
 import { registerGetHotspotStatisticsTool } from './getHotspotStatistics.js';
 import { registerGetIgmpTool } from './getIgmp.js';
+import { registerGetIntelliRecoverSettingTool } from './getIntelliRecoverSetting.js';
 import { registerGetInterfaceLanNetworkTool } from './getInterfaceLanNetwork.js';
 import { registerGetInterfaceLanNetworkV2Tool } from './getInterfaceLanNetworkV2.js';
 import { registerGetInterferenceTool } from './getInterference.js';
@@ -241,6 +248,7 @@ import { registerGetInternetTool } from './getInternet.js';
 import { registerGetInternetBasicPortInfoTool } from './getInternetBasicPortInfo.js';
 import { registerGetInternetInfoTool } from './getInternetInfo.js';
 import { registerGetInternetLoadBalanceTool } from './getInternetLoadBalance.js';
+import { registerGetIotRadioSettingTool } from './getIotRadioSetting.js';
 import { registerGetIpGroupProfileTool } from './getIpGroupProfile.js';
 import { registerGetIpMacBindingGeneralSettingTool } from './getIpMacBindingGeneralSetting.js';
 import { registerGetIpsConfigTool } from './getIpsConfig.js';
@@ -272,6 +280,7 @@ import { registerGetMailServerStatusTool } from './getMailServerStatus.js';
 import { registerGetMeshSettingTool } from './getMeshSetting.js';
 import { registerGetMeshStatisticsTool } from './getMeshStatistics.js';
 import { registerGetMfaStatusTool } from './getMfaStatus.js';
+import { registerGetMldSettingTool } from './getMldSetting.js';
 import { registerGetMulticastRateLimitTool } from './getMulticastRateLimit.js';
 import { registerGetNetworkHealthSummaryTool } from './getNetworkHealthSummary.js';
 import { registerGetNtpSettingTool } from './getNtpSetting.js';
@@ -284,6 +293,7 @@ import { registerGetOswStackLagListTool } from './getOswStackLagList.js';
 import { registerGetOuiProfileListTool } from './getOuiProfileList.js';
 import { registerGetPastClientNumTool } from './getPastClientNum.js';
 import { registerGetPoeScheduleListTool } from './getPoeScheduleList.js';
+import { registerGetPortalLogoutSettingTool } from './getPortalLogoutSetting.js';
 import { registerGetPortalPortTool } from './getPortalPort.js';
 import { registerGetPortalProfileTool } from './getPortalProfile.js';
 import { registerGetPortForwardingListTool } from './getPortForwardingList.js';
@@ -329,6 +339,7 @@ import { registerGetSiteBackupResultTool } from './getSiteBackupResult.js';
 import { registerGetSiteCapacityTool } from './getSiteCapacity.js';
 import { registerGetSiteDetailTool } from './getSiteDetail.js';
 import { registerGetSiteDeviceAccountTool } from './getSiteDeviceAccount.js';
+import { registerGetSiteMailServerTool } from './getSiteMailServer.js';
 import { registerGetSiteNtpStatusTool } from './getSiteNtpStatus.js';
 import { registerGetSiteRememberSettingTool } from './getSiteRememberSetting.js';
 import { registerGetSiteSpecificationTool } from './getSiteSpecification.js';
@@ -354,6 +365,7 @@ import { registerGetSiteToSiteVpnInfoTool } from './getSiteToSiteVpnInfo.js';
 import { registerGetSiteUrlTool } from './getSiteUrl.js';
 import { registerGetSnmpSettingTool } from './getSnmpSetting.js';
 import { registerGetSpeedTestResultsTool } from './getSpeedTestResults.js';
+import { registerGetSpeedTestSettingTool } from './getSpeedTestSetting.js';
 import { registerGetSshSettingTool } from './getSshSetting.js';
 import { registerGetSsidDetailTool } from './getSsidDetail.js';
 import { registerGetSsidListTool } from './getSsidList.js';
@@ -439,6 +451,7 @@ import { registerListGroupProfilesTool } from './listGroupProfiles.js';
 import { registerListHotspotAuthRecordsTool } from './listHotspotAuthRecords.js';
 import { registerListHotspotLocalUsersTool } from './listHotspotLocalUsers.js';
 import { registerListHotspotOperatorsTool } from './listHotspotOperators.js';
+import { registerListIotServersTool } from './listIotServers.js';
 import { registerListLockToApApsTool } from './listLockToApAps.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
 import { registerListMdnsRulesTool } from './listMdnsRules.js';
@@ -447,6 +460,7 @@ import { registerListOsgAclsTool } from './listOsgAcls.js';
 import { registerListOuiProfileSummariesTool } from './listOuiProfileSummaries.js';
 import { registerListPendingDevicesTool } from './listPendingDevices.js';
 import { registerListPolicyRoutesTool } from './listPolicyRoutes.js';
+import { registerListPortalsWithLogoutTool } from './listPortalsWithLogout.js';
 import { registerListPortForwardingRulesTool } from './listPortForwardingRules.js';
 import { registerListRadiusProfilesTool } from './listRadiusProfiles.js';
 import { registerListSamlIdpsTool } from './listSamlIdps.js';
@@ -525,9 +539,17 @@ import { registerSetDeviceLedTool } from './setDeviceLed.js';
 import { registerSetEoGreTunnelConfigTool } from './setEoGreTunnelConfig.js';
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
 import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
+import { registerSetIntelliRecoverSettingTool } from './setIntelliRecoverSetting.js';
+import { registerSetIotRadioSettingTool } from './setIotRadioSetting.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
 import { registerSetMfaStatusTool } from './setMfaStatus.js';
+import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
+import { registerSetPortalLogoutSettingTool } from './setPortalLogoutSetting.js';
+import { registerSetSiteLedTool } from './setSiteLed.js';
+import { registerSetSiteMailServerTool } from './setSiteMailServer.js';
+import { registerSetSiteRememberSettingTool } from './setSiteRememberSetting.js';
 import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
+import { registerSetSpeedTestSettingTool } from './setSpeedTestSetting.js';
 import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
@@ -547,6 +569,8 @@ import { registerUpdateGatewayAclTool } from './updateGatewayAcl.js';
 import { registerUpdateGroupProfileTool } from './updateGroupProfile.js';
 import { registerUpdateHotspotLocalUserTool } from './updateHotspotLocalUser.js';
 import { registerUpdateHotspotOperatorTool } from './updateHotspotOperator.js';
+import { registerUpdateIotServerTool } from './updateIotServer.js';
+import { registerUpdateIpMacBindingTool } from './updateIpMacBinding.js';
 import { registerUpdateLanDnsRuleTool } from './updateLanDnsRule.js';
 import { registerUpdateLanNetworkTool } from './updateLanNetwork.js';
 import { registerUpdateLanProfileTool } from './updateLanProfile.js';
@@ -555,6 +579,7 @@ import { registerUpdateMdnsProfileTool } from './updateMdnsProfile.js';
 import { registerUpdateMdnsRuleTool } from './updateMdnsRule.js';
 import { registerUpdateOneToOneNatTool } from './updateOneToOneNat.js';
 import { registerUpdateOuiProfileTool } from './updateOuiProfile.js';
+import { registerUpdatePoeScheduleTool } from './updatePoeSchedule.js';
 import { registerUpdatePolicyRouteTool } from './updatePolicyRoute.js';
 import { registerUpdatePortForwardingRuleTool } from './updatePortForwardingRule.js';
 import { registerUpdatePortScheduleTool } from './updatePortSchedule.js';
@@ -960,6 +985,31 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerUpdateTimeRangeProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerDeleteTimeRangeProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerGetRateLimitProfilesTool, category: 'profiles', permission: 'read' },
+    { fn: registerCreatePoeScheduleTool, category: 'schedules', permission: 'write' },
+    { fn: registerUpdatePoeScheduleTool, category: 'schedules', permission: 'write' },
+    { fn: registerDeletePoeScheduleTool, category: 'schedules', permission: 'write' },
+    { fn: registerCreateIpMacBindingTool, category: 'network-lan', permission: 'write' },
+    { fn: registerUpdateIpMacBindingTool, category: 'network-lan', permission: 'write' },
+    { fn: registerDeleteIpMacBindingTool, category: 'network-lan', permission: 'write' },
+    { fn: registerCreateIotServerTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateIotServerTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteIotServerTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetIotRadioSettingTool, category: 'profiles', permission: 'write' },
+    { fn: registerListIotServersTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetIotRadioSettingTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetIntelliRecoverSettingTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetSpeedTestSettingTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetMldSettingTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetPortalLogoutSettingTool, category: 'profiles', permission: 'read' },
+    { fn: registerListPortalsWithLogoutTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetSiteMailServerTool, category: 'profiles', permission: 'read' },
+    { fn: registerSetSiteLedTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetMulticastRateLimitTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetSiteRememberSettingTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetSpeedTestSettingTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetPortalLogoutSettingTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetIntelliRecoverSettingTool, category: 'profiles', permission: 'write' },
+    { fn: registerSetSiteMailServerTool, category: 'profiles', permission: 'write' },
     { fn: registerCreateRateLimitProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerUpdateRateLimitProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerDeleteRateLimitProfileTool, category: 'profiles', permission: 'write' },

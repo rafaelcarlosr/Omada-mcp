@@ -51,6 +51,14 @@ import { ScheduleOperations } from './schedules.js';
 import { SecurityOperations } from './security.js';
 import { SiteOperations } from './site.js';
 import { type Input, type macFilterListSchema, SiteConfigOperations, type urlFilterTypeSchema } from './siteConfig.js';
+import {
+    type intelliRecoverPayloadSchema,
+    type iotRadioPayloadSchema,
+    type ipMacBindingPayloadSchema,
+    type mailServerPayloadSchema,
+    type poeSchedulePayloadSchema,
+    SiteServiceOperations,
+} from './siteServices.js';
 import { type healthRangeSchema, SwitchOperations, type switchGeneralSettingsSchema } from './switches.js';
 import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
 import { VpnOperations } from './vpn.js';
@@ -98,6 +106,7 @@ export class OmadaClient {
     private readonly switchOps: SwitchOperations;
     private readonly apOps: ApOperations;
     private readonly profileOps: ProfileOperations;
+    private readonly siteServiceOps: SiteServiceOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -144,6 +153,7 @@ export class OmadaClient {
         this.switchOps = new SwitchOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.apOps = new ApOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.profileOps = new ProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3028,5 +3038,154 @@ export class OmadaClient {
 
     public async getSwitchOuiAutoAddVlanAllSupport(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
+    }
+
+    // ---- Site services and settings (SiteServiceOperations) ----
+    public async createPoeSchedule(payload: z.input<typeof poeSchedulePayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.createPoeSchedule(payload, siteId, h);
+    }
+
+    public async updatePoeSchedule(
+        poeScheduleId: string,
+        payload: z.input<typeof poeSchedulePayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.updatePoeSchedule(poeScheduleId, payload, siteId, h);
+    }
+
+    public async deletePoeSchedule(poeScheduleId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.deletePoeSchedule(poeScheduleId, siteId, h);
+    }
+
+    public async createIpMacBinding(payload: z.input<typeof ipMacBindingPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.createIpMacBinding(payload, siteId, h);
+    }
+
+    public async updateIpMacBinding(
+        bindId: string,
+        payload: z.input<typeof ipMacBindingPayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.updateIpMacBinding(bindId, payload, siteId, h);
+    }
+
+    public async deleteIpMacBinding(bindId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.deleteIpMacBinding(bindId, siteId, h);
+    }
+
+    public async listIotServers(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.siteServiceOps.listIotServers(siteId, h);
+    }
+
+    public async createIotServer(
+        payload: z.input<typeof schemas.configIotServerOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.createIotServer(payload, siteId, h);
+    }
+
+    public async updateIotServer(
+        id: string,
+        payload: z.input<typeof schemas.configIotServerOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.updateIotServer(id, payload, siteId, h);
+    }
+
+    public async deleteIotServer(id: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.deleteIotServer(id, siteId, h);
+    }
+
+    public async getSiteMailServer(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.getSiteMailServer(siteId, h);
+    }
+
+    public async createSiteMailServer(payload: z.input<typeof mailServerPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.createSiteMailServer(payload, siteId, h);
+    }
+
+    public async updateSiteMailServer(
+        mailId: string,
+        payload: z.input<typeof mailServerPayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.updateSiteMailServer(mailId, payload, siteId, h);
+    }
+
+    public async setSiteLed(payload: z.input<typeof schemas.siteLedSettingSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.setSiteLed(payload, siteId, h);
+    }
+
+    public async setMulticastRateLimit(
+        payload: z.input<typeof schemas.siteMulticastRateLimitSettingSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.setMulticastRateLimit(payload, siteId, h);
+    }
+
+    public async setSiteRememberSetting(
+        payload: z.input<typeof schemas.siteRememberDeviceSettingSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.setSiteRememberSetting(payload, siteId, h);
+    }
+
+    public async getMldSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.getMldSetting(siteId, h);
+    }
+
+    public async getSpeedTestSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.getSpeedTestSetting(siteId, h);
+    }
+
+    public async setSpeedTestSetting(
+        payload: z.input<typeof schemas.modifySpeedTestV2SettingOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.setSpeedTestSetting(payload, siteId, h);
+    }
+
+    public async getPortalLogoutSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.getPortalLogoutSetting(siteId, h);
+    }
+
+    public async setPortalLogoutSetting(
+        payload: z.input<typeof schemas.portalLogoutConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.setPortalLogoutSetting(payload, siteId, h);
+    }
+
+    public async listPortalsWithLogout(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.listPortalsWithLogout(siteId, h);
+    }
+
+    public async getIotRadioSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.getIotRadioSetting(siteId, h);
+    }
+
+    public async setIotRadioSetting(payload: z.input<typeof iotRadioPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.setIotRadioSetting(payload, siteId, h);
+    }
+
+    public async getIntelliRecoverSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteServiceOps.getIntelliRecoverSetting(siteId, h);
+    }
+
+    public async setIntelliRecoverSetting(
+        payload: z.input<typeof intelliRecoverPayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteServiceOps.setIntelliRecoverSetting(payload, siteId, h);
     }
 }

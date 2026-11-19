@@ -1,0 +1,67 @@
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import type { OmadaClient } from '../../src/omadaClient/index.js';
+import { OmadaApiError } from '../../src/omadaClient/request.js';
+import { registerSetSpeedTestSettingTool } from '../../src/tools/setSpeedTestSetting.js';
+
+type Handler = (
+    args: Record<string, unknown>,
+    extra: object
+) => Promise<{ structuredContent?: Record<string, unknown>; content: { text: string }[] }>;
+
+const payload = { autoSpeedTest: true, timingType: 2, hour: 4, minute: 15, dayOfWeek: [0, 3] };
+
+describe('tools/setSpeedTestSetting', () => {
+    let handler: Handler;
+    let definition: { inputSchema: Record<string, { parse: (value: unknown) => unknown }> };
+    let client: Record<string, ReturnType<typeof vi.fn>>;
+    let state: Record<string, unknown>;
+
+    beforeEach(() => {
+        state = { autoSpeedTest: false, timingType: 1, hour: 0, minute: 0 };
+        client = {
+            getSpeedTestSetting: vi.fn(async () => state),
+            setSpeedTestSetting: vi.fn((body: Record<string, unknown>) => {
+                state = { ...state, ...body };
+                return Promise.resolve(undefined);
+            }),
+        };
+        const server = {
+            registerTool: vi.fn((_name, def, fn) => {
+                definition = def;
+                handler = fn;
+            }),
+        } as unknown as McpServer;
+        registerSetSpeedTestSettingTool(server, client as unknown as OmadaClient);
+    });
+
+    it('validates the documented payload', () => {
+        expect(() => definition.inputSchema.payload.parse({ ...payload, unexpected: true })).toThrow();
+        expect(definition.inputSchema.payload.parse(payload)).toEqual(payload);
+    });
+
+    it('previews the differences without writing', async () => {
+        const result = await handler({ payload }, {});
+        expect(client.setSpeedTestSetting).not.toHaveBeenCalled();
+        expect(result.structuredContent).toMatchObject({ status: 'planned', result: { dryRun: true, alreadyMatches: false } });
+    });
+
+    it('applies once and verifies the readback', async () => {
+        const result = await handler({ payload, siteId: 'site-1', dryRun: false }, {});
+        expect(client.setSpeedTestSetting).toHaveBeenCalledWith(payload, 'site-1', undefined);
+        expect(result.structuredContent).toMatchObject({ status: 'verified', result: { noOp: false } });
+    });
+
+    it('skips the write when the setting already matches', async () => {
+        state = { ...state, ...payload };
+        const result = await handler({ payload, dryRun: false }, {});
+        expect(client.setSpeedTestSetting).not.toHaveBeenCalled();
+        expect(result.structuredContent).toMatchObject({ result: { noOp: true } });
+    });
+
+    it('surfaces controller rejections', async () => {
+        client.setSpeedTestSetting.mockRejectedValueOnce(new OmadaApiError(-1001, 'rejected'));
+        await expect(handler({ payload, dryRun: false }, {})).rejects.toThrow('(errorCode -1001): rejected');
+    });
+});
