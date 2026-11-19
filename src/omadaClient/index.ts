@@ -48,6 +48,7 @@ import { DeviceOperations } from './device.js';
 import { type authSurveyPayloadSchema, HotspotAdminOperations, type secondsRangeSchema, type VoucherGroupQuery } from './hotspotAdmin.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
 import { LogOperations, type LogQueryOptions } from './log.js';
+import { LogAdminOperations, type logNotificationBodySchema, type logSelectionSchema } from './logAdmin.js';
 import type { FileServerConfig, SiteFileRestoreInfo, SiteRestoreInfo } from './maintenance.js';
 import { MaintenanceOperations } from './maintenance.js';
 import { MonitorOperations } from './monitor.js';
@@ -127,6 +128,7 @@ export class OmadaClient {
     private readonly controllerSettingOps: ControllerSettingOperations;
     private readonly hotspotAdminOps: HotspotAdminOperations;
     private readonly dashboardOps: DashboardOperations;
+    private readonly logAdminOps: LogAdminOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -178,6 +180,7 @@ export class OmadaClient {
         this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.dashboardOps = new DashboardOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.logAdminOps = new LogAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3765,5 +3768,69 @@ export class OmadaClient {
 
     public async setDashboardTabs(payload: z.input<typeof schemas.batchEditTabsSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.dashboardOps.setDashboardTabs(payload, siteId, h);
+    }
+
+    // ---- Log administration (LogAdminOperations) ----
+    public async listApSsidOverrideAuditLogs(apMac: string, page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.listApSsidOverrideAuditLogs(apMac, page, pageSize, siteId, h);
+    }
+
+    public async listFailedUpgradeDevices(upgradeLogId: string, page: number, pageSize: number, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.listFailedUpgradeDevices(upgradeLogId, page, pageSize, h);
+    }
+
+    public async getFailedUpgradeFirmware(upgradeLogId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.getFailedUpgradeFirmware(upgradeLogId, h);
+    }
+
+    public async setGlobalLogNotifications(body: z.input<typeof logNotificationBodySchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.setGlobalLogNotifications(body, h);
+    }
+
+    public async setSiteLogNotifications(body: z.input<typeof logNotificationBodySchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.setSiteLogNotifications(body, siteId, h);
+    }
+
+    public async setGlobalAuditNotifications(
+        payload: z.input<typeof schemas.auditLogNotificationSettingEditOpenApiVOSchema>,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.logAdminOps.setGlobalAuditNotifications(payload, h);
+    }
+
+    public async setSiteAuditNotifications(
+        payload: z.input<typeof schemas.auditLogNotificationSettingEditOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.logAdminOps.setSiteAuditNotifications(payload, siteId, h);
+    }
+
+    public async resetGlobalLogNotifications(h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.resetGlobalLogNotifications(h);
+    }
+
+    public async resetSiteLogNotifications(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.resetSiteLogNotifications(siteId, h);
+    }
+
+    public async resolveSiteAlerts(selection: z.input<typeof logSelectionSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.resolveSiteAlerts(selection, siteId, h);
+    }
+
+    public async deleteSiteEventLogs(selection: z.input<typeof logSelectionSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.deleteSiteEventLogs(selection, siteId, h);
+    }
+
+    public async deleteSiteAlertLogs(selection: z.input<typeof logSelectionSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.deleteSiteAlertLogs(selection, siteId, h);
+    }
+
+    public async deleteGlobalEventLogs(selection: z.input<typeof logSelectionSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.deleteGlobalEventLogs(selection, h);
+    }
+
+    public async deleteGlobalAlertLogs(selection: z.input<typeof logSelectionSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.logAdminOps.deleteGlobalAlertLogs(selection, h);
     }
 }

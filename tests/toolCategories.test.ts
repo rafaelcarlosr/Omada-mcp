@@ -313,7 +313,7 @@ describe('registerAllTools category filtering', () => {
         'listMostActiveEapsByTraffic',
         'searchClientTraffic',
     ];
-    const fullOperationCount = 707;
+    const fullOperationCount = 721;
     const deprecatedOperationCount = 31;
     // restoreController is both a restore tool and deprecated (removed from the Open API in controller 6.3).
     const activeRestoreCount = restoreNames.filter((name) => name !== 'restoreController').length;
@@ -352,7 +352,7 @@ describe('registerAllTools category filtering', () => {
         expect(names()).toContain('getRFScanResult');
     });
 
-    it('registers 707 operations plus three discovery tools with explicit recovery and aliases', () => {
+    it('registers 721 operations plus three discovery tools with explicit recovery and aliases', () => {
         registerAllTools(mockServer, mockClient, parseToolCategories('all:rw,recovery:rw').categories, { includeDeprecated: true });
         expect(names()).toHaveLength(fullOperationCount + discoveryNames.length);
         expect(new Set(names()).size).toBe(fullOperationCount + discoveryNames.length);
@@ -365,14 +365,14 @@ describe('registerAllTools category filtering', () => {
         ).toHaveLength(deprecatedOperationCount);
     });
 
-    it('has 711 distinct tool names across the standard and compact interfaces', () => {
+    it('has 725 distinct tool names across the standard and compact interfaces', () => {
         const categories = parseToolCategories('all:rw,recovery:rw').categories;
         registerAllTools(mockServer, mockClient, categories, { includeDeprecated: true });
         const standardNames = names();
         vi.mocked(mockServer.registerTool).mockClear();
         registerAllTools(mockServer, mockClient, categories, { includeDeprecated: true, catalogMode: 'compact' });
         expect(names().sort()).toEqual([...discoveryNames, 'callOperation'].sort());
-        expect(new Set([...standardNames, ...names()]).size).toBe(711);
+        expect(new Set([...standardNames, ...names()]).size).toBe(725);
     });
 
     it('write-only clients expose ten mutations and the three discovery tools', () => {

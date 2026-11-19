@@ -199,6 +199,7 @@ const TARGETS = [
             'Channel Upgrade',
         ],
     },
+    { file: '16-log.json', suffix: '', names: ['AuditLogNotificationSettingEditOpenApiVO'] },
     { file: '18-intelli-recover.json', suffix: '', names: ['IntelliRecoverSetting'] },
 ];
 

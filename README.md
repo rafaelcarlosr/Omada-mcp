@@ -495,6 +495,22 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `deleteDashboardTab` | Delete a dashboard tab; the Overall tab is refused. | `dashboard:rw` |
 | `setDashboardTabCards` | Set the cards of one tab; every other tab is sent unchanged so none is deleted. | `dashboard:rw` |
 
+#### Logs and notifications
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `setGlobalLogNotifications` | Change which controller-wide logs are recorded, emailed or sent to a webhook, by key. | `logs:rw` |
+| `setSiteLogNotifications` | Change which site logs are recorded, emailed or sent to a webhook, by key. | `logs:rw` |
+| `setGlobalAuditNotifications` | Change which controller-wide audit categories go to a webhook. | `logs:rw` |
+| `setSiteAuditNotifications` | Change which site audit categories go to a webhook. | `logs:rw` |
+| `resetGlobalLogNotifications` | Reset every controller-wide log notification to the defaults. | `logs:rw` |
+| `resetSiteLogNotifications` | Reset every site log notification to the defaults. | `logs:rw` |
+| `resolveSiteAlerts` | Mark selected site alerts as resolved, by ID (never "all"). | `logs:rw` |
+| `deleteSiteEventLogs` | Delete selected site event logs by ID (never "all"). | `logs:rw` |
+| `deleteSiteAlertLogs` | Delete selected site alert logs by ID (never "all"). | `logs:rw` |
+| `deleteGlobalEventLogs` | Delete selected controller-wide event logs by ID (never "all"). | `logs:rw` |
+| `deleteGlobalAlertLogs` | Delete selected controller-wide alert logs by ID (never "all"). | `logs:rw` |
+
 ### Site & Client
 
 Site listing, client monitoring, and client-level operational controls (rate limits, block/unblock, reconnect).
@@ -1052,7 +1068,7 @@ RADIUS, PPSK, service, QoS, schedule, group policy, VLAN, user role, portal, APN
 Site-level and global event, alert, and audit logs.
 
 <details>
-<summary>Read tools (5)</summary>
+<summary>Read tools (8)</summary>
 
 | Tool | Description |
 |---|---|
@@ -1061,6 +1077,9 @@ Site-level and global event, alert, and audit logs.
 | `listSiteAuditLogs` | Lists site audit logs. |
 | `listGlobalEvents` | Lists global event logs across all sites. |
 | `listGlobalAlerts` | Lists global alert logs across all sites. |
+| `listApSsidOverrideAuditLogs` | Audit log of SSID override changes on one AP (paginated). |
+| `listFailedUpgradeDevices` | Devices whose firmware upgrade failed in an upgrade run (paginated). |
+| `getFailedUpgradeFirmware` | Firmware available for the devices whose upgrade failed. |
 
 </details>
 
