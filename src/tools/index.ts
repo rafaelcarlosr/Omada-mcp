@@ -3,6 +3,7 @@ import type { ToolCategory, ToolPermission } from '../config.js';
 import type { OmadaClient } from '../omadaClient/index.js';
 import { type CatalogOptions, type CatalogTool, registerCatalog } from '../server/catalog.js';
 import { logger } from '../utils/logger.js';
+import { registerAddPpskEntriesTool } from './addPpskEntries.js';
 import { registerAdoptDeviceTool } from './adoptDevice.js';
 import { registerAuthorizeHotspotClientTool } from './authorizeHotspotClient.js';
 import { registerBackupControllerTool } from './backupController.js';
@@ -51,8 +52,10 @@ import { registerCreateOneToOneNatTool } from './createOneToOneNat.js';
 import { registerCreateOuiProfileTool } from './createOuiProfile.js';
 import { registerCreatePoeScheduleTool } from './createPoeSchedule.js';
 import { registerCreatePolicyRouteTool } from './createPolicyRoute.js';
+import { registerCreatePortalTool } from './createPortal.js';
 import { registerCreatePortForwardingRuleTool } from './createPortForwardingRule.js';
 import { registerCreatePortScheduleTool } from './createPortSchedule.js';
+import { registerCreatePpskProfileTool } from './createPpskProfile.js';
 import { registerCreateRadiusProfileTool } from './createRadiusProfile.js';
 import { registerCreateRadiusUserTool } from './createRadiusUser.js';
 import { registerCreateRateLimitProfileTool } from './createRateLimitProfile.js';
@@ -122,8 +125,11 @@ import { registerDeleteOneToOneNatTool } from './deleteOneToOneNat.js';
 import { registerDeleteOuiProfileTool } from './deleteOuiProfile.js';
 import { registerDeletePoeScheduleTool } from './deletePoeSchedule.js';
 import { registerDeletePolicyRouteTool } from './deletePolicyRoute.js';
+import { registerDeletePortalTool } from './deletePortal.js';
 import { registerDeletePortForwardingRuleTool } from './deletePortForwardingRule.js';
 import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
+import { registerDeletePpskEntriesTool } from './deletePpskEntries.js';
+import { registerDeletePpskProfileTool } from './deletePpskProfile.js';
 import { registerDeleteRadiusProfileTool } from './deleteRadiusProfile.js';
 import { registerDeleteRadiusUserTool } from './deleteRadiusUser.js';
 import { registerDeleteRateLimitProfileTool } from './deleteRateLimitProfile.js';
@@ -396,7 +402,10 @@ import { registerGetOswStackLagListTool } from './getOswStackLagList.js';
 import { registerGetOuiProfileListTool } from './getOuiProfileList.js';
 import { registerGetPastClientNumTool } from './getPastClientNum.js';
 import { registerGetPoeScheduleListTool } from './getPoeScheduleList.js';
+import { registerGetPortalTool } from './getPortal.js';
 import { registerGetPortalCandidatesTool } from './getPortalCandidates.js';
+import { registerGetPortalCustomizationTool } from './getPortalCustomization.js';
+import { registerGetPortalDomainTool } from './getPortalDomain.js';
 import { registerGetPortalLogoutSettingTool } from './getPortalLogoutSetting.js';
 import { registerGetPortalPortTool } from './getPortalPort.js';
 import { registerGetPortalProfileTool } from './getPortalProfile.js';
@@ -632,6 +641,7 @@ import { registerListPolicyRoutesTool } from './listPolicyRoutes.js';
 import { registerListPortalsWithLogoutTool } from './listPortalsWithLogout.js';
 import { registerListPortForwardingRulesTool } from './listPortForwardingRules.js';
 import { registerListRadiusProfilesTool } from './listRadiusProfiles.js';
+import { registerListRebootSchedulesTool } from './listRebootSchedules.js';
 import { registerListReportTabsTool } from './listReportTabs.js';
 import { registerListSamlIdpsTool } from './listSamlIdps.js';
 import { registerListScenariosTool } from './listScenarios.js';
@@ -865,8 +875,10 @@ import { registerUpdateOneToOneNatTool } from './updateOneToOneNat.js';
 import { registerUpdateOuiProfileTool } from './updateOuiProfile.js';
 import { registerUpdatePoeScheduleTool } from './updatePoeSchedule.js';
 import { registerUpdatePolicyRouteTool } from './updatePolicyRoute.js';
+import { registerUpdatePortalTool } from './updatePortal.js';
 import { registerUpdatePortForwardingRuleTool } from './updatePortForwardingRule.js';
 import { registerUpdatePortScheduleTool } from './updatePortSchedule.js';
+import { registerUpdatePpskProfileTool } from './updatePpskProfile.js';
 import { registerUpdateRadiusProfileTool } from './updateRadiusProfile.js';
 import { registerUpdateRadiusUserTool } from './updateRadiusUser.js';
 import { registerUpdateRateLimitProfileTool } from './updateRateLimitProfile.js';
@@ -1628,6 +1640,18 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetVlanProfileTool, category: 'profiles', permission: 'read' },
     { fn: registerGetUserRoleProfileTool, category: 'profiles', permission: 'read' },
     { fn: registerGetPortalProfileTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetPortalTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetPortalCustomizationTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetPortalDomainTool, category: 'profiles', permission: 'read' },
+    { fn: registerCreatePortalTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdatePortalTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeletePortalTool, category: 'profiles', permission: 'write' },
+    { fn: registerCreatePpskProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdatePpskProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeletePpskProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerAddPpskEntriesTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeletePpskEntriesTool, category: 'profiles', permission: 'write' },
+    { fn: registerListRebootSchedulesTool, category: 'schedules', permission: 'read' },
 
     // --- Auth profiles ---
     { fn: registerGetLdapProfileListTool, category: 'auth-profiles', permission: 'read' },

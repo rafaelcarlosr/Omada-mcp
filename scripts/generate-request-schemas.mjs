@@ -76,7 +76,7 @@ const TARGETS = [
     {
         file: '04.1-site-network-setting-authentication.json',
         suffix: '',
-        names: ['PortalCandidatesOpenApiVO', 'UpdateMacAuthOpenApiVO', 'Dot1xEapOpenApiVO'],
+        names: ['PortalCandidatesOpenApiVO', 'UpdateMacAuthOpenApiVO', 'Dot1xEapOpenApiVO', 'PortalSetting'],
     },
     {
         file: '04.2-site-network-setting-general.json',
@@ -145,6 +145,10 @@ const TARGETS = [
             'CreateRadiusProfileOpenApiVO',
             'CreateLdapProfileOpenApiVO',
             'CreateRadiusUserOpenApiVO',
+            'PpskProfile V2',
+            'PpskProfile',
+            'AddPSKsOpenApiVO',
+            'DeletePSKsOpenApiVO',
         ],
     },
     {

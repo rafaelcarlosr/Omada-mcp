@@ -233,6 +233,14 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `createPortal` | Create a captive portal; a disabled portal keeps only its name. | `profiles:rw` |
+| `updatePortal` | Change a portal; unlisted fields and the page customization are kept. | `profiles:rw` |
+| `deletePortal` | Delete a captive portal. | `profiles:rw` |
+| `createPpskProfile` | Create a private-PSK profile with manual or generated PSKs. | `profiles:rw` |
+| `updatePpskProfile` | Change a PPSK profile; existing PSKs are kept unless replaced. | `profiles:rw` |
+| `deletePpskProfile` | Delete a PPSK profile. | `profiles:rw` |
+| `addPpskEntries` | Add PSK entries to a PPSK profile. | `profiles:rw` |
+| `deletePpskEntries` | Delete PSK entries from a PPSK profile by name. | `profiles:rw` |
 | `refreshTopology` | Ask the controller to rediscover the site topology. | `insights:rw` |
 | `setTopologyRootNode` | Choose the root device of the topology map, or automatic discovery. | `insights:rw` |
 | `reorderReportTabs` | Set the order of network report tabs (complete list, cards kept). | `dashboard:rw` |
@@ -832,6 +840,10 @@ WAN/LAN configuration, SSIDs, WLAN groups, routing, NAT, DHCP, DNS, firewall set
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getPortal` | Gets one portal; secrets redacted. |
+| `getPortalCustomization` | Gets the page customization of a portal. |
+| `getPortalDomain` | Gets the portal domain setting. |
+| `listRebootSchedules` | Lists device reboot schedules. |
 | `getSiteTopology` | Gets the site topology (v2, or v3 with a status filter). |
 | `listTopologyNodes` | Lists candidate topology root nodes. |
 | `listTopologyDeviceClients` | Lists clients attached to one device. |
