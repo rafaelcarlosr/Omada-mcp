@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import { OmadaApiError } from '../../src/omadaClient/request.js';
+import { RequestNotSentError } from '../../src/omadaClient/templateScope.js';
 import {
     attemptWrite,
     dryRunSchema,
@@ -70,6 +71,7 @@ describe('tools/resourceMutationShared', () => {
 
         it('rethrows local validation errors', async () => {
             await expect(attemptWrite('x', 'update', async () => z.string().parse(1))).rejects.toBeInstanceOf(z.ZodError);
+            await expect(attemptWrite('x', 'update', () => Promise.reject(new RequestNotSentError('refused')))).rejects.toThrow('refused');
         });
 
         it('treats transport failures as unacknowledged without echoing them', async () => {

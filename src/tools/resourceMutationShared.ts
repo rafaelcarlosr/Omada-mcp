@@ -3,6 +3,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { z } from 'zod';
 
 import { OmadaApiError } from '../omadaClient/request.js';
+import { RequestNotSentError } from '../omadaClient/templateScope.js';
 import type { MutationSummary } from '../server/common.js';
 import { compareRequestedFields, type FieldDifference } from '../utils/verification.js';
 
@@ -127,7 +128,7 @@ export async function attemptWrite(label: string, action: string, write: () => P
         if (error instanceof OmadaApiError) {
             throw new Error(`The controller rejected the ${label} ${action} (errorCode ${error.errorCode}): ${error.message}`);
         }
-        if (error instanceof z.ZodError) throw error;
+        if (error instanceof z.ZodError || error instanceof RequestNotSentError) throw error;
         // Transport failures do not prove whether the write took effect. Never echo the raw
         // error (it may contain the request payload) and never replay the write.
         return { acknowledged: false };

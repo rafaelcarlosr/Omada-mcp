@@ -195,13 +195,23 @@ function callArguments(text, open) {
 const HELPER_METHOD = { get: 'GET', fetchPaginated: 'GET', fetchCollection: 'GET', post: 'POST', put: 'PUT', patch: 'PATCH', delete: 'DELETE' };
 const routes = []; // { method, regex, where }
 
-function addRoute(method, versions, templates, file, consts) {
+function addRoute(method, versions, templates, file, consts, member) {
     for (const template of templates) {
         for (const version of versions) {
-            routes.push({ method, regex: new RegExp(`^/openapi/${version}/\\{\\}${templateToRegex(template, file, consts)}$`), where: file });
+            routes.push({ method, regex: new RegExp(`^/openapi/${version}/\\{\\}${templateToRegex(template, file, consts)}$`), where: file, member });
         }
     }
 }
+
+// Class members and module functions of a source file, in order, for tracing which routes a tool can reach.
+const MEMBER = /^(?: {4}(?:(?:public|private|protected|static|readonly|async) )*|(?:export )?(?:async )?function )(\w+)\s*(?:<[^\n(]*>)?\(/gm;
+const NOT_MEMBERS = new Set(['if', 'for', 'while', 'switch', 'return', 'catch', 'function']);
+function membersOf(text) {
+    const members = [...text.matchAll(MEMBER)].filter((match) => !NOT_MEMBERS.has(match[1]));
+    return members.map((match, index) => ({ name: match[1], start: match.index, end: members[index + 1]?.index ?? text.length }));
+}
+const memberAt = (members, position) => members.findLast((member) => member.start <= position)?.name;
+const memberCalls = new Map(); // member name -> names it calls on this or a collaborator
 
 function versionsOf(arg) {
     if (!arg) return ['v1'];
@@ -212,6 +222,13 @@ const clientDir = join(root, 'src', 'omadaClient');
 const SITE_HELPER_FILES = new Set(['aps.ts', 'profiles.ts', 'siteConfig.ts', 'siteServices.ts', 'switches.ts', 'vpn.ts']);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
+    const members = membersOf(text);
+    for (const member of members) {
+        const body = text.slice(member.start, member.end);
+        const calls = memberCalls.get(member.name) ?? new Set();
+        for (const call of body.matchAll(/this\.(?:(\w+)\.)?(\w+)\(/g)) if (call[1] !== 'request') calls.add(call[2]);
+        memberCalls.set(member.name, calls);
+    }
     // aps.ts, siteConfig.ts, switches.ts and vpn.ts build every path through their send()/list() helpers, handled below.
     if (!SITE_HELPER_FILES.has(file)) {
         for (const match of text.matchAll(/this\.buildPath\(/g)) {
@@ -229,7 +246,7 @@ for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') 
             const explicit = /method:\s*'(GET|POST|PUT|PATCH|DELETE)'/i.exec(window);
             const method = helper ? HELPER_METHOD[helper[1]] : explicit?.[1].toUpperCase();
             if (!method || !args[0]) continue;
-            addRoute(method, versionsOf(args[1]), candidates(args[0], consts), file, consts);
+            addRoute(method, versionsOf(args[1]), candidates(args[0], consts), file, consts, memberAt(members, match.index));
         }
         continue;
     }
@@ -238,14 +255,19 @@ for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') 
         const consts = localConsts(text, match.index);
         const [method, suffixArg, versionArg] = match[1] === 'send' ? [args[0].slice(1, -1), args[2], args[5]] : ['GET', args[1], args[3]];
         const templates = candidates(suffixArg ?? '', consts).map((suffix) => `/sites/\${siteId}${suffix}`);
-        addRoute(method.toUpperCase(), versionsOf(versionArg), templates, file, consts);
+        addRoute(method.toUpperCase(), versionsOf(versionArg), templates, file, consts, memberAt(members, match.index));
     }
 }
 
 const implemented = new Set();
+const SITE_TEMPLATE = '/sitetemplates/{siteTemplateId}';
 for (const op of operations) {
     const path = normalize(op.path);
-    if (routes.some((route) => route.method === op.method && route.regex.test(path))) implemented.add(op.key);
+    // A site template route is reached by calling the matching site route with siteTemplateId (templateScope.ts).
+    const sitePath = op.path.includes(SITE_TEMPLATE) ? normalize(op.path.replace(SITE_TEMPLATE, '/sites/{siteId}')) : undefined;
+    if (routes.some((route) => route.method === op.method && (route.regex.test(path) || (sitePath !== undefined && route.regex.test(sitePath))))) {
+        implemented.add(op.key);
+    }
 }
 
 // ---- categories and names --------------------------------------------------
@@ -456,7 +478,94 @@ if (unknownDynamic.size) {
     process.exit(1);
 }
 
+// ---- site template routes (src/omadaClient/templateRoutes.ts) ----------------
+
+const templateRoutesFile = join(root, 'src', 'omadaClient', 'templateRoutes.ts');
+const templateRoutes = new Map();
+for (const op of operations) {
+    const match = /^\/openapi\/(v\d)\/\{omadacId\}(\/sitetemplates(?:\/.*)?)$/.exec(op.path);
+    if (!match) continue;
+    const key = `${op.method} ${match[1]}`;
+    if (!templateRoutes.has(key)) templateRoutes.set(key, new Set());
+    templateRoutes.get(key).add(normalize(match[2]));
+}
+// Site tools that may target a site template: every route they can reach (traced from the tool through the
+// client by name, which over-approximates) is a /sites/{siteId} route whose /sitetemplates mirror the spec defines.
+// Site ID resolution is skipped: with a template target the site ID is always given, so no site discovery runs.
+const TRACE_IGNORED = new Set(['resolveSiteId']);
+const routesOfMember = new Map();
+for (const route of routes) {
+    if (!route.member) continue;
+    if (!routesOfMember.has(route.member)) routesOfMember.set(route.member, []);
+    routesOfMember.get(route.member).push(route);
+}
+function reachableRoutes(names) {
+    const seen = new Set();
+    const found = [];
+    const queue = [...names];
+    while (queue.length) {
+        const name = queue.pop();
+        if (seen.has(name) || TRACE_IGNORED.has(name)) continue;
+        seen.add(name);
+        found.push(...(routesOfMember.get(name) ?? []));
+        queue.push(...(memberCalls.get(name) ?? []));
+    }
+    return found;
+}
+function mirrored(route) {
+    const matched = operations.filter((op) => op.method === route.method && route.regex.test(normalize(op.path)));
+    return (
+        matched.length > 0 &&
+        matched.every((op) => {
+            const site = /^\/openapi\/(v\d)\/\{\}\/sites\/\{\}(\/.*)$/.exec(normalize(op.path));
+            return site !== null && (templateRoutes.get(`${op.method} ${site[1]}`)?.has(`/sitetemplates/{}${site[2]}`) ?? false);
+        })
+    );
+}
+const toolsDir = join(root, 'src', 'tools');
+function clientCallsOf(file, seen = new Set()) {
+    if (seen.has(file) || !existsSync(join(toolsDir, file))) return new Set();
+    seen.add(file);
+    const text = readFileSync(join(toolsDir, file), 'utf8');
+    const calls = new Set([...text.matchAll(/\bclient\.(\w+)\b/g)].map((match) => match[1]));
+    for (const imported of text.matchAll(/from '\.\/(\w+)\.js'/g)) for (const call of clientCallsOf(`${imported[1]}.ts`, seen)) calls.add(call);
+    return calls;
+}
+const templateTools = [];
+for (const file of readdirSync(toolsDir).filter((name) => name.endsWith('.ts'))) {
+    const names = [...readFileSync(join(toolsDir, file), 'utf8').matchAll(/registerTool\(\s*'(\w+)'/g)].map((match) => match[1]);
+    if (!names.length) continue;
+    const reached = reachableRoutes(clientCallsOf(file));
+    if (reached.length && reached.every(mirrored)) templateTools.push(...names);
+}
+templateTools.sort();
+
+const templateRoutesContent = `// Generated by scripts/generate-tools-catalog.mjs from docs/openapi. Do not edit.
+// Site template routes by "METHOD version", with path parameters as {}; used by templateScope.ts.
+export const SITE_TEMPLATE_ROUTES: Readonly<Record<string, readonly string[]>> = {
+${[...templateRoutes.keys()]
+    .sort()
+    .map(
+        (key) =>
+            `    '${key}': [\n${[...templateRoutes.get(key)]
+                .sort()
+                .map((route) => `        '${route}',`)
+                .join('\n')}\n    ],`
+    )
+    .join('\n')}
+};
+
+// Site tools whose every route has a site template mirror; they also accept siteTemplateId.
+export const SITE_TEMPLATE_TOOLS: ReadonlySet<string> = new Set([
+${templateTools.map((name) => `    '${name}',`).join('\n')}
+]);
+`;
+
 if (process.argv.includes('--check')) {
+    if (!existsSync(templateRoutesFile) || readFileSync(templateRoutesFile, 'utf8') !== templateRoutesContent) {
+        console.error('❌ src/omadaClient/templateRoutes.ts is stale. Run: node scripts/generate-tools-catalog.mjs');
+        process.exit(1);
+    }
     const current = existsSync(outFile) ? readFileSync(outFile, 'utf8') : '';
     if (current !== content) {
         console.error('❌ OMADA_TOOLS.md is stale. Run: node scripts/generate-tools-catalog.mjs');
@@ -465,6 +574,7 @@ if (process.argv.includes('--check')) {
     console.log(`✅ OMADA_TOOLS.md is up to date (${done}/${total} operations implemented).`);
 } else {
     writeFileSync(outFile, content);
+    writeFileSync(templateRoutesFile, templateRoutesContent);
     const unmatched = routes.filter((route) => !operations.some((op) => op.method === route.method && route.regex.test(normalize(op.path))));
     console.log(`Wrote ${outFile}: ${done}/${total} operations implemented across ${categories.length} categories.`);
     for (const route of unmatched) console.log(`  route not in spec: ${route.method} ${route.regex.source} (${route.where})`);

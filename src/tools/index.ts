@@ -709,6 +709,7 @@ import { registerSetUiInterfaceTool } from './setUiInterface.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
 import { registerSetVoucherCurrencyTool } from './setVoucherCurrency.js';
 import { registerSetVoucherGroupPatternTool } from './setVoucherGroupPattern.js';
+import { withSiteTemplateOption } from './siteTemplateOption.js';
 import { registerStartApRfScanTool } from './startApRfScan.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
 import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
@@ -1635,7 +1636,7 @@ export function registerAllTools(
                 definition: Pick<CatalogTool, 'description' | 'inputSchema' | 'annotations'>,
                 handler: CatalogTool['handler']
             ): void {
-                catalog.push({ name, ...definition, category: entry.category, permission: entry.permission, handler });
+                catalog.push(withSiteTemplateOption({ name, ...definition, category: entry.category, permission: entry.permission, handler }));
             },
         } as unknown as McpServer;
         entry.fn(collector, client);

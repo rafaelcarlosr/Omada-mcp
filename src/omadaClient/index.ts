@@ -85,6 +85,7 @@ import {
 import { SiteTemplateOperations, type siteTemplateCreateSchema } from './siteTemplates.js';
 import { type healthRangeSchema, SwitchOperations, type switchGeneralSettingsSchema } from './switches.js';
 import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
+import { scopeTemplatePath } from './templateScope.js';
 import { VpnOperations } from './vpn.js';
 
 export type { LogQueryOptions, SiteThreatListOptions };
@@ -1975,7 +1976,7 @@ export class OmadaClient {
      * @param version - The API version to use (default: 'v1')
      */
     private buildOmadaPath(relativePath: string, version = 'v1'): string {
-        const normalized = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+        const normalized = scopeTemplatePath(relativePath.startsWith('/') ? relativePath : `/${relativePath}`);
         return `/openapi/${version}/${encodeURIComponent(this.omadacId)}${normalized}`;
     }
 
