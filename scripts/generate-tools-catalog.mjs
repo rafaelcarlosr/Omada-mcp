@@ -233,7 +233,16 @@ function versionsOf(arg) {
 }
 
 const clientDir = join(root, 'src', 'omadaClient');
-const SITE_HELPER_FILES = new Set(['aps.ts', 'profiles.ts', 'siteConfig.ts', 'siteServices.ts', 'switches.ts', 'vpn.ts', 'wireless.ts']);
+const SITE_HELPER_FILES = new Set([
+    'aps.ts',
+    'profiles.ts',
+    'siteConfig.ts',
+    'siteServices.ts',
+    'switches.ts',
+    'vpn.ts',
+    'wireless.ts',
+    'authProfiles.ts',
+]);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
     const members = membersOf(text);

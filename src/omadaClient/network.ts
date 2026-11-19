@@ -522,7 +522,11 @@ export class NetworkOperations {
     public async listRadiusProfiles(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/profiles/radius`);
-        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
+        // Controller 6.3 returns a plain list here, not a page.
+        const result = this.request.ensureSuccess(await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders));
+        if (Array.isArray(result)) return result;
+        const data = (result as { data?: unknown } | undefined)?.data;
+        return Array.isArray(data) ? data : [];
     }
 
     /**

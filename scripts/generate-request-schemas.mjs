@@ -134,6 +134,9 @@ const TARGETS = [
             'CreateWifiCallingProfileOpenApiVO',
             'CopyWifiCallingProfileOpenApiVO',
             'OuiProfileOpenApiVO',
+            'CreateRadiusProfileOpenApiVO',
+            'CreateLdapProfileOpenApiVO',
+            'CreateRadiusUserOpenApiVO',
         ],
     },
     {
@@ -216,6 +219,7 @@ const TARGETS = [
             'Experience Improvement Program',
             'General Setting',
             'Radius Proxy Server Setting RequestBody',
+            'Built In RADIUS Server Config RequestBody',
             'Remote Log',
             'Log Level',
             'ClientRecognitionEnableOpenApiVO',

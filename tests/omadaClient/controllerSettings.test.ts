@@ -73,6 +73,13 @@ const cases: { method: keyof Ops; args: unknown[]; http: string; route: string; 
         data: { enable: false, port: 1812 },
     },
     {
+        method: 'setRadiusServer',
+        args: [{ enable: false, authServerPort: 1812, secret: 'lab-secret-1', tunnelReplyEnable: false, serverAddressType: 0 }],
+        http: 'PATCH',
+        route: '/global/controller/setting/network/radius-server',
+        data: { enable: false, authServerPort: 1812, secret: 'lab-secret-1', tunnelReplyEnable: false, serverAddressType: 0 },
+    },
+    {
         method: 'setRemoteLogging',
         args: [{ enable: false, port: 514 }],
         http: 'PATCH',

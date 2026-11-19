@@ -35,6 +35,7 @@ import { registerCreateIpMacBindingTool } from './createIpMacBinding.js';
 import { registerCreateLanDnsRuleTool } from './createLanDnsRule.js';
 import { registerCreateLanNetworkTool } from './createLanNetwork.js';
 import { registerCreateLanProfileTool } from './createLanProfile.js';
+import { registerCreateLdapProfileTool } from './createLdapProfile.js';
 import { registerCreateMacFilterTool } from './createMacFilter.js';
 import { registerCreateMdnsProfileTool } from './createMdnsProfile.js';
 import { registerCreateMdnsRuleTool } from './createMdnsRule.js';
@@ -44,6 +45,8 @@ import { registerCreatePoeScheduleTool } from './createPoeSchedule.js';
 import { registerCreatePolicyRouteTool } from './createPolicyRoute.js';
 import { registerCreatePortForwardingRuleTool } from './createPortForwardingRule.js';
 import { registerCreatePortScheduleTool } from './createPortSchedule.js';
+import { registerCreateRadiusProfileTool } from './createRadiusProfile.js';
+import { registerCreateRadiusUserTool } from './createRadiusUser.js';
 import { registerCreateRateLimitProfileTool } from './createRateLimitProfile.js';
 import { registerCreateReportTabTool } from './createReportTab.js';
 import { registerCreateRoleTool } from './createRole.js';
@@ -95,6 +98,7 @@ import { registerDeleteIpMacBindingTool } from './deleteIpMacBinding.js';
 import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
 import { registerDeleteLanNetworkTool } from './deleteLanNetwork.js';
 import { registerDeleteLanProfileTool } from './deleteLanProfile.js';
+import { registerDeleteLdapProfileTool } from './deleteLdapProfile.js';
 import { registerDeleteMacFilterTool } from './deleteMacFilter.js';
 import { registerDeleteMdnsProfileTool } from './deleteMdnsProfile.js';
 import { registerDeleteMdnsRuleTool } from './deleteMdnsRule.js';
@@ -104,6 +108,8 @@ import { registerDeletePoeScheduleTool } from './deletePoeSchedule.js';
 import { registerDeletePolicyRouteTool } from './deletePolicyRoute.js';
 import { registerDeletePortForwardingRuleTool } from './deletePortForwardingRule.js';
 import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
+import { registerDeleteRadiusProfileTool } from './deleteRadiusProfile.js';
+import { registerDeleteRadiusUserTool } from './deleteRadiusUser.js';
 import { registerDeleteRateLimitProfileTool } from './deleteRateLimitProfile.js';
 import { registerDeleteReportTabsTool } from './deleteReportTabs.js';
 import { registerDeleteRoleTool } from './deleteRole.js';
@@ -701,6 +707,7 @@ import { registerSetMfaStatusTool } from './setMfaStatus.js';
 import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
 import { registerSetPortalLogoutSettingTool } from './setPortalLogoutSetting.js';
 import { registerSetRadiusProxyTool } from './setRadiusProxy.js';
+import { registerSetRadiusServerTool } from './setRadiusServer.js';
 import { registerSetRemoteLoggingTool } from './setRemoteLogging.js';
 import { registerSetSiteAuditNotificationsTool } from './setSiteAuditNotifications.js';
 import { registerSetSiteDeviceAccountTool } from './setSiteDeviceAccount.js';
@@ -747,6 +754,7 @@ import { registerUpdateIpMacBindingTool } from './updateIpMacBinding.js';
 import { registerUpdateLanDnsRuleTool } from './updateLanDnsRule.js';
 import { registerUpdateLanNetworkTool } from './updateLanNetwork.js';
 import { registerUpdateLanProfileTool } from './updateLanProfile.js';
+import { registerUpdateLdapProfileTool } from './updateLdapProfile.js';
 import { registerUpdateMacFilterTool } from './updateMacFilter.js';
 import { registerUpdateMdnsProfileTool } from './updateMdnsProfile.js';
 import { registerUpdateMdnsRuleTool } from './updateMdnsRule.js';
@@ -756,6 +764,8 @@ import { registerUpdatePoeScheduleTool } from './updatePoeSchedule.js';
 import { registerUpdatePolicyRouteTool } from './updatePolicyRoute.js';
 import { registerUpdatePortForwardingRuleTool } from './updatePortForwardingRule.js';
 import { registerUpdatePortScheduleTool } from './updatePortSchedule.js';
+import { registerUpdateRadiusProfileTool } from './updateRadiusProfile.js';
+import { registerUpdateRadiusUserTool } from './updateRadiusUser.js';
 import { registerUpdateRateLimitProfileTool } from './updateRateLimitProfile.js';
 import { registerUpdateReportTabTool } from './updateReportTab.js';
 import { registerUpdateRoleTool } from './updateRole.js';
@@ -1414,6 +1424,16 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetRadiusUserListTool, category: 'auth-profiles', permission: 'read' },
     { fn: registerGetRadiusServerTool, category: 'auth-profiles', permission: 'read' },
     { fn: registerListRadiusProfilesTool, category: 'auth-profiles', permission: 'read' },
+    { fn: registerCreateRadiusProfileTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerUpdateRadiusProfileTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerDeleteRadiusProfileTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerCreateLdapProfileTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerUpdateLdapProfileTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerDeleteLdapProfileTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerCreateRadiusUserTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerUpdateRadiusUserTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerDeleteRadiusUserTool, category: 'auth-profiles', permission: 'write' },
+    { fn: registerSetRadiusServerTool, category: 'auth-profiles', permission: 'write' },
 
     // --- Logs ---
     { fn: registerListSiteEventsTool, category: 'logs', permission: 'read' },

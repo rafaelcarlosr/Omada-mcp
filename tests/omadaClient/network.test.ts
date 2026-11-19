@@ -1139,14 +1139,23 @@ describe('NetworkOperations', () => {
     });
 
     describe('listRadiusProfiles', () => {
-        it('should list RADIUS profiles', async () => {
-            const mockData = [{ id: 'radius-1', name: 'Corp RADIUS' }];
-            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue(mockData);
+        it('should list RADIUS profiles from the plain list 6.3 returns', async () => {
+            const mockData = [{ radiusProfileId: 'radius-1', name: 'Corp RADIUS' }];
+            vi.mocked(mockRequest.get).mockResolvedValue({ errorCode: 0, result: mockData });
+            vi.mocked(mockRequest.ensureSuccess).mockImplementation((response: OmadaApiResponse<unknown>) => response.result);
 
             const result = await networkOps.listRadiusProfiles('site-123');
 
-            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/profiles/radius', {}, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/profiles/radius', undefined, undefined);
             expect(result).toEqual(mockData);
+        });
+
+        it('should accept a page or nothing', async () => {
+            vi.mocked(mockRequest.ensureSuccess).mockImplementation((response: OmadaApiResponse<unknown>) => response.result);
+            vi.mocked(mockRequest.get).mockResolvedValueOnce({ errorCode: 0, result: { data: [{ radiusProfileId: 'r' }] } });
+            await expect(networkOps.listRadiusProfiles('site-123')).resolves.toEqual([{ radiusProfileId: 'r' }]);
+            vi.mocked(mockRequest.get).mockResolvedValueOnce({ errorCode: 0, result: undefined });
+            await expect(networkOps.listRadiusProfiles('site-123')).resolves.toEqual([]);
         });
     });
 

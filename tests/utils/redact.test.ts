@@ -5,6 +5,9 @@ describe('redact', () => {
     describe('isSensitiveKey', () => {
         it('matches known secret field names regardless of casing', () => {
             expect(isSensitiveKey('Authorization')).toBe(true);
+            expect(isSensitiveKey('radiusPwd')).toBe(true);
+            expect(isSensitiveKey('accountingServerPwd')).toBe(true);
+            expect(isSensitiveKey('hidePwd')).toBe(false);
             expect(isSensitiveKey('token')).toBe(true);
             expect(isSensitiveKey('clientSecret')).toBe(true);
             expect(isSensitiveKey('PASSWORD')).toBe(true);
