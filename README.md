@@ -338,6 +338,22 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `deleteVoucherGroup` | Delete a voucher group and revoke its unused vouchers. | `hotspot-vouchers:rw` |
 | `listVoucherGroups` | List hotspot voucher groups with their code counts, limits and validity. Returns every page. | `hotspot-vouchers:r` |
 | `getVoucherSummary` | All-time voucher counts, revenue and duration (current, in use, expired, unused, created). | `hotspot-vouchers:r` |
+| `getVoucherGroupDetail` | Get a voucher group with its print pattern, counts and one page of vouchers (codes grant access). | `hotspot-vouchers:r` |
+| `getVoucher` | Get one voucher with its code, status, limits and usage. | `hotspot-vouchers:r` |
+| `listVoucherGroupOptions` | List voucher group names and IDs for filters (paginated). | `hotspot-vouchers:r` |
+| `getVoucherGroupConfigLimit` | Get the maximum number of vouchers the site can hold. | `hotspot-vouchers:r` |
+| `listVoucherCurrencies` | List the currency codes vouchers can be priced in. | `hotspot-vouchers:r` |
+| `getVoucherGroupSummary` | Voucher counts, amount and duration of one group by status. | `hotspot-vouchers:r` |
+| `listUnusedVoucherCodes` | List the unused voucher codes of a group, as printed. | `hotspot-vouchers:r` |
+| `getPortalCandidates` | List the SSIDs and networks served by captive portals. | `hotspot-vouchers:r` |
+| `getVoucherHistoryStatistics` | Voucher usage over a period (epoch seconds), all groups or one. | `hotspot-vouchers:r` |
+| `getVoucherDurationDistribution` | Used vouchers by duration over a period, all groups or one. | `hotspot-vouchers:r` |
+| `getVoucherPriceDistribution` | Used vouchers by unit price over a period, all groups or one. | `hotspot-vouchers:r` |
+| `deleteVouchers` | Delete selected vouchers of a group by ID; every ID must belong to the group. | `hotspot-vouchers:rw` |
+| `deleteVoucherGroups` | Delete several voucher groups and all their vouchers; only the listed IDs. | `hotspot-vouchers:rw` |
+| `clearExpiredVouchers` | Delete the expired vouchers of the listed groups. | `hotspot-vouchers:rw` |
+| `setVoucherGroupPattern` | Change how the vouchers of a group are printed (logo or title, SSIDs, limits, comments). | `hotspot-vouchers:rw` |
+| `setVoucherCurrency` | Set the currency of voucher prices and statistics. | `hotspot-vouchers:rw` |
 
 #### Hotspot users, operators and sessions
 
@@ -352,6 +368,22 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateHotspotOperator` | Replace a hotspot operator (password, role, sites). | `hotspot-users:rw` |
 | `deleteHotspotOperator` | Delete a hotspot operator. | `hotspot-users:rw` |
 | `listHotspotAuthRecords` | List hotspot authentication records (client, auth type, traffic, session times). | `hotspot-portal:r` |
+| `listAuthSurveys` | List authentication surveys (form authentication) with questions and answer counts. | `hotspot-portal:r` |
+| `getAuthSurvey` | Get one authentication survey. | `hotspot-portal:r` |
+| `listSurveyResults` | List the answers submitted to a survey (paginated). | `hotspot-portal:r` |
+| `getSurveyResult` | Get one submitted survey answer. | `hotspot-portal:r` |
+| `getHotspotLocalUser` | Get one hotspot local user. The password is masked. | `hotspot-portal:r` |
+| `getHotspotOperator` | Get one hotspot operator. The password is masked. | `hotspot-portal:r` |
+| `listHotspotRateLimitProfiles` | List the rate limit profiles available to hotspot vouchers and users. | `hotspot-portal:r` |
+| `createAuthSurvey` | Create an authentication survey portal users answer before access. | `hotspot-portal:rw` |
+| `updateAuthSurvey` | Replace an authentication survey. | `hotspot-portal:rw` |
+| `deleteAuthSurvey` | Delete an authentication survey and its answers. | `hotspot-portal:rw` |
+| `deleteSurveyResults` | Delete selected survey answers by ID. | `hotspot-portal:rw` |
+| `deleteAuthedRecord` | Delete a hotspot authorization record; the client must pass the portal again. | `hotspot-portal:rw` |
+| `deleteExpiredAuthedRecords` | Delete the expired authorization records of a period. | `hotspot-portal:rw` |
+| `extendAuthedRecord` | Change how long an authorized hotspot client stays authorized. | `hotspot-portal:rw` |
+| `deleteHotspotLocalUsers` | Delete several hotspot local users by ID. | `hotspot-portal:rw` |
+| `clearLocalUserDynamicMac` | Forget the devices of a dynamic-MAC-binding local user. | `hotspot-portal:rw` |
 | `disconnectHotspotAuthRecord` | Disconnect a hotspot-authenticated session; the client must pass the portal again. The API reports acceptance only. | `hotspot-portal:rw` |
 | `getHotspotStatistics` | Hotspot dashboard statistics: recent connections and authentication-type distribution. | `hotspot-portal:r` |
 

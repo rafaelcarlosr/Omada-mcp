@@ -60,6 +60,7 @@ const TARGETS = [
             'ApSsidOverrideOpenApiV2VO',
         ],
     },
+    { file: '04.1-site-network-setting-authentication.json', suffix: '', names: ['PortalCandidatesOpenApiVO'] },
     {
         file: '04.2-site-network-setting-general.json',
         suffix: '',
@@ -154,7 +155,21 @@ const TARGETS = [
     {
         file: '07-hotspot.json',
         suffix: '06',
-        names: ['CreateVoucherGroupOpenApiVO', 'CreateLocalUserOpenApiVO', 'ModifyLocalUserOpenApiVO', 'Hotspot Operator'],
+        names: [
+            'CreateVoucherGroupOpenApiVO',
+            'CreateLocalUserOpenApiVO',
+            'ModifyLocalUserOpenApiVO',
+            'Hotspot Operator',
+            'SelectVoucherGroupOpenApiVO',
+            'SelectIdsOpenApiVO',
+            'EditVoucherGroupPatternOpenApiVO',
+            'HotspotSiteSettingOpenApiVO',
+            'CreateFormAuthOpenApiVO',
+            'Form Auth Result Selector',
+            'ExtendOpenApiVO',
+            'Delete Filter Info',
+            'SelectLocalUsersOpenApiVO',
+        ],
     },
     { file: '14-maintenance.json', suffix: '08', names: ['AutoBackupOpenApiVO', 'ModifyHistoryRetentionOpenApiVO'] },
     {
@@ -189,8 +204,8 @@ const MAX_DESCRIPTION = 240;
  * They are applied as min/max when no machine-readable bound exists. Ranges that
  * depend on another field's unit are skipped.
  */
-const PROSE_RANGE = /(?:within|in) the range of\s*\(?\s*(-?\d+)\s*(?:-|–|~|to)\s*(-?\d+)/i;
-const CONDITIONAL_RANGES = new Set(['rekeyPskInterval', 'rekeyEntInterval']);
+const PROSE_RANGE = /(?:within|in) the range of\s*\(?\s*(-?\d{1,3}(?:,\d{3})+|-?\d+)\s*(?:-|–|~|to)\s*(-?\d{1,3}(?:,\d{3})+|-?\d+)/i;
+const CONDITIONAL_RANGES = new Set(['rekeyPskInterval', 'rekeyEntInterval', 'customTimeout']);
 const omittedPatterns = [];
 
 function identifier(suffix, name) {
@@ -287,7 +302,7 @@ function createGenerator(file, suffix, spec) {
         if (CONDITIONAL_RANGES.has(key)) return value;
         const match = PROSE_RANGE.exec(value.description ?? '');
         if (!match) return value;
-        const bounded = { ...target, minimum: Number(match[1]), maximum: Number(match[2]) };
+        const bounded = { ...target, minimum: Number(match[1].replaceAll(',', '')), maximum: Number(match[2].replaceAll(',', '')) };
         return value.type === 'array' ? { ...value, items: bounded } : bounded;
     }
 

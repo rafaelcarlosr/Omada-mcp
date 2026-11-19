@@ -44,6 +44,7 @@ import {
     type webhookUpdatePayloadSchema,
 } from './controllerSettings.js';
 import { DeviceOperations } from './device.js';
+import { type authSurveyPayloadSchema, HotspotAdminOperations, type secondsRangeSchema, type VoucherGroupQuery } from './hotspotAdmin.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
 import { LogOperations, type LogQueryOptions } from './log.js';
 import type { FileServerConfig, SiteFileRestoreInfo, SiteRestoreInfo } from './maintenance.js';
@@ -123,6 +124,7 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly siteAdminOps: SiteAdminOperations;
     private readonly controllerSettingOps: ControllerSettingOperations;
+    private readonly hotspotAdminOps: HotspotAdminOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -172,6 +174,7 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3402,5 +3405,175 @@ export class OmadaClient {
 
     public async checkControllerUpdate(payload: z.input<typeof schemas.channelUpgrade21Schema>, h?: CustomHeaders): Promise<unknown> {
         return await this.controllerSettingOps.checkControllerUpdate(payload, h);
+    }
+
+    // ---- Hotspot administration (HotspotAdminOperations) ----
+    public async getVoucherGroupDetail(groupId: string, query: VoucherGroupQuery, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucherGroupDetail(groupId, query, siteId, h);
+    }
+
+    public async getVoucher(voucherId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucher(voucherId, siteId, h);
+    }
+
+    public async listVoucherGroupOptions(page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.listVoucherGroupOptions(page, pageSize, siteId, h);
+    }
+
+    public async getVoucherGroupConfigLimit(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucherGroupConfigLimit(siteId, h);
+    }
+
+    public async listVoucherCurrencies(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.listVoucherCurrencies(siteId, h);
+    }
+
+    public async getVoucherGroupSummary(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucherGroupSummary(groupId, siteId, h);
+    }
+
+    public async listUnusedVoucherCodes(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.listUnusedVoucherCodes(groupId, siteId, h);
+    }
+
+    public async getPortalCandidates(
+        payload: z.input<typeof schemas.portalCandidatesOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.getPortalCandidates(payload, siteId, h);
+    }
+
+    public async getVoucherHistoryStatistics(
+        range: z.input<typeof secondsRangeSchema>,
+        groupId?: string,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucherHistoryStatistics(range, groupId, siteId, h);
+    }
+
+    public async getVoucherDurationDistribution(
+        range: z.input<typeof secondsRangeSchema>,
+        groupId?: string,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucherDurationDistribution(range, groupId, siteId, h);
+    }
+
+    public async getVoucherPriceDistribution(
+        range: z.input<typeof secondsRangeSchema>,
+        groupId?: string,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.getVoucherPriceDistribution(range, groupId, siteId, h);
+    }
+
+    public async deleteVoucher(voucherId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteVoucher(voucherId, siteId, h);
+    }
+
+    public async deleteVouchers(groupId: string, voucherIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteVouchers(groupId, voucherIds, siteId, h);
+    }
+
+    public async deleteVoucherGroups(groupIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteVoucherGroups(groupIds, siteId, h);
+    }
+
+    public async clearExpiredVouchers(groupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.clearExpiredVouchers(groupId, siteId, h);
+    }
+
+    public async clearExpiredVouchersInGroups(groupIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.clearExpiredVouchersInGroups(groupIds, siteId, h);
+    }
+
+    public async setVoucherGroupPattern(
+        groupId: string,
+        payload: z.input<typeof schemas.editVoucherGroupPatternOpenApiVO06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.setVoucherGroupPattern(groupId, payload, siteId, h);
+    }
+
+    public async setVoucherCurrency(currency: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.setVoucherCurrency(currency, siteId, h);
+    }
+
+    public async listAuthSurveys(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.listAuthSurveys(siteId, h);
+    }
+
+    public async getAuthSurvey(surveyId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getAuthSurvey(surveyId, siteId, h);
+    }
+
+    public async createAuthSurvey(payload: z.input<typeof authSurveyPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.createAuthSurvey(payload, siteId, h);
+    }
+
+    public async updateAuthSurvey(
+        surveyId: string,
+        payload: z.input<typeof authSurveyPayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.updateAuthSurvey(surveyId, payload, siteId, h);
+    }
+
+    public async deleteAuthSurvey(surveyId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteAuthSurvey(surveyId, siteId, h);
+    }
+
+    public async listSurveyResults(surveyId: string, page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.listSurveyResults(surveyId, page, pageSize, siteId, h);
+    }
+
+    public async getSurveyResult(resultId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getSurveyResult(resultId, siteId, h);
+    }
+
+    public async deleteSurveyResults(surveyId: string, resultIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteSurveyResults(surveyId, resultIds, siteId, h);
+    }
+
+    public async deleteAuthedRecord(recordId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteAuthedRecord(recordId, siteId, h);
+    }
+
+    public async deleteExpiredAuthedRecords(
+        payload: z.input<typeof schemas.deleteFilterInfo06Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteExpiredAuthedRecords(payload, siteId, h);
+    }
+
+    public async extendAuthedRecord(recordId: string, periodMs: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.extendAuthedRecord(recordId, periodMs, siteId, h);
+    }
+
+    public async getHotspotLocalUser(userId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getHotspotLocalUser(userId, siteId, h);
+    }
+
+    public async deleteHotspotLocalUsers(userIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.deleteHotspotLocalUsers(userIds, siteId, h);
+    }
+
+    public async clearLocalUserDynamicMac(userId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.clearLocalUserDynamicMac(userId, siteId, h);
+    }
+
+    public async getHotspotOperator(operatorId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.getHotspotOperator(operatorId, siteId, h);
+    }
+
+    public async listHotspotRateLimitProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.hotspotAdminOps.listHotspotRateLimitProfiles(siteId, h);
     }
 }

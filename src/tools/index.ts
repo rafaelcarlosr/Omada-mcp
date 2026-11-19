@@ -12,9 +12,12 @@ import { registerBackupSitesToFileServerTool } from './backupSitesToFileServer.j
 import { registerBlockClientTool } from './blockClient.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
+import { registerClearExpiredVouchersTool } from './clearExpiredVouchers.js';
+import { registerClearLocalUserDynamicMacTool } from './clearLocalUserDynamicMac.js';
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
 import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
 import { registerCreateApnProfileTool } from './createApnProfile.js';
+import { registerCreateAuthSurveyTool } from './createAuthSurvey.js';
 import { registerCreateDdnsEntryTool } from './createDdnsEntry.js';
 import { registerCreateDhcpReservationTool } from './createDhcpReservation.js';
 import { registerCreateEapAclTool } from './createEapAcl.js';
@@ -62,14 +65,18 @@ import { registerCreateWlanGroupTool } from './createWlanGroup.js';
 import { registerDeleteAclTool } from './deleteAcl.js';
 import { registerDeleteApnProfileTool } from './deleteApnProfile.js';
 import { registerDeleteAppControlRuleTool } from './deleteAppControlRule.js';
+import { registerDeleteAuthedRecordTool } from './deleteAuthedRecord.js';
+import { registerDeleteAuthSurveyTool } from './deleteAuthSurvey.js';
 import { registerDeleteBandwidthControlRuleTool } from './deleteBandwidthControlRule.js';
 import { registerDeleteClientToSiteVpnClientTool } from './deleteClientToSiteVpnClient.js';
 import { registerDeleteClientToSiteVpnServerTool } from './deleteClientToSiteVpnServer.js';
 import { registerDeleteDdnsEntryTool } from './deleteDdnsEntry.js';
 import { registerDeleteDhcpReservationTool } from './deleteDhcpReservation.js';
+import { registerDeleteExpiredAuthedRecordsTool } from './deleteExpiredAuthedRecords.js';
 import { registerDeleteExternalUserGroupTool } from './deleteExternalUserGroup.js';
 import { registerDeleteGroupProfileTool } from './deleteGroupProfile.js';
 import { registerDeleteHotspotLocalUserTool } from './deleteHotspotLocalUser.js';
+import { registerDeleteHotspotLocalUsersTool } from './deleteHotspotLocalUsers.js';
 import { registerDeleteHotspotOperatorTool } from './deleteHotspotOperator.js';
 import { registerDeleteIotServerTool } from './deleteIotServer.js';
 import { registerDeleteIpMacBindingTool } from './deleteIpMacBinding.js';
@@ -99,10 +106,13 @@ import { registerDeleteSslVpnResourceTool } from './deleteSslVpnResource.js';
 import { registerDeleteSslVpnResourceGroupTool } from './deleteSslVpnResourceGroup.js';
 import { registerDeleteSslVpnUserGroupTool } from './deleteSslVpnUserGroup.js';
 import { registerDeleteStaticRouteTool } from './deleteStaticRoute.js';
+import { registerDeleteSurveyResultsTool } from './deleteSurveyResults.js';
 import { registerDeleteSwitchPortTagTool } from './deleteSwitchPortTag.js';
 import { registerDeleteTimeRangeProfileTool } from './deleteTimeRangeProfile.js';
 import { registerDeleteUrlFilterRuleTool } from './deleteUrlFilterRule.js';
 import { registerDeleteVoucherGroupTool } from './deleteVoucherGroup.js';
+import { registerDeleteVoucherGroupsTool } from './deleteVoucherGroups.js';
+import { registerDeleteVouchersTool } from './deleteVouchers.js';
 import { registerDeleteVpnUserTool } from './deleteVpnUser.js';
 import { registerDeleteWebhookTool } from './deleteWebhook.js';
 import { registerDeleteWifiCallingProfileTool } from './deleteWifiCallingProfile.js';
@@ -114,6 +124,7 @@ import { registerDiagnoseClientTool } from './diagnoseClient.js';
 import { registerDiagnoseLogsTool } from './diagnoseLogs.js';
 import { registerDisableClientRateLimitTool } from './disableClientRateLimit.js';
 import { registerDisconnectHotspotAuthRecordTool } from './disconnectHotspotAuthRecord.js';
+import { registerExtendAuthedRecordTool } from './extendAuthedRecord.js';
 import { registerForceProvisionDeviceTool } from './forceProvisionDevice.js';
 import { registerGetAccessControlTool } from './getAccessControl.js';
 import { registerGetAclConfigTypeSettingTool } from './getAclConfigTypeSetting.js';
@@ -152,6 +163,7 @@ import { registerGetAttackDefenseSettingTool } from './getAttackDefenseSetting.j
 import { registerGetAuditLogSettingForGlobalTool } from './getAuditLogSettingForGlobal.js';
 import { registerGetAuditLogSettingForSiteTool } from './getAuditLogSettingForSite.js';
 import { registerGetAuditLogsForGlobalTool } from './getAuditLogsForGlobal.js';
+import { registerGetAuthSurveyTool } from './getAuthSurvey.js';
 import { registerGetAvailableRolesTool } from './getAvailableRoles.js';
 import { registerGetBackupFileListTool } from './getBackupFileList.js';
 import { registerGetBackupResultTool } from './getBackupResult.js';
@@ -250,6 +262,8 @@ import { registerGetGridStaticRoutingTool } from './getGridStaticRouting.js';
 import { registerGetGridVirtualWanTool } from './getGridVirtualWan.js';
 import { registerGetGroupPolicyDetailTool } from './getGroupPolicyDetail.js';
 import { registerGetGroupProfilesByTypeTool } from './getGroupProfilesByType.js';
+import { registerGetHotspotLocalUserTool } from './getHotspotLocalUser.js';
+import { registerGetHotspotOperatorTool } from './getHotspotOperator.js';
 import { registerGetHotspotStatisticsTool } from './getHotspotStatistics.js';
 import { registerGetIgmpTool } from './getIgmp.js';
 import { registerGetIntelliRecoverSettingTool } from './getIntelliRecoverSetting.js';
@@ -305,6 +319,7 @@ import { registerGetOswStackLagListTool } from './getOswStackLagList.js';
 import { registerGetOuiProfileListTool } from './getOuiProfileList.js';
 import { registerGetPastClientNumTool } from './getPastClientNum.js';
 import { registerGetPoeScheduleListTool } from './getPoeScheduleList.js';
+import { registerGetPortalCandidatesTool } from './getPortalCandidates.js';
 import { registerGetPortalLogoutSettingTool } from './getPortalLogoutSetting.js';
 import { registerGetPortalPortTool } from './getPortalPort.js';
 import { registerGetPortalProfileTool } from './getPortalProfile.js';
@@ -392,6 +407,7 @@ import { registerGetSslVpnServerSettingTool } from './getSslVpnServerSetting.js'
 import { registerGetStackNetworkListTool } from './getStackNetworkList.js';
 import { registerGetStackPortsTool } from './getStackPorts.js';
 import { registerGetStaticRoutingInterfaceListTool } from './getStaticRoutingInterfaceList.js';
+import { registerGetSurveyResultTool } from './getSurveyResult.js';
 import { registerGetSwitchDdmInfoTool } from './getSwitchDdmInfo.js';
 import { registerGetSwitchDetailTool } from './getSwitchDetail.js';
 import { registerGetSwitchDot1xSettingTool } from './getSwitchDot1xSetting.js';
@@ -428,6 +444,13 @@ import { registerGetUrlFilterWhitelistTool } from './getUrlFilterWhitelist.js';
 import { registerGetUrlGroupProfileTool } from './getUrlGroupProfile.js';
 import { registerGetUserRoleProfileTool } from './getUserRoleProfile.js';
 import { registerGetVlanProfileTool } from './getVlanProfile.js';
+import { registerGetVoucherTool } from './getVoucher.js';
+import { registerGetVoucherDurationDistributionTool } from './getVoucherDurationDistribution.js';
+import { registerGetVoucherGroupConfigLimitTool } from './getVoucherGroupConfigLimit.js';
+import { registerGetVoucherGroupDetailTool } from './getVoucherGroupDetail.js';
+import { registerGetVoucherGroupSummaryTool } from './getVoucherGroupSummary.js';
+import { registerGetVoucherHistoryStatisticsTool } from './getVoucherHistoryStatistics.js';
+import { registerGetVoucherPriceDistributionTool } from './getVoucherPriceDistribution.js';
 import { registerGetVoucherSummaryTool } from './getVoucherSummary.js';
 import { registerGetVpnClientStatusTool } from './getVpnClientStatus.js';
 import { registerGetVpnRouteConfigTool } from './getVpnRouteConfig.js';
@@ -454,6 +477,7 @@ import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
 import { registerListApnProfilesTool } from './listApnProfiles.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
+import { registerListAuthSurveysTool } from './listAuthSurveys.js';
 import { registerListClientsTool } from './listClients.js';
 import { registerListClientsActivityTool } from './listClientsActivity.js';
 import { registerListClientsPastConnectionsTool } from './listClientsPastConnections.js';
@@ -471,6 +495,7 @@ import { registerListGroupProfilesTool } from './listGroupProfiles.js';
 import { registerListHotspotAuthRecordsTool } from './listHotspotAuthRecords.js';
 import { registerListHotspotLocalUsersTool } from './listHotspotLocalUsers.js';
 import { registerListHotspotOperatorsTool } from './listHotspotOperators.js';
+import { registerListHotspotRateLimitProfilesTool } from './listHotspotRateLimitProfiles.js';
 import { registerListIotServersTool } from './listIotServers.js';
 import { registerListLockToApApsTool } from './listLockToApAps.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
@@ -507,6 +532,7 @@ import { registerListSslVpnResourcesTool } from './listSslVpnResources.js';
 import { registerListSslVpnUserGroupsTool } from './listSslVpnUserGroups.js';
 import { registerListSslVpnUserGroupUsersTool } from './listSslVpnUserGroupUsers.js';
 import { registerListStaticRoutesTool } from './listStaticRoutes.js';
+import { registerListSurveyResultsTool } from './listSurveyResults.js';
 import { registerListSwitchDhcpUsersTool } from './listSwitchDhcpUsers.js';
 import { registerListSwitchInterfacesTool } from './listSwitchInterfaces.js';
 import { registerListSwitchLldpNeighborsTool } from './listSwitchLldpNeighbors.js';
@@ -524,8 +550,11 @@ import { registerListSwitchPortPoeInfoTool } from './listSwitchPortPoeInfo.js';
 import { registerListSwitchPortTagsTool } from './listSwitchPortTags.js';
 import { registerListTimeRangeProfilesTool } from './listTimeRangeProfiles.js';
 import { registerListUnplacedSitePositionsTool } from './listUnplacedSitePositions.js';
+import { registerListUnusedVoucherCodesTool } from './listUnusedVoucherCodes.js';
 import { registerListUpgradeFirmwaresTool } from './listUpgradeFirmwares.js';
 import { registerListUpgradeOverviewFirmwaresTool } from './listUpgradeOverviewFirmwares.js';
+import { registerListVoucherCurrenciesTool } from './listVoucherCurrencies.js';
+import { registerListVoucherGroupOptionsTool } from './listVoucherGroupOptions.js';
 import { registerListVoucherGroupsTool } from './listVoucherGroups.js';
 import { registerListVpnClientStatusTool } from './listVpnClientStatus.js';
 import { registerListVpnServerClientStatusTool } from './listVpnServerClientStatus.js';
@@ -593,6 +622,8 @@ import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js'
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
 import { registerSetUiInterfaceTool } from './setUiInterface.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
+import { registerSetVoucherCurrencyTool } from './setVoucherCurrency.js';
+import { registerSetVoucherGroupPatternTool } from './setVoucherGroupPattern.js';
 import { registerStartApRfScanTool } from './startApRfScan.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
 import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
@@ -600,6 +631,7 @@ import { registerTestWebhookTool } from './testWebhook.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
 import { registerUnblockClientTool } from './unblockClient.js';
 import { registerUpdateApnProfileTool } from './updateApnProfile.js';
+import { registerUpdateAuthSurveyTool } from './updateAuthSurvey.js';
 import { registerUpdateClientToSiteVpnClientTool } from './updateClientToSiteVpnClient.js';
 import { registerUpdateClientToSiteVpnServerTool } from './updateClientToSiteVpnServer.js';
 import { registerUpdateDdnsEntryTool } from './updateDdnsEntry.js';
@@ -718,6 +750,38 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerTestWebhookTool, category: 'controller', permission: 'write' },
     { fn: registerSendTestMailTool, category: 'controller', permission: 'write' },
     { fn: registerCheckControllerUpdateTool, category: 'controller', permission: 'write' },
+    { fn: registerGetVoucherGroupDetailTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerListVoucherGroupOptionsTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherGroupConfigLimitTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerListVoucherCurrenciesTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherGroupSummaryTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerListUnusedVoucherCodesTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetPortalCandidatesTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherHistoryStatisticsTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherDurationDistributionTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerGetVoucherPriceDistributionTool, category: 'hotspot-vouchers', permission: 'read' },
+    { fn: registerListAuthSurveysTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerGetAuthSurveyTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerListSurveyResultsTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerGetSurveyResultTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerGetHotspotLocalUserTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerGetHotspotOperatorTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerListHotspotRateLimitProfilesTool, category: 'hotspot-portal', permission: 'read' },
+    { fn: registerDeleteVouchersTool, category: 'hotspot-vouchers', permission: 'write' },
+    { fn: registerDeleteVoucherGroupsTool, category: 'hotspot-vouchers', permission: 'write' },
+    { fn: registerClearExpiredVouchersTool, category: 'hotspot-vouchers', permission: 'write' },
+    { fn: registerSetVoucherGroupPatternTool, category: 'hotspot-vouchers', permission: 'write' },
+    { fn: registerSetVoucherCurrencyTool, category: 'hotspot-vouchers', permission: 'write' },
+    { fn: registerCreateAuthSurveyTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerUpdateAuthSurveyTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerDeleteAuthSurveyTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerDeleteSurveyResultsTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerDeleteAuthedRecordTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerDeleteExpiredAuthedRecordsTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerExtendAuthedRecordTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerDeleteHotspotLocalUsersTool, category: 'hotspot-portal', permission: 'write' },
+    { fn: registerClearLocalUserDynamicMacTool, category: 'hotspot-portal', permission: 'write' },
 
     // --- Devices (general) ---
     { fn: registerListDevicesTool, category: 'devices-general', permission: 'read' },
