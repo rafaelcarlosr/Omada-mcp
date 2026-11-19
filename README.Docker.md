@@ -311,6 +311,31 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `createPortSchedule` | Turn switch ports on only inside a time range profile. | `schedules:rw` |
 | `updatePortSchedule` | Replace a port schedule (status, time range, ports). | `schedules:rw` |
 | `deletePortSchedule` | Delete a port schedule. | `schedules:rw` |
+
+#### Profiles
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `createRateLimitProfile` | Create a client rate limit profile with optional download/upload limits in Kbps. | `profiles:rw` |
+| `updateRateLimitProfile` | Replace the name and limits of a rate limit profile; the built-in Default profile is refused. | `profiles:rw` |
+| `deleteRateLimitProfile` | Delete a rate limit profile; the built-in Default profile is refused. | `profiles:rw` |
+| `createServiceType` | Create a gateway QoS service type (TCP/UDP ports, ICMP type/code or IP protocol number). | `profiles:rw` |
+| `updateServiceType` | Replace a gateway QoS service type; built-in types (ALL, FTP, SSH...) are refused. | `profiles:rw` |
+| `deleteServiceType` | Delete a gateway QoS service type; built-in types are refused. | `profiles:rw` |
+| `createMdnsProfile` | Create a Bonjour (mDNS) service with up to three service IDs such as _airplay._tcp.local. | `profiles:rw` |
+| `updateMdnsProfile` | Replace a Bonjour service; built-in services are refused. | `profiles:rw` |
+| `deleteMdnsProfile` | Delete a Bonjour service; built-in services are refused. | `profiles:rw` |
+| `createApnProfile` | Create an APN profile for LTE/5G gateways (static or dynamic APN, PDP type, PAP/CHAP). | `profiles:rw` |
+| `updateApnProfile` | Replace an APN profile; built-in APN profiles are refused. | `profiles:rw` |
+| `deleteApnProfile` | Delete an APN profile; built-in APN profiles are refused. | `profiles:rw` |
+| `createWifiCallingProfile` | Create a Wi-Fi calling profile with carriers and their ePDG servers. | `profiles:rw` |
+| `copyWifiCallingProfile` | Copy a Wi-Fi calling profile, carriers included, under a new name. | `profiles:rw` |
+| `updateWifiCallingProfile` | Replace the name, description and carriers of a Wi-Fi calling profile. | `profiles:rw` |
+| `deleteWifiCallingProfile` | Delete a Wi-Fi calling profile. | `profiles:rw` |
+| `createOuiProfile` | Create an OUI profile (manufacturer MAC prefixes) for OUI-based VLAN rules; OUIs are sent in upper case. | `wireless-auth:rw` |
+| `updateOuiProfile` | Replace the name and OUIs of an OUI profile. | `wireless-auth:rw` |
+| `deleteOuiProfile` | Delete an OUI profile. | `wireless-auth:rw` |
+
 ### Site & Client
 
 | Tool                         | Description                                                                  |
@@ -664,6 +689,16 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `getVlanProfile` | Get LAN/VLAN profiles. Alias for `getLanProfileList`. |
 | `getUserRoleProfile` | Get user role profiles from the controller (global, no siteId). |
 | `getPortalProfile` | Get captive portal profiles for a site. |
+| `listApnProfiles` | List APN profiles used by LTE/5G gateways. Passwords are masked. |
+| `listWifiCallingProfiles` | List Wi-Fi calling profiles with their carriers and ePDG servers. |
+| `listOuiProfileSummaries` | List every OUI profile as id and name (`wireless-auth`). |
+| `listSwitchOuiRules` | List switch OUI-based VLAN rules. Returns every page. |
+| `listSwitchOuiValidVlans` | List the VLANs OUI-based VLAN rules can use. Returns every page. |
+| `listSwitchOuiRuleSwitches` | List switches for OUI-based VLAN rules with auto-add-VLAN support (paginated). |
+| `listSwitchOuiSupportedSwitches` | List switches, stacks and M-LAG pairs that support OUI-based VLAN rules (paginated). |
+| `listSwitchOuiAutoAddVlanSwitches` | List switches that can add OUI rule VLANs to ports automatically (paginated). |
+| `getSwitchOuiAutoAddVlan` | Show whether the site adds OUI rule VLANs to switch ports automatically. |
+| `getSwitchOuiAutoAddVlanAllSupport` | Show whether every switch supports adding OUI rule VLANs automatically. |
 ### Logs
 
 | Tool                | Description                                                  |

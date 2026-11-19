@@ -75,7 +75,19 @@ const TARGETS = [
     {
         file: '04.4-site-network-setting-profiles.json',
         suffix: '',
-        names: ['CreateGroupOpenApiVO', 'CreateTimeRangeProfileOpenApiVO', 'UpdateTimeRangeProfileOpenApiVO'],
+        names: [
+            'CreateGroupOpenApiVO',
+            'CreateTimeRangeProfileOpenApiVO',
+            'UpdateTimeRangeProfileOpenApiVO',
+            'CreateRateLimitProfileOpenApiVO',
+            'UpdateRateLimitProfileOpenApiVO',
+            'GatewayQosServiceOpenApiVO',
+            'BonjourServiceOpenApiVO',
+            'ApnProfileConfig',
+            'CreateWifiCallingProfileOpenApiVO',
+            'CopyWifiCallingProfileOpenApiVO',
+            'OuiProfileOpenApiVO',
+        ],
     },
     { file: '04.6-site-network-setting-security.json', suffix: '', names: ['UrlFilteringOpenApiVO', 'AttackDefenseSetting', 'IpsInfo'] },
     {

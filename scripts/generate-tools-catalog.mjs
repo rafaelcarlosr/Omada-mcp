@@ -209,7 +209,7 @@ function versionsOf(arg) {
 }
 
 const clientDir = join(root, 'src', 'omadaClient');
-const SITE_HELPER_FILES = new Set(['aps.ts', 'siteConfig.ts', 'switches.ts', 'vpn.ts']);
+const SITE_HELPER_FILES = new Set(['aps.ts', 'profiles.ts', 'siteConfig.ts', 'switches.ts', 'vpn.ts']);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
     // aps.ts, siteConfig.ts, switches.ts and vpn.ts build every path through their send()/list() helpers, handled below.

@@ -37,6 +37,14 @@ import type { FileServerConfig, SiteFileRestoreInfo, SiteRestoreInfo } from './m
 import { MaintenanceOperations } from './maintenance.js';
 import { MonitorOperations } from './monitor.js';
 import { NetworkOperations, type SsidBasicConfig } from './network.js';
+import {
+    type bonjourServicePayloadSchema,
+    type ouiProfilePayloadSchema,
+    ProfileOperations,
+    type serviceTypePayloadSchema,
+    type wifiCallingCopySchema,
+    type wifiCallingProfilePayloadSchema,
+} from './profiles.js';
 import { RequestHandler } from './request.js';
 import type * as schemas from './requestSchemas.js';
 import { ScheduleOperations } from './schedules.js';
@@ -89,6 +97,7 @@ export class OmadaClient {
     private readonly vpnOps: VpnOperations;
     private readonly switchOps: SwitchOperations;
     private readonly apOps: ApOperations;
+    private readonly profileOps: ProfileOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -134,6 +143,7 @@ export class OmadaClient {
         this.vpnOps = new VpnOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.switchOps = new SwitchOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.apOps = new ApOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.profileOps = new ProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -2858,5 +2868,165 @@ export class OmadaClient {
         customHeaders?: CustomHeaders
     ): Promise<unknown> {
         return await this.clientOps.getClientIncidentCounts(payload, siteId, customHeaders);
+    }
+
+    // ---- Site profiles (ProfileOperations) ----
+    public async createRateLimitProfile(
+        payload: z.input<typeof schemas.createRateLimitProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.createRateLimitProfile(payload, siteId, h);
+    }
+
+    public async updateRateLimitProfile(
+        profileId: string,
+        payload: z.input<typeof schemas.updateRateLimitProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.updateRateLimitProfile(profileId, payload, siteId, h);
+    }
+
+    public async deleteRateLimitProfile(profileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.deleteRateLimitProfile(profileId, siteId, h);
+    }
+
+    public async createServiceType(payload: z.input<typeof serviceTypePayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.createServiceType(payload, siteId, h);
+    }
+
+    public async updateServiceType(
+        id: string,
+        payload: z.input<typeof serviceTypePayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.updateServiceType(id, payload, siteId, h);
+    }
+
+    public async deleteServiceType(id: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.deleteServiceType(id, siteId, h);
+    }
+
+    public async createMdnsProfile(payload: z.input<typeof bonjourServicePayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.createMdnsProfile(payload, siteId, h);
+    }
+
+    public async updateMdnsProfile(
+        id: string,
+        payload: z.input<typeof bonjourServicePayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.updateMdnsProfile(id, payload, siteId, h);
+    }
+
+    public async deleteMdnsProfile(id: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.deleteMdnsProfile(id, siteId, h);
+    }
+
+    public async listApnProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.listApnProfiles(siteId, h);
+    }
+
+    public async createApnProfile(payload: z.input<typeof schemas.apnProfileConfigSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.createApnProfile(payload, siteId, h);
+    }
+
+    public async updateApnProfile(
+        profileId: string,
+        payload: z.input<typeof schemas.apnProfileConfigSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.updateApnProfile(profileId, payload, siteId, h);
+    }
+
+    public async deleteApnProfile(profileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.deleteApnProfile(profileId, siteId, h);
+    }
+
+    public async listWifiCallingProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.listWifiCallingProfiles(siteId, h);
+    }
+
+    public async createWifiCallingProfile(
+        payload: z.input<typeof wifiCallingProfilePayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.createWifiCallingProfile(payload, siteId, h);
+    }
+
+    public async copyWifiCallingProfile(
+        profileId: string,
+        payload: z.input<typeof wifiCallingCopySchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.copyWifiCallingProfile(profileId, payload, siteId, h);
+    }
+
+    public async updateWifiCallingProfile(
+        profileId: string,
+        payload: z.input<typeof wifiCallingProfilePayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.updateWifiCallingProfile(profileId, payload, siteId, h);
+    }
+
+    public async deleteWifiCallingProfile(profileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.deleteWifiCallingProfile(profileId, siteId, h);
+    }
+
+    public async listOuiProfileSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.listOuiProfileSummaries(siteId, h);
+    }
+
+    public async createOuiProfile(payload: z.input<typeof ouiProfilePayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.createOuiProfile(payload, siteId, h);
+    }
+
+    public async updateOuiProfile(
+        ouiId: string,
+        payload: z.input<typeof ouiProfilePayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.profileOps.updateOuiProfile(ouiId, payload, siteId, h);
+    }
+
+    public async deleteOuiProfile(ouiId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.deleteOuiProfile(ouiId, siteId, h);
+    }
+
+    public async listSwitchOuiRules(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.profileOps.listSwitchOuiRules(siteId, h);
+    }
+
+    public async listSwitchOuiValidVlans(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.profileOps.listSwitchOuiValidVlans(siteId, h);
+    }
+
+    public async listSwitchOuiRuleSwitches(page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.listSwitchOuiRuleSwitches(page, pageSize, siteId, h);
+    }
+
+    public async listSwitchOuiSupportedSwitches(page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.listSwitchOuiSupportedSwitches(page, pageSize, siteId, h);
+    }
+
+    public async listSwitchOuiAutoAddVlanSwitches(page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.listSwitchOuiAutoAddVlanSwitches(page, pageSize, siteId, h);
+    }
+
+    public async getSwitchOuiAutoAddVlan(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.getSwitchOuiAutoAddVlan(siteId, h);
+    }
+
+    public async getSwitchOuiAutoAddVlanAllSupport(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
     }
 }

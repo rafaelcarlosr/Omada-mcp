@@ -109,7 +109,8 @@ function nameClash(spec: ResourceSpec, records: RecordLike[], payload: RecordLik
     const clashes = records.filter((record) => record[nameKey] === name && recordId(record, spec.idKeys) !== exceptId);
     if (clashes.length > 0) {
         const ids = clashes.map((record) => recordId(record, spec.idKeys) ?? 'unknown-id').join(', ');
-        throw new Error(`A ${spec.label} named "${name}" already exists (${ids}). Update that ${spec.label} or choose another name.`);
+        const article = /^[aeiou]/i.test(spec.label) ? 'An' : 'A';
+        throw new Error(`${article} ${spec.label} named "${name}" already exists (${ids}). Update that ${spec.label} or choose another name.`);
     }
 }
 
@@ -243,6 +244,8 @@ function notVerified(payload: RecordLike, keys?: readonly string[]): RecordLike 
 
 export interface UpdateInput extends CreateInput {
     id: string;
+    /** Throw to refuse changing a protected record (default/system objects). */
+    guard?: (record: RecordLike, records: RecordLike[]) => void | Promise<void>;
 }
 
 export async function runUpdate(input: UpdateInput): Promise<RecordLike> {
@@ -250,6 +253,7 @@ export async function runUpdate(input: UpdateInput): Promise<RecordLike> {
     const records = await readRecords(spec);
     const listed = findRecord(records, id, spec.idKeys);
     if (!listed) throw new Error(`No ${spec.label} with id "${id}" exists. List them again to get a current id.`);
+    await input.guard?.(listed, records);
     nameClash(spec, records, payload, id);
     const before = (await verificationView(spec, listed)) as RecordLike;
     const requested = omitKeys(payload, spec.writeOnly);

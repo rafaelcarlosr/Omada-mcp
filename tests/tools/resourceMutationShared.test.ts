@@ -239,6 +239,21 @@ describe('tools/resourceMutationShared', () => {
             await expect(
                 runUpdate({ spec: { label: 'route', list: snapshots(records) }, id: 'a', payload: { name: 'two' }, dryRun: false, write })
             ).rejects.toThrow('A route named "two" already exists (b).');
+            await expect(
+                runUpdate({ spec: { label: 'IP group', list: snapshots(records) }, id: 'a', payload: { name: 'two' }, dryRun: false, write })
+            ).rejects.toThrow('An IP group named "two" already exists (b).');
+            expect(write).not.toHaveBeenCalled();
+        });
+
+        it('runs the guard on the listed record before previewing or writing', async () => {
+            const write = vi.fn();
+            const guard = vi.fn((record: Record<string, unknown>) => {
+                if (record.id === 'b') throw new Error('protected');
+            });
+            await expect(
+                runUpdate({ spec: { label: 'route', list: snapshots(records) }, id: 'b', payload: { metric: 3 }, dryRun: true, write, guard })
+            ).rejects.toThrow('protected');
+            expect(guard).toHaveBeenCalledWith(records[1], records);
             expect(write).not.toHaveBeenCalled();
         });
 
