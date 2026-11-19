@@ -11,6 +11,7 @@ import { registerBackupSitesTool } from './backupSites.js';
 import { registerBackupSitesToFileServerTool } from './backupSitesToFileServer.js';
 import { registerBindSiteToTemplateTool } from './bindSiteToTemplate.js';
 import { registerBlockClientTool } from './blockClient.js';
+import { registerBlockCountryTool } from './blockCountry.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
 import { registerClearExpiredVouchersTool } from './clearExpiredVouchers.js';
@@ -32,6 +33,7 @@ import { registerCreateHotspotLocalUserTool } from './createHotspotLocalUser.js'
 import { registerCreateHotspotOperatorTool } from './createHotspotOperator.js';
 import { registerCreateIotServerTool } from './createIotServer.js';
 import { registerCreateIpMacBindingTool } from './createIpMacBinding.js';
+import { registerCreateIpsAllowEntryTool } from './createIpsAllowEntry.js';
 import { registerCreateLanDnsRuleTool } from './createLanDnsRule.js';
 import { registerCreateLanNetworkTool } from './createLanNetwork.js';
 import { registerCreateLanProfileTool } from './createLanProfile.js';
@@ -95,6 +97,9 @@ import { registerDeleteHotspotOperatorTool } from './deleteHotspotOperator.js';
 import { registerDeleteIncidentsTool } from './deleteIncidents.js';
 import { registerDeleteIotServerTool } from './deleteIotServer.js';
 import { registerDeleteIpMacBindingTool } from './deleteIpMacBinding.js';
+import { registerDeleteIpsAllowEntryTool } from './deleteIpsAllowEntry.js';
+import { registerDeleteIpsBlockEntryTool } from './deleteIpsBlockEntry.js';
+import { registerDeleteIpsSignatureTool } from './deleteIpsSignature.js';
 import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
 import { registerDeleteLanNetworkTool } from './deleteLanNetwork.js';
 import { registerDeleteLanProfileTool } from './deleteLanProfile.js';
@@ -478,9 +483,11 @@ import { registerGetSwitchPortViewTool } from './getSwitchPortView.js';
 import { registerGetSwitchStackDetailTool } from './getSwitchStackDetail.js';
 import { registerGetSwitchVlanInterfaceTool } from './getSwitchVlanInterface.js';
 import { registerGetSyslogConfigTool } from './getSyslogConfig.js';
+import { registerGetThreatCategoryCountsTool } from './getThreatCategoryCounts.js';
 import { registerGetThreatCountTool } from './getThreatCount.js';
 import { registerGetThreatDetailTool } from './getThreatDetail.js';
 import { registerGetThreatListTool } from './getThreatList.js';
+import { registerGetThreatMapTool } from './getThreatMap.js';
 import { registerGetTopApsTool } from './getTopAps.js';
 import { registerGetTopThreatsTool } from './getTopThreats.js';
 import { registerGetTrafficDistributionTool } from './getTrafficDistribution.js';
@@ -533,6 +540,8 @@ import { registerGetWifiHealthSummaryTool } from './getWifiHealthSummary.js';
 import { registerGetWifiHealthTimelineTool } from './getWifiHealthTimeline.js';
 import { registerGetWifiSubHealthTimelineTool } from './getWifiSubHealthTimeline.js';
 import { registerGetWireguardSummaryTool } from './getWireguardSummary.js';
+import { registerGetWirelessIdsConfigTool } from './getWirelessIdsConfig.js';
+import { registerGetWirelessIpsConfigTool } from './getWirelessIpsConfig.js';
 import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
 import { registerListAllowedAppsTool } from './listAllowedApps.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
@@ -546,12 +555,14 @@ import { registerListAppCategoriesTool } from './listAppCategories.js';
 import { registerListApSsidOverrideAuditLogsTool } from './listApSsidOverrideAuditLogs.js';
 import { registerListAuthSurveysTool } from './listAuthSurveys.js';
 import { registerListBlockedAppsTool } from './listBlockedApps.js';
+import { registerListBlockedCountriesTool } from './listBlockedCountries.js';
 import { registerListClientsTool } from './listClients.js';
 import { registerListClientsActivityTool } from './listClientsActivity.js';
 import { registerListClientsPastConnectionsTool } from './listClientsPastConnections.js';
 import { registerListClientToSiteVpnClientsTool } from './listClientToSiteVpnClients.js';
 import { registerListClientToSiteVpnServersTool } from './listClientToSiteVpnServers.js';
 import { registerListClientTrafficTool } from './listClientTraffic.js';
+import { registerListCountryThreatsTool } from './listCountryThreats.js';
 import { registerListDashboardTabsTool } from './listDashboardTabs.js';
 import { registerListDashboardTabsWithoutOverallTool } from './listDashboardTabsWithoutOverall.js';
 import { registerListDeviceIncidentsTool } from './listDeviceIncidents.js';
@@ -727,6 +738,8 @@ import { registerSetUiInterfaceTool } from './setUiInterface.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
 import { registerSetVoucherCurrencyTool } from './setVoucherCurrency.js';
 import { registerSetVoucherGroupPatternTool } from './setVoucherGroupPattern.js';
+import { registerSetWirelessIdsConfigTool } from './setWirelessIdsConfig.js';
+import { registerSetWirelessIpsConfigTool } from './setWirelessIpsConfig.js';
 import { withSiteTemplateOption } from './siteTemplateOption.js';
 import { registerStartApRfScanTool } from './startApRfScan.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
@@ -736,6 +749,7 @@ import { registerTestWebhookTool } from './testWebhook.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
 import { registerUnbindSitesFromTemplateTool } from './unbindSitesFromTemplate.js';
 import { registerUnblockClientTool } from './unblockClient.js';
+import { registerUnblockCountryTool } from './unblockCountry.js';
 import { registerUpdateApGroupTool } from './updateApGroup.js';
 import { registerUpdateApnProfileTool } from './updateApnProfile.js';
 import { registerUpdateAuthSurveyTool } from './updateAuthSurvey.js';
@@ -751,6 +765,8 @@ import { registerUpdateHotspotLocalUserTool } from './updateHotspotLocalUser.js'
 import { registerUpdateHotspotOperatorTool } from './updateHotspotOperator.js';
 import { registerUpdateIotServerTool } from './updateIotServer.js';
 import { registerUpdateIpMacBindingTool } from './updateIpMacBinding.js';
+import { registerUpdateIpsAllowEntryTool } from './updateIpsAllowEntry.js';
+import { registerUpdateIpsSignatureTool } from './updateIpsSignature.js';
 import { registerUpdateLanDnsRuleTool } from './updateLanDnsRule.js';
 import { registerUpdateLanNetworkTool } from './updateLanNetwork.js';
 import { registerUpdateLanProfileTool } from './updateLanProfile.js';
@@ -1122,6 +1138,22 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerListSiteThreatManagementTool, category: 'security-threat', permission: 'read' },
     { fn: registerGetThreatDetailTool, category: 'security-threat', permission: 'read' },
     { fn: registerGetThreatCountTool, category: 'security-threat', permission: 'read' },
+    { fn: registerGetWirelessIdsConfigTool, category: 'security-wids', permission: 'read' },
+    { fn: registerGetWirelessIpsConfigTool, category: 'security-wids', permission: 'read' },
+    { fn: registerSetWirelessIdsConfigTool, category: 'security-wids', permission: 'write' },
+    { fn: registerSetWirelessIpsConfigTool, category: 'security-wids', permission: 'write' },
+    { fn: registerCreateIpsAllowEntryTool, category: 'firewall-ids', permission: 'write' },
+    { fn: registerUpdateIpsAllowEntryTool, category: 'firewall-ids', permission: 'write' },
+    { fn: registerDeleteIpsAllowEntryTool, category: 'firewall-ids', permission: 'write' },
+    { fn: registerDeleteIpsBlockEntryTool, category: 'firewall-ids', permission: 'write' },
+    { fn: registerUpdateIpsSignatureTool, category: 'firewall-ids', permission: 'write' },
+    { fn: registerDeleteIpsSignatureTool, category: 'firewall-ids', permission: 'write' },
+    { fn: registerGetThreatMapTool, category: 'security-threat', permission: 'read' },
+    { fn: registerGetThreatCategoryCountsTool, category: 'security-threat', permission: 'read' },
+    { fn: registerListCountryThreatsTool, category: 'security-threat', permission: 'read' },
+    { fn: registerListBlockedCountriesTool, category: 'security-threat', permission: 'read' },
+    { fn: registerBlockCountryTool, category: 'security-threat', permission: 'write' },
+    { fn: registerUnblockCountryTool, category: 'security-threat', permission: 'write' },
 
     // --- Security WIDS ---
     { fn: registerGetWidsTool, category: 'security-wids', permission: 'read' },

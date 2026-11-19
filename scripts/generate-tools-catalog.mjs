@@ -242,6 +242,7 @@ const SITE_HELPER_FILES = new Set([
     'vpn.ts',
     'wireless.ts',
     'authProfiles.ts',
+    'networkSecurity.ts',
 ]);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
