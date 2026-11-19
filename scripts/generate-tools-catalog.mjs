@@ -77,6 +77,20 @@ const PARAM_EXPR = /^(encodeURIComponent\(.*\)|seg\(.*\)|mac\(.*\)|clientMac\(.*
 const DYNAMIC_SEGMENTS = {
     'client.ts': { interval: ['5Min', 'hourly', 'daily'] },
     'siteConfig.ts': { 'urlFilterTypeSchema.parse(type)': ['gateway', 'eap'], mode: ['allow', 'deny'] },
+    'wireless.ts': {
+        section: [
+            'band-steer',
+            'dhcp-option',
+            'enable',
+            'hotspotv2',
+            'load-balance',
+            'mac-filter',
+            'multicast-config',
+            'rate-limit',
+            'wifi-calling',
+            'wlan-schedule',
+        ],
+    },
     'switchPorts.ts': { suffix: ['multi-ports', 'ports/{}'], operation: ['name', 'status', 'poe-mode', 'profile', 'profile-override'] },
 };
 const unknownDynamic = new Set();
@@ -219,7 +233,7 @@ function versionsOf(arg) {
 }
 
 const clientDir = join(root, 'src', 'omadaClient');
-const SITE_HELPER_FILES = new Set(['aps.ts', 'profiles.ts', 'siteConfig.ts', 'siteServices.ts', 'switches.ts', 'vpn.ts']);
+const SITE_HELPER_FILES = new Set(['aps.ts', 'profiles.ts', 'siteConfig.ts', 'siteServices.ts', 'switches.ts', 'vpn.ts', 'wireless.ts']);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
     const members = membersOf(text);

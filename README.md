@@ -233,6 +233,11 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `createApGroup` | Create an AP group, optionally moving APs into it. SSIDs are broadcast per AP group. | `wireless-ssid:rw` |
+| `updateApGroup` | Rename an AP group and add or remove APs. | `wireless-ssid:rw` |
+| `deleteApGroup` | Delete an AP group; the default group is refused. | `wireless-ssid:rw` |
+| `setSsidApGroups` | Set the AP groups an SSID is broadcast on (replaces the list). | `wireless-ssid:rw` |
+| `setSsidConfig` | Change one SSID section by ID: band steering, Option 82, enable, Hotspot 2.0, load balance, MAC filter, multicast, rate control, rate limits, Wi-Fi Calling, WLAN schedule. | `wireless-ssid:rw` |
 | `deleteSsid` | Delete an SSID. Clients connected to it are disconnected. | `wireless-ssid:rw` |
 | `createLanNetwork` | Create a LAN network / VLAN (gateway interface with subnet and DHCP, or a switch-only VLAN) for segmentation. Gateways and switches re-provision. | `network-lan:rw` |
 | `updateLanNetwork` | Replace an existing LAN network (subnet, DHCP, VLAN, interfaces). Clients on the network can lose connectivity while devices re-provision. | `network-lan:rw` |
@@ -765,7 +770,14 @@ WAN/LAN configuration, SSIDs, WLAN groups, routing, NAT, DHCP, DNS, firewall set
 | `getWlanGroupList` | Gets the list of WLAN groups configured in a site. |
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
-| `listAllSsids` | Lists wireless SSIDs across all WLAN groups. |
+| `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getSsidConfig` | Gets the complete configuration of one SSID by ID, secrets redacted. |
+| `listDuplicateSsidNames` | Lists SSID names used more than once in the site. |
+| `listSsidApGroups` | Lists the AP groups an SSID is broadcast on. |
+| `listApGroups` | Lists AP groups with AP count, SSIDs and remaining capacity. |
+| `getApGroup` | Gets one AP group. |
+| `listApGroupAps` | Lists the site APs grouped by AP group. |
+| `getApGroupCount` | Gets the AP group count and whether the limit is exceeded. |
 | `getFirewallSetting` | Gets the site-global firewall settings returned by the official Omada firewall endpoint. |
 | `getVpnSettings` | Gets VPN settings for a site. |
 | `listSiteToSiteVpns` | Lists site-to-site VPN configurations. |
