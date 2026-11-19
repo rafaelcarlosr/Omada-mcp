@@ -317,6 +317,47 @@ export async function runDelete(input: DeleteInput): Promise<RecordLike> {
     return { writeAcknowledged: outcome.acknowledged, ...(outcome.acknowledged ? { applied: outcome.applied } : {}), id, verification, ...warnings };
 }
 
+export interface BatchDeleteInput {
+    spec: ResourceSpec;
+    ids: string[];
+    dryRun: boolean;
+    write: () => Promise<unknown>;
+    /** Throw to refuse deleting a protected record. */
+    guard?: (record: RecordLike, records: RecordLike[]) => void | Promise<void>;
+    warnings?: string[];
+    verify?: VerifyOptions;
+}
+
+/** Deletes an explicit list of records in one request; every ID must exist first, and all must be gone afterwards. */
+export async function runBatchDelete(input: BatchDeleteInput): Promise<RecordLike> {
+    const { spec } = input;
+    const ids = [...new Set(input.ids)];
+    const records = await readRecords(spec);
+    const missing = ids.filter((id) => !findRecord(records, id, spec.idKeys));
+    if (missing.length) {
+        throw new Error(
+            `No ${spec.label} with id ${missing.map((id) => `"${id}"`).join(', ')} exists. List them again to get current ids. No request was sent.`
+        );
+    }
+    const before = ids.map((id) => findRecord(records, id, spec.idKeys) as RecordLike);
+    for (const record of before) await input.guard?.(record, records);
+    const warnings = input.warnings?.length ? { warnings: input.warnings } : {};
+    if (input.dryRun) return { accepted: true, dryRun: true, ids, before, ...warnings };
+    const outcome = await attemptWrite(spec.label, 'deletion', input.write);
+    const verification = await pollVerification(
+        async () => {
+            const remaining = (await readRecords(spec))
+                .map((record) => recordId(record, spec.idKeys))
+                .filter((id) => id !== undefined && ids.includes(id));
+            return remaining.length ? { remaining } : undefined;
+        },
+        undefined,
+        outcome.acknowledged,
+        input.verify
+    );
+    return { writeAcknowledged: outcome.acknowledged, ...(outcome.acknowledged ? { applied: outcome.applied } : {}), ids, verification, ...warnings };
+}
+
 export interface SettingsInput {
     label: string;
     read: () => Promise<unknown>;

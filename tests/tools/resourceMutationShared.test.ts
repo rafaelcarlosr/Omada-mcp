@@ -10,6 +10,7 @@ import {
     pollVerification,
     recordId,
     runAction,
+    runBatchDelete,
     runCreate,
     runDelete,
     runSettings,
@@ -222,6 +223,61 @@ describe('tools/resourceMutationShared', () => {
                 verify: fast,
             });
             expect(result.verification).toMatchObject({ status: 'unknown', reason: 'Readback failed; current state is unknown.' });
+        });
+    });
+
+    describe('runBatchDelete', () => {
+        const spec = (records: Record<string, unknown>[]) => ({ label: 'voucher', list: async () => records });
+
+        it('refuses unknown ids and guarded records before sending', async () => {
+            const write = vi.fn();
+            const records = [{ id: 'a' }, { id: 'b', locked: true }];
+            await expect(runBatchDelete({ spec: spec(records), ids: ['a', 'zz'], dryRun: false, write })).rejects.toThrow(
+                'No voucher with id "zz" exists.'
+            );
+            const guard = (record: Record<string, unknown>) => {
+                if (record.locked) throw new Error('locked');
+            };
+            await expect(runBatchDelete({ spec: spec(records), ids: ['b'], dryRun: false, write, guard })).rejects.toThrow('locked');
+            expect(write).not.toHaveBeenCalled();
+        });
+
+        it('previews the de-duplicated records', async () => {
+            const result = await runBatchDelete({
+                spec: spec([{ id: 'a' }, { id: 'b' }]),
+                ids: ['a', 'a', 'b'],
+                dryRun: true,
+                write: vi.fn(),
+                warnings: ['w'],
+            });
+            expect(result).toEqual({ accepted: true, dryRun: true, ids: ['a', 'b'], before: [{ id: 'a' }, { id: 'b' }], warnings: ['w'] });
+        });
+
+        it('verifies every id is gone, or reports the ones that remain', async () => {
+            let records: Record<string, unknown>[] = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+            const list = async () => records;
+            const done = await runBatchDelete({
+                spec: { label: 'voucher', list },
+                ids: ['a', 'b'],
+                dryRun: false,
+                write: () => {
+                    records = [{ id: 'c' }];
+                    return Promise.resolve(undefined);
+                },
+            });
+            expect(done).toMatchObject({ writeAcknowledged: true, ids: ['a', 'b'], verification: { status: 'verified' } });
+            records = [{ id: 'a' }, { id: 'c' }];
+            const partial = await runBatchDelete({
+                spec: { label: 'voucher', list },
+                ids: ['a', 'c'],
+                dryRun: false,
+                write: () => {
+                    records = [{ id: 'a' }];
+                    return Promise.resolve(undefined);
+                },
+                verify: { attempts: 1, delayMs: 0 },
+            });
+            expect(partial).toMatchObject({ verification: { status: 'mismatch', reason: 'The record is still present.' } });
         });
     });
 
