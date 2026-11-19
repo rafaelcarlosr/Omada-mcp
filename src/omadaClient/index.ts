@@ -50,6 +50,7 @@ import type * as schemas from './requestSchemas.js';
 import { ScheduleOperations } from './schedules.js';
 import { SecurityOperations } from './security.js';
 import { SiteOperations } from './site.js';
+import { SiteAdminOperations } from './siteAdmin.js';
 import { type Input, type macFilterListSchema, SiteConfigOperations, type urlFilterTypeSchema } from './siteConfig.js';
 import {
     type intelliRecoverPayloadSchema,
@@ -107,6 +108,7 @@ export class OmadaClient {
     private readonly apOps: ApOperations;
     private readonly profileOps: ProfileOperations;
     private readonly siteServiceOps: SiteServiceOperations;
+    private readonly siteAdminOps: SiteAdminOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -154,6 +156,7 @@ export class OmadaClient {
         this.apOps = new ApOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.profileOps = new ProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3187,5 +3190,95 @@ export class OmadaClient {
         h?: CustomHeaders
     ): Promise<unknown> {
         return await this.siteServiceOps.setIntelliRecoverSetting(payload, siteId, h);
+    }
+
+    // ---- Site administration (SiteAdminOperations) ----
+    public async createSite(payload: z.input<typeof schemas.createSiteEntity02Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.createSite(payload, h);
+    }
+
+    public async updateSite(siteId: string, payload: z.input<typeof schemas.updateSiteEntity02Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.updateSite(siteId, payload, h);
+    }
+
+    public async deleteSite(siteId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.deleteSite(siteId, h);
+    }
+
+    public async listSiteTags(h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.listSiteTags(h);
+    }
+
+    public async createSiteTag(payload: z.input<typeof schemas.createSiteTagOpenApiVO02Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.createSiteTag(payload, h);
+    }
+
+    public async updateSiteTag(tagId: string, name: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.updateSiteTag(tagId, name, h);
+    }
+
+    public async deleteSiteTag(tagId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.deleteSiteTag(tagId, h);
+    }
+
+    public async listScenarios(h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.listScenarios(h);
+    }
+
+    public async createScenario(name: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.createScenario(name, h);
+    }
+
+    public async deleteScenario(name: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.deleteScenario(name, h);
+    }
+
+    public async listPlacedSitePositions(h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.listPlacedSitePositions(h);
+    }
+
+    public async listUnplacedSitePositions(page: number, pageSize: number, searchKey?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.listUnplacedSitePositions(page, pageSize, searchKey, h);
+    }
+
+    public async getSiteOverrides(siteIds: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.getSiteOverrides(siteIds, h);
+    }
+
+    public async getSiteHealthOverview(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.getSiteHealthOverview(siteId, h);
+    }
+
+    public async getSiteJumbo(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.getSiteJumbo(siteId, h);
+    }
+
+    public async setSiteJumbo(payload: z.input<typeof schemas.siteJumboOpenApiVOSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.setSiteJumbo(payload, siteId, h);
+    }
+
+    public async getSiteLagHashAlgorithm(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteAdminOps.getSiteLagHashAlgorithm(siteId, h);
+    }
+
+    public async setSiteLagHashAlgorithm(
+        payload: z.input<typeof schemas.siteLagHashAlgOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteAdminOps.setSiteLagHashAlgorithm(payload, siteId, h);
+    }
+
+    public async setSiteDeviceAccount(
+        payload: z.input<typeof schemas.deviceAccountSettingOpenApiVO02Schema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteAdminOps.setSiteDeviceAccount(payload, siteId, h);
+    }
+
+    /** The site ID configured with OMADA_SITE_ID, if any. */
+    public configuredSiteId(): string | undefined {
+        return this.siteOps.configuredSiteId();
     }
 }
