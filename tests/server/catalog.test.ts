@@ -32,11 +32,11 @@ function setup(options: CatalogOptions = {}, inputTools?: CatalogTool[]) {
     ];
     const registered = new Map<
         string,
-        { config: { inputSchema: z.ZodRawShape; annotations?: Record<string, unknown> }; handler: CatalogTool['handler'] }
+        { config: { inputSchema: z.ZodRawShape | z.AnyZodObject; annotations?: Record<string, unknown> }; handler: CatalogTool['handler'] }
     >();
     registerCatalog(
         {
-            registerTool(name: string, config: { inputSchema: z.ZodRawShape }, handler: CatalogTool['handler']) {
+            registerTool(name: string, config: { inputSchema: z.ZodRawShape | z.AnyZodObject }, handler: CatalogTool['handler']) {
                 registered.set(name, { config, handler });
             },
         } as unknown as McpServer,
@@ -46,25 +46,32 @@ function setup(options: CatalogOptions = {}, inputTools?: CatalogTool[]) {
     const raw = async (name: string, args: Record<string, unknown> = {}): Promise<CallToolResult> => {
         const tool = registered.get(name);
         if (!tool) throw new Error('missing registration');
-        return await tool.handler(z.object(tool.config.inputSchema).parse(args), { sessionId: 'test' } as ToolExtra);
+        const schema = tool.config.inputSchema instanceof z.ZodType ? tool.config.inputSchema : z.object(tool.config.inputSchema);
+        return await tool.handler(schema.parse(args), { sessionId: 'test' } as ToolExtra);
     };
     const call = async (name: string, args: Record<string, unknown> = {}): Promise<Record<string, unknown>> =>
         JSON.parse((await raw(name, args)).content[0].text as string);
-    return { registered, raw, call, read, write };
+    const shape = (name: string): z.ZodRawShape | undefined => {
+        const inputSchema = registered.get(name)?.config.inputSchema;
+        return inputSchema instanceof z.ZodObject ? inputSchema.shape : inputSchema;
+    };
+    return { registered, raw, call, read, write, shape };
 }
 
 describe('policy-aware tool catalog', () => {
     it('hides legacy aliases and transport headers and sets accurate annotations', () => {
-        const { registered } = setup();
+        const { registered, raw, shape } = setup();
         expect(registered.has('oldRead')).toBe(false);
-        expect(registered.get('readDevice')?.config.inputSchema.customHeaders).toBeUndefined();
+        expect(shape('readDevice')?.customHeaders).toBeUndefined();
         expect(registered.get('readDevice')?.config.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false });
         expect(registered.get('changeDevice')?.config.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: true });
+        // Undeclared arguments are refused at the protocol boundary rather than dropped.
+        return expect(raw('readDevice', { id: 'x', siteTemplateId: 't1' })).rejects.toThrow('Unrecognized key');
     });
     it('retains explicit legacy/header options', async () => {
-        const { registered, call } = setup({ includeDeprecated: true, allowToolHeaders: true, capabilityProfile: 'admin' });
+        const { registered, call, shape } = setup({ includeDeprecated: true, allowToolHeaders: true, capabilityProfile: 'admin' });
         expect(registered.has('oldRead')).toBe(true);
-        expect(registered.get('readDevice')?.config.inputSchema.customHeaders).toBeDefined();
+        expect(shape('readDevice')?.customHeaders).toBeDefined();
         expect(await call('getServerCapabilities')).toMatchObject({
             profile: 'admin',
             deprecatedIncluded: true,

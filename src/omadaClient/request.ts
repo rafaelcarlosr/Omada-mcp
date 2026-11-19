@@ -5,6 +5,7 @@ import { logger } from '../utils/logger.js';
 import { isSensitiveKey, maskValue } from '../utils/redact.js';
 
 import type { AuthManager } from './auth.js';
+import { assertSiteTemplateRequest } from './templateScope.js';
 
 const DEFAULT_PAGE_SIZE = 200;
 const RETRYABLE_STATUS_CODES = new Set([429, 502, 503, 504]);
@@ -105,6 +106,7 @@ export class RequestHandler {
         let readRetries = 0;
         const method = (config.method ?? 'GET').toUpperCase();
         const safeRead = method === 'GET' || method === 'HEAD' || method === 'OPTIONS';
+        assertSiteTemplateRequest(method, String(config.url ?? ''), config.data, config.params);
 
         for (;;) {
             const accessToken = await this.auth.getAccessToken();

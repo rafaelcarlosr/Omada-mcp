@@ -83,7 +83,9 @@ export function registerCatalog(server: McpServer, tools: CatalogTool[], options
                 tool.name,
                 {
                     description: tool.description,
-                    inputSchema: tool.inputSchema,
+                    // Strict, so an argument a tool does not declare (e.g. siteTemplateId on a site-only tool) is refused
+                    // instead of being dropped and the call silently applied to the default site.
+                    inputSchema: z.object(tool.inputSchema).strict(),
                     annotations: { ...tool.annotations, readOnlyHint: tool.permission === 'read', destructiveHint: tool.permission === 'write' },
                 },
                 (args, extra) => invoke(tool, args, extra)

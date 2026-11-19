@@ -54,6 +54,13 @@ describe('RequestHandler', () => {
         vi.useRealTimers();
     });
 
+    it('refuses site template routes the spec does not define, before sending', async () => {
+        await expect(handler.request({ method: 'DELETE', url: '/openapi/v1/cid/sitetemplates/t1/devices' })).rejects.toThrow(
+            'Site templates do not support DELETE /sitetemplates/{siteTemplateId}/devices. No request was sent.'
+        );
+        expect(http.request).not.toHaveBeenCalled();
+    });
+
     it.each([
         { minRequestIntervalMs: -1 },
         { maxReadRetries: 0.5 },

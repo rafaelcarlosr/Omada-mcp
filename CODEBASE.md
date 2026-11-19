@@ -213,3 +213,5 @@ npm run inspector        # launch MCP inspector UI
 - Every `src/tools/<name>.ts` must have `tests/tools/<name>.test.ts`.
 - Every `src/omadaClient/<name>.ts` (except `index.ts`) must have `tests/omadaClient/<name>.test.ts`.
 - Both `README.md` and `README.Docker.md` must be updated together for any tool or env var change.
+- Tool input schemas are registered strict: undeclared arguments are refused, never dropped.
+- Site template targeting (`siteTemplateId`) is granted per tool from `SITE_TEMPLATE_TOOLS` in the generated `src/omadaClient/templateRoutes.ts`; regenerate it with `node scripts/generate-tools-catalog.mjs` whenever client routes change. `src/omadaClient/templateScope.ts` confines requests to the template while such a call runs.

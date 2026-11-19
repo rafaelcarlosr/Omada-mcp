@@ -108,6 +108,10 @@ Writes default to `dryRun: true`. Review the preview and explicitly pass `dryRun
 
 Restore tools also require `confirmDangerous: true`. This is an argument check, not enforced human approval or a stateful second-call protocol. Configure approvals in the MCP host and grant `recovery:rw` only when recovery is intended.
 
+### Site templates
+
+About 190 site setting tools (SSIDs and WLAN groups, profiles, firewall, routing, network services and more) also accept `siteTemplateId` in place of `siteId`; the call then reads or changes that site template instead of a site. A tool offers the option only when every controller route it uses has a site template version in the official spec, and while it runs every request must target that template, so anything else is refused before it is sent. Tools refuse arguments they do not declare, so `siteTemplateId` on a device or client tool is an error, never a change to the default site. The controller pushes template changes to bound sites; `syncSitesWithTemplate` re-applies the template and discards site overrides. Known 6.3 limitation: updating a rate limit profile in a template fails with errorCode -1 (creating and deleting work).
+
 ### Optional HTTP Lab Mode
 
 HTTP is not part of the supported container baseline. It only starts when both of these are set:
