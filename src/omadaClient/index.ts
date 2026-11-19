@@ -69,6 +69,7 @@ import {
 } from './monitoring.js';
 import { NetworkOperations, type SsidBasicConfig } from './network.js';
 import { NetworkSecurityOperations } from './networkSecurity.js';
+import { PortalOperations } from './portals.js';
 import {
     type bonjourServicePayloadSchema,
     type ouiProfilePayloadSchema,
@@ -147,6 +148,7 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
     private readonly authProfileOps: AuthProfileOperations;
+    private readonly portalOps: PortalOperations;
     private readonly topologyOps: TopologyOperations;
     private readonly serviceSettingOps: ServiceSettingOperations;
     private readonly lanServiceOps: LanServiceOperations;
@@ -209,6 +211,7 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.portalOps = new PortalOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.topologyOps = new TopologyOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.serviceSettingOps = new ServiceSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.lanServiceOps = new LanServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3499,6 +3502,70 @@ export class OmadaClient {
 
     public async getMultiSiteTopology(siteIds: string[], h?: CustomHeaders): Promise<unknown> {
         return await this.topologyOps.getMultiSiteTopology(siteIds, h);
+    }
+
+    // ---- Portals, PPSK profiles and reboot schedule list (PortalOperations) ----
+    public async getPortal(portalId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.getPortal(portalId, siteId, h);
+    }
+
+    public async getPortalCustomization(portalId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.getPortalCustomization(portalId, siteId, h);
+    }
+
+    public async getPortalDomain(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.getPortalDomain(siteId, h);
+    }
+
+    public async createPortal(payload: z.input<typeof schemas.portalSettingSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.createPortal(payload, siteId, h);
+    }
+
+    public async updatePortal(
+        portalId: string,
+        payload: z.input<typeof schemas.portalSettingSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.portalOps.updatePortal(portalId, payload, siteId, h);
+    }
+
+    public async deletePortal(portalId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.deletePortal(portalId, siteId, h);
+    }
+
+    public async createPpskProfile(payload: z.input<typeof schemas.ppskProfileV2Schema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.createPpskProfile(payload, siteId, h);
+    }
+
+    public async updatePpskProfile(
+        profileId: string,
+        payload: z.input<typeof schemas.ppskProfileSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.portalOps.updatePpskProfile(profileId, payload, siteId, h);
+    }
+
+    public async deletePpskProfile(profileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.deletePpskProfile(profileId, siteId, h);
+    }
+
+    public async addPpskEntries(
+        profileId: string,
+        payload: z.input<typeof schemas.addPSKsOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.portalOps.addPpskEntries(profileId, payload, siteId, h);
+    }
+
+    public async deletePpskEntries(profileId: string, names: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.deletePpskEntries(profileId, names, siteId, h);
+    }
+
+    public async listRebootSchedules(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.portalOps.listRebootSchedules(siteId, h);
     }
 
     // ---- Firewall maintenance (FirewallMaintenanceOperations) ----
