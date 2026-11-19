@@ -12,6 +12,8 @@ import { registerBackupSitesToFileServerTool } from './backupSitesToFileServer.j
 import { registerBlockClientTool } from './blockClient.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
+import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
+import { registerCreateApnProfileTool } from './createApnProfile.js';
 import { registerCreateDdnsEntryTool } from './createDdnsEntry.js';
 import { registerCreateDhcpReservationTool } from './createDhcpReservation.js';
 import { registerCreateEapAclTool } from './createEapAcl.js';
@@ -24,13 +26,17 @@ import { registerCreateLanDnsRuleTool } from './createLanDnsRule.js';
 import { registerCreateLanNetworkTool } from './createLanNetwork.js';
 import { registerCreateLanProfileTool } from './createLanProfile.js';
 import { registerCreateMacFilterTool } from './createMacFilter.js';
+import { registerCreateMdnsProfileTool } from './createMdnsProfile.js';
 import { registerCreateMdnsRuleTool } from './createMdnsRule.js';
 import { registerCreateOneToOneNatTool } from './createOneToOneNat.js';
+import { registerCreateOuiProfileTool } from './createOuiProfile.js';
 import { registerCreatePolicyRouteTool } from './createPolicyRoute.js';
 import { registerCreatePortForwardingRuleTool } from './createPortForwardingRule.js';
 import { registerCreatePortScheduleTool } from './createPortSchedule.js';
+import { registerCreateRateLimitProfileTool } from './createRateLimitProfile.js';
 import { registerCreateRoleTool } from './createRole.js';
 import { registerCreateSamlIdpTool } from './createSamlIdp.js';
+import { registerCreateServiceTypeTool } from './createServiceType.js';
 import { registerCreateSsidTool } from './createSsid.js';
 import { registerCreateSslVpnLockTool } from './createSslVpnLock.js';
 import { registerCreateSslVpnResourceTool } from './createSslVpnResource.js';
@@ -43,8 +49,10 @@ import { registerCreateTimeRangeProfileTool } from './createTimeRangeProfile.js'
 import { registerCreateUrlFilterRuleTool } from './createUrlFilterRule.js';
 import { registerCreateVoucherGroupTool } from './createVoucherGroup.js';
 import { registerCreateVpnUserTool } from './createVpnUser.js';
+import { registerCreateWifiCallingProfileTool } from './createWifiCallingProfile.js';
 import { registerCreateWlanGroupTool } from './createWlanGroup.js';
 import { registerDeleteAclTool } from './deleteAcl.js';
+import { registerDeleteApnProfileTool } from './deleteApnProfile.js';
 import { registerDeleteAppControlRuleTool } from './deleteAppControlRule.js';
 import { registerDeleteBandwidthControlRuleTool } from './deleteBandwidthControlRule.js';
 import { registerDeleteClientToSiteVpnClientTool } from './deleteClientToSiteVpnClient.js';
@@ -59,13 +67,17 @@ import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
 import { registerDeleteLanNetworkTool } from './deleteLanNetwork.js';
 import { registerDeleteLanProfileTool } from './deleteLanProfile.js';
 import { registerDeleteMacFilterTool } from './deleteMacFilter.js';
+import { registerDeleteMdnsProfileTool } from './deleteMdnsProfile.js';
 import { registerDeleteMdnsRuleTool } from './deleteMdnsRule.js';
 import { registerDeleteOneToOneNatTool } from './deleteOneToOneNat.js';
+import { registerDeleteOuiProfileTool } from './deleteOuiProfile.js';
 import { registerDeletePolicyRouteTool } from './deletePolicyRoute.js';
 import { registerDeletePortForwardingRuleTool } from './deletePortForwardingRule.js';
 import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
+import { registerDeleteRateLimitProfileTool } from './deleteRateLimitProfile.js';
 import { registerDeleteRoleTool } from './deleteRole.js';
 import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
+import { registerDeleteServiceTypeTool } from './deleteServiceType.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
 import { registerDeleteSslVpnLockTool } from './deleteSslVpnLock.js';
@@ -78,6 +90,7 @@ import { registerDeleteTimeRangeProfileTool } from './deleteTimeRangeProfile.js'
 import { registerDeleteUrlFilterRuleTool } from './deleteUrlFilterRule.js';
 import { registerDeleteVoucherGroupTool } from './deleteVoucherGroup.js';
 import { registerDeleteVpnUserTool } from './deleteVpnUser.js';
+import { registerDeleteWifiCallingProfileTool } from './deleteWifiCallingProfile.js';
 import { registerDeleteWireguardTool } from './deleteWireguard.js';
 import { registerDeleteWireguardPeerTool } from './deleteWireguardPeer.js';
 import { registerDeleteWlanGroupTool } from './deleteWlanGroup.js';
@@ -357,6 +370,8 @@ import { registerGetSwitchGeneralConfigTool } from './getSwitchGeneralConfig.js'
 import { registerGetSwitchHealthDetailTool } from './getSwitchHealthDetail.js';
 import { registerGetSwitchHealthTimelineTool } from './getSwitchHealthTimeline.js';
 import { registerGetSwitchInterfacesBriefTool } from './getSwitchInterfacesBrief.js';
+import { registerGetSwitchOuiAutoAddVlanTool } from './getSwitchOuiAutoAddVlan.js';
+import { registerGetSwitchOuiAutoAddVlanAllSupportTool } from './getSwitchOuiAutoAddVlanAllSupport.js';
 import { registerGetSwitchPortViewTool } from './getSwitchPortView.js';
 import { registerGetSwitchStackDetailTool } from './getSwitchStackDetail.js';
 import { registerGetSwitchVlanInterfaceTool } from './getSwitchVlanInterface.js';
@@ -406,6 +421,7 @@ import { registerGetWifiHealthSummaryTool } from './getWifiHealthSummary.js';
 import { registerGetWireguardSummaryTool } from './getWireguardSummary.js';
 import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
+import { registerListApnProfilesTool } from './listApnProfiles.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
 import { registerListClientsTool } from './listClients.js';
 import { registerListClientsActivityTool } from './listClientsActivity.js';
@@ -428,6 +444,7 @@ import { registerListMdnsProfileTool } from './listMdnsProfile.js';
 import { registerListMdnsRulesTool } from './listMdnsRules.js';
 import { registerListMostActiveClientsTool } from './listMostActiveClients.js';
 import { registerListOsgAclsTool } from './listOsgAcls.js';
+import { registerListOuiProfileSummariesTool } from './listOuiProfileSummaries.js';
 import { registerListPendingDevicesTool } from './listPendingDevices.js';
 import { registerListPolicyRoutesTool } from './listPolicyRoutes.js';
 import { registerListPortForwardingRulesTool } from './listPortForwardingRules.js';
@@ -458,6 +475,11 @@ import { registerListSwitchInterfacesTool } from './listSwitchInterfaces.js';
 import { registerListSwitchLldpNeighborsTool } from './listSwitchLldpNeighbors.js';
 import { registerListSwitchNetworksTool } from './listSwitchNetworks.js';
 import { registerListSwitchNetworksDetailTool } from './listSwitchNetworksDetail.js';
+import { registerListSwitchOuiAutoAddVlanSwitchesTool } from './listSwitchOuiAutoAddVlanSwitches.js';
+import { registerListSwitchOuiRuleSwitchesTool } from './listSwitchOuiRuleSwitches.js';
+import { registerListSwitchOuiRulesTool } from './listSwitchOuiRules.js';
+import { registerListSwitchOuiSupportedSwitchesTool } from './listSwitchOuiSupportedSwitches.js';
+import { registerListSwitchOuiValidVlansTool } from './listSwitchOuiValidVlans.js';
 import { registerListSwitchPortCountersTool } from './listSwitchPortCounters.js';
 import { registerListSwitchPortLagNetworksTool } from './listSwitchPortLagNetworks.js';
 import { registerListSwitchPortOverviewTool } from './listSwitchPortOverview.js';
@@ -471,6 +493,7 @@ import { registerListVpnClientStatusTool } from './listVpnClientStatus.js';
 import { registerListVpnServerClientStatusTool } from './listVpnServerClientStatus.js';
 import { registerListVpnServerStatusTool } from './listVpnServerStatus.js';
 import { registerListVpnUsersTool } from './listVpnUsers.js';
+import { registerListWifiCallingProfilesTool } from './listWifiCallingProfiles.js';
 import { registerListWireguardTool } from './listWireguard.js';
 import { registerListWireguardPeersTool } from './listWireguardPeers.js';
 import { registerLocateDeviceTool } from './locateDevice.js';
@@ -513,6 +536,7 @@ import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade
 import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
 import { registerUnblockClientTool } from './unblockClient.js';
+import { registerUpdateApnProfileTool } from './updateApnProfile.js';
 import { registerUpdateClientToSiteVpnClientTool } from './updateClientToSiteVpnClient.js';
 import { registerUpdateClientToSiteVpnServerTool } from './updateClientToSiteVpnServer.js';
 import { registerUpdateDdnsEntryTool } from './updateDdnsEntry.js';
@@ -527,13 +551,17 @@ import { registerUpdateLanDnsRuleTool } from './updateLanDnsRule.js';
 import { registerUpdateLanNetworkTool } from './updateLanNetwork.js';
 import { registerUpdateLanProfileTool } from './updateLanProfile.js';
 import { registerUpdateMacFilterTool } from './updateMacFilter.js';
+import { registerUpdateMdnsProfileTool } from './updateMdnsProfile.js';
 import { registerUpdateMdnsRuleTool } from './updateMdnsRule.js';
 import { registerUpdateOneToOneNatTool } from './updateOneToOneNat.js';
+import { registerUpdateOuiProfileTool } from './updateOuiProfile.js';
 import { registerUpdatePolicyRouteTool } from './updatePolicyRoute.js';
 import { registerUpdatePortForwardingRuleTool } from './updatePortForwardingRule.js';
 import { registerUpdatePortScheduleTool } from './updatePortSchedule.js';
+import { registerUpdateRateLimitProfileTool } from './updateRateLimitProfile.js';
 import { registerUpdateRoleTool } from './updateRole.js';
 import { registerUpdateSamlIdpTool } from './updateSamlIdp.js';
+import { registerUpdateServiceTypeTool } from './updateServiceType.js';
 import { registerUpdateSiteToSiteVpnTool } from './updateSiteToSiteVpn.js';
 import { registerUpdateSsidTool } from './updateSsid.js';
 import { registerUpdateSslVpnLockTool } from './updateSslVpnLock.js';
@@ -546,6 +574,7 @@ import { registerUpdateSwitchPortTagTool } from './updateSwitchPortTag.js';
 import { registerUpdateTimeRangeProfileTool } from './updateTimeRangeProfile.js';
 import { registerUpdateUrlFilterRuleTool } from './updateUrlFilterRule.js';
 import { registerUpdateVpnUserTool } from './updateVpnUser.js';
+import { registerUpdateWifiCallingProfileTool } from './updateWifiCallingProfile.js';
 import { registerUpdateWireguardTool } from './updateWireguard.js';
 import { registerUpdateWlanGroupTool } from './updateWlanGroup.js';
 
@@ -931,6 +960,35 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerUpdateTimeRangeProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerDeleteTimeRangeProfileTool, category: 'profiles', permission: 'write' },
     { fn: registerGetRateLimitProfilesTool, category: 'profiles', permission: 'read' },
+    { fn: registerCreateRateLimitProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateRateLimitProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteRateLimitProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerCreateServiceTypeTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateServiceTypeTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteServiceTypeTool, category: 'profiles', permission: 'write' },
+    { fn: registerCreateMdnsProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateMdnsProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteMdnsProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerCreateApnProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateApnProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteApnProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerCreateWifiCallingProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerCopyWifiCallingProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerUpdateWifiCallingProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerDeleteWifiCallingProfileTool, category: 'profiles', permission: 'write' },
+    { fn: registerCreateOuiProfileTool, category: 'wireless-auth', permission: 'write' },
+    { fn: registerUpdateOuiProfileTool, category: 'wireless-auth', permission: 'write' },
+    { fn: registerDeleteOuiProfileTool, category: 'wireless-auth', permission: 'write' },
+    { fn: registerListOuiProfileSummariesTool, category: 'wireless-auth', permission: 'read' },
+    { fn: registerListApnProfilesTool, category: 'profiles', permission: 'read' },
+    { fn: registerListWifiCallingProfilesTool, category: 'profiles', permission: 'read' },
+    { fn: registerListSwitchOuiRulesTool, category: 'profiles', permission: 'read' },
+    { fn: registerListSwitchOuiValidVlansTool, category: 'profiles', permission: 'read' },
+    { fn: registerListSwitchOuiRuleSwitchesTool, category: 'profiles', permission: 'read' },
+    { fn: registerListSwitchOuiSupportedSwitchesTool, category: 'profiles', permission: 'read' },
+    { fn: registerListSwitchOuiAutoAddVlanSwitchesTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetSwitchOuiAutoAddVlanTool, category: 'profiles', permission: 'read' },
+    { fn: registerGetSwitchOuiAutoAddVlanAllSupportTool, category: 'profiles', permission: 'read' },
     { fn: registerGetGoogleLdapProfileTool, category: 'profiles', permission: 'read' },
     { fn: registerGetBuiltinRadiusUsersTool, category: 'profiles', permission: 'read' },
     { fn: registerGetRadiusUserDetailTool, category: 'profiles', permission: 'read' },
