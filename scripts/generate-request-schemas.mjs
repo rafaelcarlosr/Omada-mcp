@@ -73,12 +73,19 @@ const TARGETS = [
             'ApSsidOverrideOpenApiV2VO',
         ],
     },
-    { file: '04.1-site-network-setting-authentication.json', suffix: '', names: ['PortalCandidatesOpenApiVO'] },
+    {
+        file: '04.1-site-network-setting-authentication.json',
+        suffix: '',
+        names: ['PortalCandidatesOpenApiVO', 'UpdateMacAuthOpenApiVO', 'Dot1xEapOpenApiVO'],
+    },
     {
         file: '04.2-site-network-setting-general.json',
         suffix: '',
         names: [
             'CreateMdnsRuleOpenApiVO',
+            'SSHSetting',
+            'SiteRemoteLoggingSetting',
+            'SiteLldpSetting',
             'SnmpSettingOpenApiVO',
             'PortScheduleOpenApiVO',
             'PoeScheduleOpenApiVO',
@@ -161,7 +168,17 @@ const TARGETS = [
     {
         file: '04.7-site-network-setting-transmission.json',
         suffix: '',
-        names: ['ALGSetting', 'PortForwardingConfig', 'OtoNatOpenApiVO', 'StaticRoutingConfig', 'PolicyRoutingConfig', 'OuiBasedVlanApOpenApiVO'],
+        names: [
+            'ALGSetting',
+            'PortForwardingConfig',
+            'OtoNatOpenApiVO',
+            'StaticRoutingConfig',
+            'PolicyRoutingConfig',
+            'OuiBasedVlanApOpenApiVO',
+            'SessionLimitRuleOpenApiVO',
+            'Session limit entity',
+            'BandwidthControl',
+        ],
     },
     {
         file: '04.8-site-network-setting-vpn.json',
@@ -192,6 +209,7 @@ const TARGETS = [
             'DnsCacheOpenApiVO',
             'DnsProxySettingOpenApiVO',
             'IPMacBindingGeneralSetting',
+            'MacFilteringGeneralSetting',
             'UpnpSettingOpenApiVO',
             'MacFiltering',
             'IPMacBinding',

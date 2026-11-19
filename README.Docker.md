@@ -179,6 +179,20 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `setSessionLimit` | Turn gateway session limiting on or off. | `network-services:rw` |
+| `createSessionLimitRule` | Create a session limit rule. | `network-services:rw` |
+| `updateSessionLimitRule` | Change a session limit rule; unlisted fields are kept. | `network-services:rw` |
+| `deleteSessionLimitRule` | Delete a session limit rule. | `network-services:rw` |
+| `reorderSessionLimitRules` | Set the order of session limit rules (complete list). | `network-services:rw` |
+| `setBandwidthControl` | Change gateway bandwidth control and its threshold. | `network-services:rw` |
+| `reorderBandwidthControlRules` | Set the order of bandwidth control rules (complete list). | `network-services:rw` |
+| `setLldpSetting` | Turn LLDP on or off for the site devices. | `network-services:rw` |
+| `setSiteRemoteLogging` | Change the syslog target of the site devices. | `network-services:rw` |
+| `setSshSetting` | Change device SSH access, port and layer-3 reachability. | `network-services:rw` |
+| `reorderPolicyRoutes` | Set the order of policy routes (complete list). | `network-routing:rw` |
+| `setMacAuthSetting` | Change MAC-based authentication for SSIDs. | `wireless-auth:rw` |
+| `setMacFilteringGeneralSetting` | Change gateway MAC filtering mode and directions. | `wireless-auth:rw` |
+| `setEapDot1xSetting` | Change EAP 802.1X authentication. | `wireless-auth:rw` |
 | `setDnsCacheSetting` | Turn the gateway DNS cache on or off and set its TTL. | `network-lan:rw` |
 | `clearDnsCache` | Clear the cached DNS records of the site gateway. | `network-lan:rw` |
 | `setDnsProxy` | Change the DNS proxy: DNSSEC, DNS over HTTPS/TLS or DNS override. | `network-lan:rw` |
@@ -713,6 +727,10 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getRemoteLoggingTip` | Gets the effective site syslog target hint. |
+| `listSnmpIncompatibleDevices` | Lists devices that do not support the SNMP version. |
+| `listEapDot1xCandidates` | Lists APs that can take part in EAP 802.1X. |
+| `listSwitchDot1xCandidates` | Lists switches that can take part in 802.1X. |
 | `getLanNetwork` | Gets one LAN network. |
 | `listAllLanNetworks` | Lists every network of a site without paging. |
 | `listDhcpClients` | Lists the DHCP leases of every DHCP server of a site. |

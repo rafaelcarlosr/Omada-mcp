@@ -245,6 +245,7 @@ const SITE_HELPER_FILES = new Set([
     'networkSecurity.ts',
     'firewallMaintenance.ts',
     'lanServices.ts',
+    'serviceSettings.ts',
 ]);
 for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') && name !== 'requestSchemas.ts')) {
     const text = readFileSync(join(clientDir, file), 'utf8');
