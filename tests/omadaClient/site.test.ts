@@ -59,6 +59,11 @@ describe('omadaClient/site', () => {
                 expect(resolved).toBe('default-site');
             });
 
+            it('exposes only the configured site ID', () => {
+                expect(new SiteOperations(mockRequest, buildPath, 'default-site').configuredSiteId()).toBe('default-site');
+                expect(new SiteOperations(mockRequest, buildPath).configuredSiteId()).toBeUndefined();
+            });
+
             it('should prefer parameter over default', async () => {
                 const siteOps = new SiteOperations(mockRequest, buildPath, 'default-site');
                 const resolved = await siteOps.resolveSiteId('param-site');

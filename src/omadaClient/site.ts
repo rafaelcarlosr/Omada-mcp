@@ -16,6 +16,11 @@ export class SiteOperations {
         private readonly defaultSiteId?: string
     ) {}
 
+    /** The site ID configured with OMADA_SITE_ID, if any (not the auto-discovered one). */
+    public configuredSiteId(): string | undefined {
+        return this.defaultSiteId;
+    }
+
     /**
      * List all sites accessible to the authenticated user.
      */

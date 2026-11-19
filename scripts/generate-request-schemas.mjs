@@ -39,6 +39,11 @@ const TARGETS = [
         names: ['ModifyControllerRoleVO', 'MFAConfigOpenApiVO', 'IdpMetadataOpenApiVO', 'ExternalUserGroupOpenApiVO'],
     },
     {
+        file: '02-organization.json',
+        suffix: '02',
+        names: ['CreateSiteEntity', 'UpdateSiteEntity', 'CreateSiteTagOpenApiVO', 'Site Tag', 'Scenario', 'DeviceAccountSettingOpenApiVO'],
+    },
+    {
         file: '03-device.json',
         suffix: '03',
         names: [
@@ -67,6 +72,8 @@ const TARGETS = [
             'SiteRememberDeviceSetting',
             'PortalLogoutConfigOpenApiVO',
             'SiteMulticastRateLimitSetting',
+            'SiteJumboOpenApiVO',
+            'SiteLagHashAlgOpenApiVO',
         ],
     },
     {
@@ -187,8 +194,32 @@ function describe(text) {
     return `.describe(${JSON.stringify(short)})`;
 }
 
+/**
+ * Java octal escapes (backslash-0 followed by up to three octal digits) mean one character, but JavaScript reads
+ * backslash-0177 as backslash-017 plus a literal "7", which would forbid that digit. They are rewritten as hex escapes.
+ */
+function javaOctalToJs(pattern) {
+    let out = '';
+    for (let index = 0; index < pattern.length; index++) {
+        const char = pattern[index];
+        if (char !== '\\') {
+            out += char;
+            continue;
+        }
+        const octal = /^0([0-3][0-7]{2}|[0-7]{1,2})/.exec(pattern.slice(index + 1));
+        if (octal) {
+            out += `\\x${Number.parseInt(octal[1], 8).toString(16).padStart(2, '0')}`;
+            index += octal[0].length;
+        } else {
+            out += pattern.slice(index, index + 2);
+            index++;
+        }
+    }
+    return out;
+}
+
 function patternFor(pattern, where) {
-    const anchored = `^(?:${pattern})$`;
+    const anchored = `^(?:${javaOctalToJs(pattern)})$`;
     try {
         new RegExp(anchored);
         return `.regex(new RegExp(${JSON.stringify(anchored)}))`;

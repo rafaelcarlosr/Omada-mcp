@@ -39,7 +39,10 @@ import { registerCreatePortScheduleTool } from './createPortSchedule.js';
 import { registerCreateRateLimitProfileTool } from './createRateLimitProfile.js';
 import { registerCreateRoleTool } from './createRole.js';
 import { registerCreateSamlIdpTool } from './createSamlIdp.js';
+import { registerCreateScenarioTool } from './createScenario.js';
 import { registerCreateServiceTypeTool } from './createServiceType.js';
+import { registerCreateSiteTool } from './createSite.js';
+import { registerCreateSiteTagTool } from './createSiteTag.js';
 import { registerCreateSsidTool } from './createSsid.js';
 import { registerCreateSslVpnLockTool } from './createSslVpnLock.js';
 import { registerCreateSslVpnResourceTool } from './createSslVpnResource.js';
@@ -83,7 +86,10 @@ import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
 import { registerDeleteRateLimitProfileTool } from './deleteRateLimitProfile.js';
 import { registerDeleteRoleTool } from './deleteRole.js';
 import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
+import { registerDeleteScenarioTool } from './deleteScenario.js';
 import { registerDeleteServiceTypeTool } from './deleteServiceType.js';
+import { registerDeleteSiteTool } from './deleteSite.js';
+import { registerDeleteSiteTagTool } from './deleteSiteTag.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
 import { registerDeleteSslVpnLockTool } from './deleteSslVpnLock.js';
@@ -339,8 +345,12 @@ import { registerGetSiteBackupResultTool } from './getSiteBackupResult.js';
 import { registerGetSiteCapacityTool } from './getSiteCapacity.js';
 import { registerGetSiteDetailTool } from './getSiteDetail.js';
 import { registerGetSiteDeviceAccountTool } from './getSiteDeviceAccount.js';
+import { registerGetSiteHealthOverviewTool } from './getSiteHealthOverview.js';
+import { registerGetSiteJumboTool } from './getSiteJumbo.js';
+import { registerGetSiteLagHashAlgorithmTool } from './getSiteLagHashAlgorithm.js';
 import { registerGetSiteMailServerTool } from './getSiteMailServer.js';
 import { registerGetSiteNtpStatusTool } from './getSiteNtpStatus.js';
+import { registerGetSiteOverridesTool } from './getSiteOverrides.js';
 import { registerGetSiteRememberSettingTool } from './getSiteRememberSetting.js';
 import { registerGetSiteSpecificationTool } from './getSiteSpecification.js';
 import { registerGetSitesApsAvailableChannelTool } from './getSitesApsAvailableChannel.js';
@@ -459,11 +469,13 @@ import { registerListMostActiveClientsTool } from './listMostActiveClients.js';
 import { registerListOsgAclsTool } from './listOsgAcls.js';
 import { registerListOuiProfileSummariesTool } from './listOuiProfileSummaries.js';
 import { registerListPendingDevicesTool } from './listPendingDevices.js';
+import { registerListPlacedSitePositionsTool } from './listPlacedSitePositions.js';
 import { registerListPolicyRoutesTool } from './listPolicyRoutes.js';
 import { registerListPortalsWithLogoutTool } from './listPortalsWithLogout.js';
 import { registerListPortForwardingRulesTool } from './listPortForwardingRules.js';
 import { registerListRadiusProfilesTool } from './listRadiusProfiles.js';
 import { registerListSamlIdpsTool } from './listSamlIdps.js';
+import { registerListScenariosTool } from './listScenarios.js';
 import { registerListServiceTypeTool } from './listServiceType.js';
 import { registerListSiteAlertsTool } from './listSiteAlerts.js';
 import { registerListSiteAuditLogsTool } from './listSiteAuditLogs.js';
@@ -474,6 +486,7 @@ import { registerListSitesCableTestSwitchesIncrementResultsTool } from './listSi
 import { registerListSitesCableTestSwitchesPortsTool } from './listSitesCableTestSwitchesPorts.js';
 import { registerListSitesSettingIotDevicesTool } from './listSitesSettingIotDevices.js';
 import { registerListSitesStacksTool } from './listSitesStacks.js';
+import { registerListSiteTagsTool } from './listSiteTags.js';
 import { registerListSiteThreatManagementTool } from './listSiteThreatManagement.js';
 import { registerListSiteToSiteVpnPeerStatusTool } from './listSiteToSiteVpnPeerStatus.js';
 import { registerListSiteToSiteVpnStatusTool } from './listSiteToSiteVpnStatus.js';
@@ -500,6 +513,7 @@ import { registerListSwitchPortOverviewTool } from './listSwitchPortOverview.js'
 import { registerListSwitchPortPoeInfoTool } from './listSwitchPortPoeInfo.js';
 import { registerListSwitchPortTagsTool } from './listSwitchPortTags.js';
 import { registerListTimeRangeProfilesTool } from './listTimeRangeProfiles.js';
+import { registerListUnplacedSitePositionsTool } from './listUnplacedSitePositions.js';
 import { registerListUpgradeFirmwaresTool } from './listUpgradeFirmwares.js';
 import { registerListUpgradeOverviewFirmwaresTool } from './listUpgradeOverviewFirmwares.js';
 import { registerListVoucherGroupsTool } from './listVoucherGroups.js';
@@ -545,6 +559,9 @@ import { registerSetIpsConfigTool } from './setIpsConfig.js';
 import { registerSetMfaStatusTool } from './setMfaStatus.js';
 import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
 import { registerSetPortalLogoutSettingTool } from './setPortalLogoutSetting.js';
+import { registerSetSiteDeviceAccountTool } from './setSiteDeviceAccount.js';
+import { registerSetSiteJumboTool } from './setSiteJumbo.js';
+import { registerSetSiteLagHashAlgorithmTool } from './setSiteLagHashAlgorithm.js';
 import { registerSetSiteLedTool } from './setSiteLed.js';
 import { registerSetSiteMailServerTool } from './setSiteMailServer.js';
 import { registerSetSiteRememberSettingTool } from './setSiteRememberSetting.js';
@@ -587,6 +604,8 @@ import { registerUpdateRateLimitProfileTool } from './updateRateLimitProfile.js'
 import { registerUpdateRoleTool } from './updateRole.js';
 import { registerUpdateSamlIdpTool } from './updateSamlIdp.js';
 import { registerUpdateServiceTypeTool } from './updateServiceType.js';
+import { registerUpdateSiteTool } from './updateSite.js';
+import { registerUpdateSiteTagTool } from './updateSiteTag.js';
 import { registerUpdateSiteToSiteVpnTool } from './updateSiteToSiteVpn.js';
 import { registerUpdateSsidTool } from './updateSsid.js';
 import { registerUpdateSslVpnLockTool } from './updateSslVpnLock.js';
@@ -630,6 +649,25 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetSiteRememberSettingTool, category: 'sites', permission: 'read' },
     { fn: registerGetSiteDeviceAccountTool, category: 'sites', permission: 'read' },
     { fn: registerGetSiteCapacityTool, category: 'sites', permission: 'read' },
+    { fn: registerListSiteTagsTool, category: 'sites', permission: 'read' },
+    { fn: registerListScenariosTool, category: 'sites', permission: 'read' },
+    { fn: registerListPlacedSitePositionsTool, category: 'sites', permission: 'read' },
+    { fn: registerListUnplacedSitePositionsTool, category: 'sites', permission: 'read' },
+    { fn: registerGetSiteOverridesTool, category: 'sites', permission: 'read' },
+    { fn: registerGetSiteHealthOverviewTool, category: 'sites', permission: 'read' },
+    { fn: registerGetSiteJumboTool, category: 'sites', permission: 'read' },
+    { fn: registerGetSiteLagHashAlgorithmTool, category: 'sites', permission: 'read' },
+    { fn: registerCreateSiteTool, category: 'sites', permission: 'write' },
+    { fn: registerUpdateSiteTool, category: 'sites', permission: 'write' },
+    { fn: registerDeleteSiteTool, category: 'sites', permission: 'write' },
+    { fn: registerCreateSiteTagTool, category: 'sites', permission: 'write' },
+    { fn: registerUpdateSiteTagTool, category: 'sites', permission: 'write' },
+    { fn: registerDeleteSiteTagTool, category: 'sites', permission: 'write' },
+    { fn: registerCreateScenarioTool, category: 'sites', permission: 'write' },
+    { fn: registerDeleteScenarioTool, category: 'sites', permission: 'write' },
+    { fn: registerSetSiteJumboTool, category: 'sites', permission: 'write' },
+    { fn: registerSetSiteLagHashAlgorithmTool, category: 'sites', permission: 'write' },
+    { fn: registerSetSiteDeviceAccountTool, category: 'sites', permission: 'write' },
 
     // --- Devices (general) ---
     { fn: registerListDevicesTool, category: 'devices-general', permission: 'read' },

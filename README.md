@@ -412,17 +412,41 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `setPortalLogoutSetting` | Change the domain of the captive portal logout URL. | `profiles:rw` |
 | `setIntelliRecoverSetting` | Turn automatic intelli-recover (PoE cycling of unreachable devices) on or off and set its intervals. | `profiles:rw` |
 
+#### Sites
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `createSite` | Create a site (name, region, time zone, scenario, device account, tags, position). | `sites:rw` |
+| `updateSite` | Change a site name, region, time zone, scenario, tags, NTP, DST, address or position. | `sites:rw` |
+| `deleteSite` | Delete a site and all its configuration; refused while it has devices and for the OMADA_SITE_ID site. | `sites:rw` |
+| `createSiteTag` | Create a site tag. | `sites:rw` |
+| `updateSiteTag` | Rename a site tag. | `sites:rw` |
+| `deleteSiteTag` | Delete a site tag; it is removed from every site. | `sites:rw` |
+| `createScenario` | Create a custom site scenario. | `sites:rw` |
+| `deleteScenario` | Delete a custom site scenario; built-in and in-use scenarios are refused. | `sites:rw` |
+| `setSiteJumbo` | Set the jumbo frame size (1518-9216 bytes) of the switches in the site. | `sites:rw` |
+| `setSiteLagHashAlgorithm` | Set how switches spread traffic over LAG members (MAC or IP based). | `sites:rw` |
+| `setSiteDeviceAccount` | Change the device login (web UI and SSH) of every device in the site. The password is masked in results. | `sites:rw` |
+
 ### Site & Client
 
 Site listing, client monitoring, and client-level operational controls (rate limits, block/unblock, reconnect).
 
 <details>
-<summary>Read tools (23)</summary>
+<summary>Read tools (31)</summary>
 
 | Tool | Description |
 |---|---|
 | `listSites` | Lists all sites configured on the controller. |
 | `getSiteCapacity` | Get site capacity settings including maximum device and client counts. |
+| `listSiteTags` | List the site tags with their IDs. |
+| `listScenarios` | List site scenarios and whether each is built in. |
+| `listPlacedSitePositions` | List sites placed on the global map with coordinates. |
+| `listUnplacedSitePositions` | List sites not yet placed on the global map (paginated, name search). |
+| `getSiteOverrides` | Show which settings of the given sites override their site template. |
+| `getSiteHealthOverview` | Get the global-map health overview of a site (device and client health, incidents, alerts). |
+| `getSiteJumbo` | Get the switch jumbo frame size of the site. |
+| `getSiteLagHashAlgorithm` | Get the switch LAG hash algorithm of the site. |
 | `getSiteDetail` | Get detailed information about a site, including name, region, timezone, and configuration. |
 | `getSiteDeviceAccount` | Get device account settings for a site. |
 | `getSiteNtpStatus` | Get NTP server status and configuration for a site. |
