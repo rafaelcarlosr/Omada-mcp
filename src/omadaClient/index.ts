@@ -30,6 +30,19 @@ import { ApOperations } from './aps.js';
 import { AuthManager } from './auth.js';
 import { ClientOperations, type clientStatGranularitySchema, type clientTimelineTypeSchema, type msRangeSchema } from './client.js';
 import { ControllerOperations } from './controller.js';
+import {
+    ControllerSettingOperations,
+    type clientDetailPayloadSchema,
+    type controllerLoggingPayloadSchema,
+    type controllerRetentionPayloadSchema,
+    type dataRetentionPayloadSchema,
+    type generalSettingsPayloadSchema,
+    type radiusProxyPayloadSchema,
+    type remoteLoggingPayloadSchema,
+    type webhookCreatePayloadSchema,
+    type webhookTestPayloadSchema,
+    type webhookUpdatePayloadSchema,
+} from './controllerSettings.js';
 import { DeviceOperations } from './device.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
 import { LogOperations, type LogQueryOptions } from './log.js';
@@ -109,6 +122,7 @@ export class OmadaClient {
     private readonly profileOps: ProfileOperations;
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly siteAdminOps: SiteAdminOperations;
+    private readonly controllerSettingOps: ControllerSettingOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -157,6 +171,7 @@ export class OmadaClient {
         this.profileOps = new ProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3280,5 +3295,112 @@ export class OmadaClient {
     /** The site ID configured with OMADA_SITE_ID, if any. */
     public configuredSiteId(): string | undefined {
         return this.siteOps.configuredSiteId();
+    }
+
+    // ---- Controller settings (ControllerSettingOperations) ----
+    public async setClientActiveTimeout(payload: z.input<typeof schemas.clientActiveTimeout21Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setClientActiveTimeout(payload, h);
+    }
+
+    public async setControllerRetention(payload: z.input<typeof controllerRetentionPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setControllerRetention(payload, h);
+    }
+
+    public async setDataRetention(payload: z.input<typeof dataRetentionPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setDataRetention(payload, h);
+    }
+
+    public async setDeviceAccessManagement(payload: z.input<typeof schemas.deviceAccessManagementVO21Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setDeviceAccessManagement(payload, h);
+    }
+
+    public async setUiInterface(payload: z.input<typeof schemas.uIInterface21Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setUiInterface(payload, h);
+    }
+
+    public async setExperienceImprovement(
+        payload: z.input<typeof schemas.experienceImprovementProgram21Schema>,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.controllerSettingOps.setExperienceImprovement(payload, h);
+    }
+
+    public async setGeneralSettings(payload: z.input<typeof generalSettingsPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setGeneralSettings(payload, h);
+    }
+
+    public async setRadiusProxy(payload: z.input<typeof radiusProxyPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setRadiusProxy(payload, h);
+    }
+
+    public async setRemoteLogging(payload: z.input<typeof remoteLoggingPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setRemoteLogging(payload, h);
+    }
+
+    public async setControllerLogging(payload: z.input<typeof controllerLoggingPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setControllerLogging(payload, h);
+    }
+
+    public async getClientRecognition(h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.getClientRecognition(h);
+    }
+
+    public async setClientRecognition(
+        payload: z.input<typeof schemas.clientRecognitionEnableOpenApiVO21Schema>,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.controllerSettingOps.setClientRecognition(payload, h);
+    }
+
+    public async getClientDetailInformation(h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.getClientDetailInformation(h);
+    }
+
+    public async setClientDetailInformation(payload: z.input<typeof clientDetailPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setClientDetailInformation(payload, h);
+    }
+
+    public async getControllerDstInfo(h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.getControllerDstInfo(h);
+    }
+
+    public async getSiteDstInfo(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.getSiteDstInfo(siteId, h);
+    }
+
+    public async getPrivacyPolicyStatus(h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.getPrivacyPolicyStatus(h);
+    }
+
+    public async getUpgradePort(h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.getUpgradePort(h);
+    }
+
+    public async listGlobalGatewayWanStatus(page: number, pageSize: number, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.listGlobalGatewayWanStatus(page, pageSize, h);
+    }
+
+    public async createWebhook(payload: z.input<typeof webhookCreatePayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.createWebhook(payload, h);
+    }
+
+    public async updateWebhook(webhookId: string, payload: z.input<typeof webhookUpdatePayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.updateWebhook(webhookId, payload, h);
+    }
+
+    public async deleteWebhook(webhookId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.deleteWebhook(webhookId, h);
+    }
+
+    public async testWebhook(webhookId: string, payload: z.input<typeof webhookTestPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.testWebhook(webhookId, payload, h);
+    }
+
+    public async sendTestMail(payload: z.input<typeof schemas.sendMailServerOpenApiVO21Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.sendTestMail(payload, h);
+    }
+
+    public async checkControllerUpdate(payload: z.input<typeof schemas.channelUpgrade21Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.checkControllerUpdate(payload, h);
     }
 }
