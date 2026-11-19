@@ -142,7 +142,17 @@ const TARGETS = [
     {
         file: '04.6-site-network-setting-security.json',
         suffix: '',
-        names: ['UrlFilteringOpenApiVO', 'AttackDefenseSetting', 'IpsInfo', 'ClientTrafficOpenApiQueryDataVO'],
+        names: [
+            'UrlFilteringOpenApiVO',
+            'AttackDefenseSetting',
+            'IpsInfo',
+            'ClientTrafficOpenApiQueryDataVO',
+            'UpdateWidsConfigOpenApiVO',
+            'UpdateWipsConfigOpenApiVO',
+            'New IPS allow list entry',
+            'Modify IPS allow list entry',
+            'IpsSignatureConfig',
+        ],
     },
     {
         file: '04.7-site-network-setting-transmission.json',
@@ -232,6 +242,11 @@ const TARGETS = [
         ],
     },
     { file: '16-log.json', suffix: '', names: ['AuditLogNotificationSettingEditOpenApiVO'] },
+    {
+        file: '22-global-security.json',
+        suffix: '22',
+        names: ['QueryThreatMapOpenApiVO', 'QueryCountryThreatListOpenApiVO', 'OpsBlockedCountryOpenApiVO'],
+    },
     {
         file: '17-incident-detect.json',
         suffix: '',

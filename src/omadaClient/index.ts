@@ -46,6 +46,7 @@ import {
 } from './controllerSettings.js';
 import { DashboardOperations, type secondsRangeSchema as dashboardRangeSchema } from './dashboard.js';
 import { DeviceOperations } from './device.js';
+import { GlobalSecurityOperations } from './globalSecurity.js';
 import { type authSurveyPayloadSchema, HotspotAdminOperations, type secondsRangeSchema, type VoucherGroupQuery } from './hotspotAdmin.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
 import { LogOperations, type LogQueryOptions } from './log.js';
@@ -60,6 +61,7 @@ import {
     type reportTabPayloadSchema,
 } from './monitoring.js';
 import { NetworkOperations, type SsidBasicConfig } from './network.js';
+import { NetworkSecurityOperations } from './networkSecurity.js';
 import {
     type bonjourServicePayloadSchema,
     type ouiProfilePayloadSchema,
@@ -136,6 +138,8 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
     private readonly authProfileOps: AuthProfileOperations;
+    private readonly networkSecurityOps: NetworkSecurityOperations;
+    private readonly globalSecurityOps: GlobalSecurityOperations;
     private readonly siteAdminOps: SiteAdminOperations;
     private readonly controllerSettingOps: ControllerSettingOperations;
     private readonly hotspotAdminOps: HotspotAdminOperations;
@@ -192,6 +196,8 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.networkSecurityOps = new NetworkSecurityOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.globalSecurityOps = new GlobalSecurityOperations(this.request, (path) => this.buildOmadaPath(path));
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3083,6 +3089,93 @@ export class OmadaClient {
 
     public async getSwitchOuiAutoAddVlanAllSupport(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
+    }
+
+    // ---- Network security (NetworkSecurityOperations) ----
+    public async getWirelessIdsConfig(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.networkSecurityOps.getWirelessIdsConfig(siteId, h);
+    }
+
+    public async setWirelessIdsConfig(
+        payload: z.input<typeof schemas.updateWidsConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.networkSecurityOps.setWirelessIdsConfig(payload, siteId, h);
+    }
+
+    public async getWirelessIpsConfig(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.networkSecurityOps.getWirelessIpsConfig(siteId, h);
+    }
+
+    public async setWirelessIpsConfig(
+        payload: z.input<typeof schemas.updateWipsConfigOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.networkSecurityOps.setWirelessIpsConfig(payload, siteId, h);
+    }
+
+    public async createIpsAllowEntry(
+        payload: z.input<typeof schemas.newIPSAllowListEntrySchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.networkSecurityOps.createIpsAllowEntry(payload, siteId, h);
+    }
+
+    public async updateIpsAllowEntry(
+        payload: z.input<typeof schemas.modifyIPSAllowListEntrySchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.networkSecurityOps.updateIpsAllowEntry(payload, siteId, h);
+    }
+
+    public async deleteIpsAllowEntry(entryId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.networkSecurityOps.deleteIpsAllowEntry(entryId, siteId, h);
+    }
+
+    public async deleteIpsBlockEntry(entryId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.networkSecurityOps.deleteIpsBlockEntry(entryId, siteId, h);
+    }
+
+    public async updateIpsSignature(
+        signId: string,
+        payload: z.input<typeof schemas.ipsSignatureConfigSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.networkSecurityOps.updateIpsSignature(signId, payload, siteId, h);
+    }
+
+    public async deleteIpsSignature(signId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.networkSecurityOps.deleteIpsSignature(signId, siteId, h);
+    }
+
+    // ---- Controller-wide threats and blocked countries (GlobalSecurityOperations) ----
+    public async getThreatMap(query: z.input<typeof schemas.queryThreatMapOpenApiVO22Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.globalSecurityOps.getThreatMap(query, h);
+    }
+
+    public async getThreatCategoryCounts(query: z.input<typeof schemas.queryThreatMapOpenApiVO22Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.globalSecurityOps.getThreatCategoryCounts(query, h);
+    }
+
+    public async listCountryThreats(query: z.input<typeof schemas.queryCountryThreatListOpenApiVO22Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.globalSecurityOps.listCountryThreats(query, h);
+    }
+
+    public async listBlockedCountries(siteIds?: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.globalSecurityOps.listBlockedCountries(siteIds, h);
+    }
+
+    public async blockCountry(country: string, siteIds: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.globalSecurityOps.blockCountry(country, siteIds, h);
+    }
+
+    public async unblockCountry(country: string, siteIds: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.globalSecurityOps.unblockCountry(country, siteIds, h);
     }
 
     // ---- RADIUS/LDAP profiles and built-in RADIUS users (AuthProfileOperations) ----

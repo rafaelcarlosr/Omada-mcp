@@ -233,6 +233,16 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `setWirelessIdsConfig` | Change wireless IDS status, level and detections; level only changes while enabled. | `security-wids:rw` |
+| `setWirelessIpsConfig` | Change wireless IPS; disabling also turns off deauthentication and dynamic blocking. | `security-wids:rw` |
+| `createIpsAllowEntry` | Exempt an IP, LAN network or subnet from gateway IPS blocking. | `firewall-ids:rw` |
+| `updateIpsAllowEntry` | Change an IPS allow list entry; unlisted fields are kept. | `firewall-ids:rw` |
+| `deleteIpsAllowEntry` | Delete an IPS allow list entry. | `firewall-ids:rw` |
+| `deleteIpsBlockEntry` | Delete an IPS block list entry. | `firewall-ids:rw` |
+| `updateIpsSignature` | Change an IPS signature suppression (all traffic or tracked IPs/subnets). | `firewall-ids:rw` |
+| `deleteIpsSignature` | Delete an IPS signature suppression. | `firewall-ids:rw` |
+| `blockCountry` | Block a country on the given sites, verified per site. | `security-threat:rw` |
+| `unblockCountry` | Stop blocking a country on the given sites. | `security-threat:rw` |
 | `createRadiusProfile` | Create a RADIUS profile; server passwords are redacted in responses. | `auth-profiles:rw` |
 | `updateRadiusProfile` | Change listed RADIUS profile fields; the rest, passwords included, is kept. Built-in profile refused. | `auth-profiles:rw` |
 | `deleteRadiusProfile` | Delete a RADIUS profile; the built-in profile is refused. | `auth-profiles:rw` |
@@ -781,6 +791,12 @@ WAN/LAN configuration, SSIDs, WLAN groups, routing, NAT, DHCP, DNS, firewall set
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getWirelessIdsConfig` | Gets the wireless IDS setting. |
+| `getWirelessIpsConfig` | Gets the wireless IPS setting. |
+| `getThreatMap` | Gets the controller-wide IPS threat map for a period. |
+| `getThreatCategoryCounts` | Gets controller-wide IPS threat counts per category. |
+| `listCountryThreats` | Lists IPS threats against one country (paginated). |
+| `listBlockedCountries` | Lists blocked country codes. |
 | `getSsidConfig` | Gets the complete configuration of one SSID by ID, secrets redacted. |
 | `listDuplicateSsidNames` | Lists SSID names used more than once in the site. |
 | `listSsidApGroups` | Lists the AP groups an SSID is broadcast on. |
