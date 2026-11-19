@@ -14,6 +14,7 @@ describe('ScheduleOperations', () => {
     beforeEach(() => {
         mockRequest = {
             get: vi.fn(),
+            fetchPaginated: vi.fn(),
             ensureSuccess: vi.fn((response: OmadaApiResponse<unknown>) => {
                 if (response.errorCode === 0) return response.result;
                 throw new Error(response.msg ?? 'API Error');
@@ -79,54 +80,42 @@ describe('ScheduleOperations', () => {
     });
 
     describe('getPoeScheduleList', () => {
-        it('should call correct endpoint with default siteId', async () => {
-            const mockResponse = { errorCode: 0, result: { schedules: [] } };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+        it('should fetch every page with the default siteId', async () => {
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([{ id: 's1' }]);
             const result = await scheduleOps.getPoeScheduleList();
             expect(mockSite.resolveSiteId).toHaveBeenCalledWith(undefined);
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/default-site/poe-schedules', undefined, undefined);
-            expect(result).toEqual({ schedules: [] });
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/default-site/poe-schedules', {}, undefined);
+            expect(result).toEqual([{ id: 's1' }]);
         });
 
-        it('should pass siteId', async () => {
-            const mockResponse = { errorCode: 0, result: { schedules: [] } };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
-            await scheduleOps.getPoeScheduleList('site-123');
-            expect(mockSite.resolveSiteId).toHaveBeenCalledWith('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/poe-schedules', undefined, undefined);
-        });
-
-        it('should pass customHeaders', async () => {
-            const mockResponse = { errorCode: 0, result: null };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
-            await scheduleOps.getPoeScheduleList(undefined, { 'X-Custom': 'value' });
-            expect(mockRequest.get).toHaveBeenCalledWith(expect.any(String), undefined, { 'X-Custom': 'value' });
+        it('should pass siteId and customHeaders', async () => {
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([]);
+            await scheduleOps.getPoeScheduleList('site-123', { 'X-Custom': 'value' });
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith(
+                '/openapi/v1/test-omadac/sites/site-123/poe-schedules',
+                {},
+                { 'X-Custom': 'value' }
+            );
         });
     });
 
     describe('getPortScheduleList', () => {
-        it('should call correct endpoint with default siteId', async () => {
-            const mockResponse = { errorCode: 0, result: { schedules: [] } };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+        it('should fetch every page with the default siteId', async () => {
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([{ id: 's1' }]);
             const result = await scheduleOps.getPortScheduleList();
             expect(mockSite.resolveSiteId).toHaveBeenCalledWith(undefined);
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/default-site/port-schedules', undefined, undefined);
-            expect(result).toEqual({ schedules: [] });
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/default-site/port-schedules', {}, undefined);
+            expect(result).toEqual([{ id: 's1' }]);
         });
 
-        it('should pass siteId', async () => {
-            const mockResponse = { errorCode: 0, result: { schedules: [] } };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
-            await scheduleOps.getPortScheduleList('site-123');
-            expect(mockSite.resolveSiteId).toHaveBeenCalledWith('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/port-schedules', undefined, undefined);
-        });
-
-        it('should pass customHeaders', async () => {
-            const mockResponse = { errorCode: 0, result: null };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
-            await scheduleOps.getPortScheduleList(undefined, { 'X-Custom': 'value' });
-            expect(mockRequest.get).toHaveBeenCalledWith(expect.any(String), undefined, { 'X-Custom': 'value' });
+        it('should pass siteId and customHeaders', async () => {
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([]);
+            await scheduleOps.getPortScheduleList('site-123', { 'X-Custom': 'value' });
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith(
+                '/openapi/v1/test-omadac/sites/site-123/port-schedules',
+                {},
+                { 'X-Custom': 'value' }
+            );
         });
     });
 

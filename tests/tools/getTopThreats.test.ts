@@ -46,10 +46,19 @@ describe('tools/getTopThreats', () => {
 
             const result = await toolHandler({}, { sessionId: 'test-session' });
 
-            expect(mockClient.getTopThreats).toHaveBeenCalledWith(undefined);
+            expect(mockClient.getTopThreats).toHaveBeenCalledWith(undefined, { startTime: undefined, endTime: undefined });
             expect(result).toEqual({
                 content: [{ type: 'text', text: JSON.stringify(mockData, null, 2) }],
             });
+        });
+
+        it('passes the period to the client', async () => {
+            (mockClient.getTopThreats as ReturnType<typeof vi.fn>).mockResolvedValue({ geo: [] });
+            registerGetTopThreatsTool(mockServer, mockClient);
+
+            await toolHandler({ startTime: 10, endTime: 20 }, { sessionId: 'test-session' });
+
+            expect(mockClient.getTopThreats).toHaveBeenCalledWith(undefined, { startTime: 10, endTime: 20 });
         });
 
         it('should handle errors', async () => {

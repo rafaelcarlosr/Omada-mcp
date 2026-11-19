@@ -9,8 +9,9 @@ export function registerListSiteThreatManagementTool(server: McpServer, client: 
     const inputSchema = z.object({
         ...createPaginationSchema(100),
         siteId: z.string().min(1).optional(),
-        startTime: z.number().int().optional().describe('Start time as Unix timestamp in milliseconds'),
-        endTime: z.number().int().optional().describe('End time as Unix timestamp in milliseconds'),
+        startTime: z.number().int().nonnegative().optional().describe('Start of the period, epoch seconds. Defaults to 24 hours before endTime.'),
+        endTime: z.number().int().nonnegative().optional().describe('End of the period, epoch seconds. Defaults to now.'),
+        archived: z.boolean().optional().describe('List archived threats instead of current ones. Defaults to false.'),
         searchKey: z.string().optional().describe('Search keyword for filtering threats'),
         customHeaders: customHeadersSchema,
     });
@@ -18,7 +19,8 @@ export function registerListSiteThreatManagementTool(server: McpServer, client: 
     server.registerTool(
         'listSiteThreatManagement',
         {
-            description: 'List site-level threat management events detected by IPS, with optional time range and keyword filtering.',
+            description:
+                'List site-level threat management events detected by IPS over a period (the last 24 hours by default), with keyword filtering.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('listSiteThreatManagement', async (args) =>
@@ -29,6 +31,7 @@ export function registerListSiteThreatManagementTool(server: McpServer, client: 
                         pageSize: args.pageSize,
                         startTime: args.startTime,
                         endTime: args.endTime,
+                        archived: args.archived,
                         searchKey: args.searchKey,
                     },
                     args.siteId,

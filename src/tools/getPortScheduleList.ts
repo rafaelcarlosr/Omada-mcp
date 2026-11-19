@@ -6,7 +6,7 @@ export function registerGetPortScheduleListTool(server: McpServer, client: Omada
     server.registerTool(
         'getPortScheduleList',
         {
-            description: 'Get the list of port schedules configured for a site.',
+            description: 'Get the list of port schedules configured for a site. Returns every page.',
             inputSchema: siteInputSchema.shape,
         },
         wrapToolHandler('getPortScheduleList', async ({ siteId, customHeaders }) =>

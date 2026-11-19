@@ -145,26 +145,28 @@ describe('omadaClient/security', () => {
             await expect(securityOps.getTopThreats()).rejects.toThrow('Operation forbidden');
         });
 
-        it('should return top threats list', async () => {
-            const mockThreats = [
-                { ip: '1.2.3.4', count: 10 },
-                { ip: '5.6.7.8', count: 5 },
-            ];
-            const mockResponse: OmadaApiResponse<unknown[]> = { errorCode: 0, result: mockThreats };
+        it('defaults the window to the last 24 hours in seconds', async () => {
+            const mockThreats = { geo: [{ country: 'DE', attempts: 2 }], classification: [] };
+            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: mockThreats };
             (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
+            vi.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000);
 
             const result = await securityOps.getTopThreats();
 
-            expect(mockRequest.get).toHaveBeenCalledWith('/api/security/threat-management/top', undefined, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith(
+                '/api/security/threat-management/top',
+                { startTime: 1_700_000_000 - 86_400, endTime: 1_700_000_000 },
+                undefined
+            );
             expect(result).toEqual(mockThreats);
+            vi.restoreAllMocks();
         });
 
-        it('should return empty array when result is null', async () => {
-            const mockResponse = { errorCode: 0, result: null };
-            (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
+        it('passes an explicit window and headers', async () => {
+            (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue({ errorCode: 0, result: { geo: [] } });
 
-            const result = await securityOps.getTopThreats();
-            expect(result).toEqual([]);
+            await securityOps.getTopThreats({ 'X-Custom': 'v' }, { startTime: 10, endTime: 20 });
+            expect(mockRequest.get).toHaveBeenCalledWith('/api/security/threat-management/top', { startTime: 10, endTime: 20 }, { 'X-Custom': 'v' });
         });
     });
 

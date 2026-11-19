@@ -91,7 +91,7 @@ describe('tools/listSiteThreatManagement', () => {
             registerListSiteThreatManagementTool(mockServer, mockClient);
 
             await toolHandler(
-                { page: 1, pageSize: 50, startTime: 1700000000000, endTime: 1700086400000, searchKey: 'intrusion', siteId: 'test-site' },
+                { page: 1, pageSize: 50, startTime: 1700000000, endTime: 1700086400, archived: true, searchKey: 'intrusion', siteId: 'test-site' },
                 { sessionId: 'test-session' }
             );
 
@@ -99,8 +99,9 @@ describe('tools/listSiteThreatManagement', () => {
                 {
                     page: 1,
                     pageSize: 50,
-                    startTime: 1700000000000,
-                    endTime: 1700086400000,
+                    startTime: 1700000000,
+                    endTime: 1700086400,
+                    archived: true,
                     searchKey: 'intrusion',
                 },
                 'test-site',

@@ -18,15 +18,13 @@ export function registerListSiteAlertsTool(server: McpServer, client: OmadaClien
             .int()
             .optional()
             .describe(
-                'Filter alerts after this time. Unix timestamp in milliseconds (e.g. Date.now() - 86400000 for last 24h). Both startTime and endTime must be provided together.'
+                'Filter alerts after this time. Unix timestamp in milliseconds (e.g. Date.now() - 86400000 for last 24h). Defaults to 24 hours before endTime.'
             ),
         endTime: z
             .number()
             .int()
             .optional()
-            .describe(
-                'Filter alerts before this time. Unix timestamp in milliseconds (e.g. Date.now()). Both startTime and endTime must be provided together.'
-            ),
+            .describe('Filter alerts before this time. Unix timestamp in milliseconds (e.g. Date.now()). Defaults to now.'),
         searchKey: z.string().optional().describe('Keyword to filter alerts by description or device name.'),
         customHeaders: customHeadersSchema,
     });
@@ -35,7 +33,7 @@ export function registerListSiteAlertsTool(server: McpServer, client: OmadaClien
         'listSiteAlerts',
         {
             description:
-                'List alert logs for a site: threshold breaches, device failures, security events, and other conditions requiring attention. Returns alert type, severity, device, and timestamp. Use startTime/endTime (both required if filtering by time) to narrow the range.',
+                'List alert logs for a site: threshold breaches, device failures, security events, and other conditions requiring attention. Returns alert type, severity, device, and timestamp. The controller needs a time window: startTime/endTime default to the last 24 hours.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('listSiteAlerts', async (args) =>

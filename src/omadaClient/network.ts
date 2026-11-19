@@ -1722,11 +1722,10 @@ export class NetworkOperations {
      * Get LAN profile usage on EAP/switch devices.
      * OperationId: getUseLanProfileES
      */
-    public async getLanProfileEsUsage(profileId: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getLanProfileEsUsage(profileId: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/lan-profiles/${encodeURIComponent(profileId)}/es`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**
@@ -1748,33 +1747,30 @@ export class NetworkOperations {
      * Get OSPF process configuration.
      * OperationId: getGridOspfProcess
      */
-    public async getOspfProcess(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getOspfProcess(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/ospf/process`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**
      * Get OSPF interface configuration.
      * OperationId: getGridOspfInterface
      */
-    public async getOspfInterface(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getOspfInterface(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/ospf/interface`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**
      * Get VRRP configuration for OSW devices.
      * OperationId: getGridOswVrrp
      */
-    public async getVrrpConfig(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getVrrpConfig(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/osw-vrrp`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**
@@ -1857,7 +1853,8 @@ export class NetworkOperations {
     public async getBandwidthCtrlDetail(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/qos/gateway/bwcs`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
+        // One full page: the result also carries supportByDsLiteAndMapE, and an empty list reports currentPage 0.
+        const response = await this.request.get<OmadaApiResponse<unknown>>(path, { page: 1, pageSize: 1000 }, customHeaders);
         return this.request.ensureSuccess(response);
     }
 

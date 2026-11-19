@@ -46,7 +46,7 @@ describe('tools/getDashboardWifiSummary', () => {
 
             const result = await toolHandler({}, { sessionId: 'test-session' });
 
-            expect(mockClient.getDashboardWifiSummary).toHaveBeenCalledWith(undefined, undefined);
+            expect(mockClient.getDashboardWifiSummary).toHaveBeenCalledWith(undefined, undefined, { start: undefined, end: undefined });
             expect(result).toEqual({
                 structuredContent: mockData,
                 content: [{ type: 'text', text: JSON.stringify(mockData, null, 2) }],
@@ -59,9 +59,9 @@ describe('tools/getDashboardWifiSummary', () => {
 
             registerGetDashboardWifiSummaryTool(mockServer, mockClient);
 
-            await toolHandler({ siteId: 'test-site' }, { sessionId: 'test-session' });
+            await toolHandler({ siteId: 'test-site', start: 100, end: 200 }, { sessionId: 'test-session' });
 
-            expect(mockClient.getDashboardWifiSummary).toHaveBeenCalledWith('test-site', undefined);
+            expect(mockClient.getDashboardWifiSummary).toHaveBeenCalledWith('test-site', undefined, { start: 100, end: 200 });
         });
 
         it('should handle errors', async () => {

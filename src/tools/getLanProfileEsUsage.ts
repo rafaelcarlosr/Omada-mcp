@@ -15,7 +15,8 @@ export function registerGetLanProfileEsUsageTool(server: McpServer, client: Omad
     server.registerTool(
         'getLanProfileEsUsage',
         {
-            description: 'Get EAP/switch device usage for a specific LAN profile. Returns which devices are using the profile. Requires `profileId`.',
+            description:
+                'List the Agile Series (ES) switch ports that use a LAN profile; profiles that do not apply to ES switches are rejected (-33558). Returns every page. Requires `profileId`.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getLanProfileEsUsage', async ({ profileId, siteId, customHeaders }) =>

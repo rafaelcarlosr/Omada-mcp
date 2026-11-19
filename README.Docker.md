@@ -636,7 +636,7 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `getGatewayLanStatus` | Gets LAN port status for a specific gateway. |
 | `getGatewayPorts` | Gets port information for a specific gateway. |
 | `getApDetail` | Fetches detailed configuration and status for a specific access point. |
-| `getApRadios` | Gets radio information for a specific access point. |
+| `getApRadios` | Gets per-band radio traffic counters (packets, bytes, drops, errors, retries) for an access point. |
 | `getStackPorts` | Gets port information for a switch stack. |
 | `listPendingDevices` | Lists devices pending adoption in a site. |
 | `getAllDeviceBySite` | Gets all devices in a site including offline and disconnected devices. |
@@ -695,7 +695,7 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `getUpgradeOverviewCritical` | Get the number of devices/models with critical firmware upgrades available. |
 | `getUpgradeOverviewTryBeta` | Get the current status of the try-beta firmware upgrade switch. |
 | `listUpgradeFirmwares` | List available firmware packages for upgrade (paginated). |
-| `listUpgradeOverviewFirmwares` | List firmware overview for upgradeable devices (paginated). |
+| `listUpgradeOverviewFirmwares` | List the firmware available per model for one release channel (stable by default; paginated). |
 | `listSitesStacks` | List switch stacks in a site (paginated). |
 | `getSitesDeviceWhiteList` | Get the device adoption whitelist for a site (paginated). |
 | `listSitesSettingIotDevices` | List devices in a site that support Bluetooth advertising (iBeacon) (paginated). |
@@ -901,7 +901,7 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | Tool            | Description                                               |
 | --------------- | --------------------------------------------------------- |
 | `getThreatList` | Gets global threat management list with filtering.        |
-| `getTopThreats` | Gets top threats from the global threat management view.  |
+| `getTopThreats` | Gets the top attacking countries and threat classifications across all sites (last 24 hours by default). |
 
 ### Composite Troubleshooting Tools
 
@@ -969,7 +969,7 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 
 | Tool                       | Description                                                        |
 | -------------------------- | ------------------------------------------------------------------ |
-| `listSiteThreatManagement` | Lists site-level threat management events.                         |
+| `listSiteThreatManagement` | Lists site IPS threat events over a period (last 24 hours by default; archived optional). |
 | `getWids` | Gets WIDS (Wireless Intrusion Detection) information for a site. |
 | `getRogueAps` | Gets rogue access points detected in a site. |
 | `getVpnTunnelStats` | Gets VPN tunnel statistics for a site. |
@@ -1014,7 +1014,7 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `listVpnServerClientStatus` | List the clients connected to one client-to-site VPN server. |
 | `listVpnClientStatus` | List client-to-site VPN client tunnel status for one VPN type (L2TP, PPTP, OpenVPN, WireGuard). |
 | `listSiteToSiteVpnStatus` | List site-to-site VPN status for IPsec or WireGuard tunnels. |
-| `listSiteToSiteVpnPeerStatus` | List the peer status of one site-to-site VPN. |
+| `listSiteToSiteVpnPeerStatus` | List the peer status of one site-to-site VPN tunnel (tunnel id from listSiteToSiteVpnStatus). |
 ### Profiles
 
 | Tool                          | Description                                                                              |
@@ -1110,7 +1110,7 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `getAllCloudUsers` | List all cloud users on the controller, excluding the root account. |
 | `getAllLocalUsers` | List all local users on the controller, excluding the root account. |
 | `getAllRoles` | [DEPRECATED] Use `getUserRoleProfile` instead. List all user roles configured on the controller. |
-| `getAllUsersApp` | List all users (cloud and local) in grid view. |
+| `getAllUsersApp` | List all users (cloud and local); the controller allows it only for authorization-code apps. |
 | `getAvailableRoles` | List roles available for user assignment. |
 | `getRoleDetail` | Get detailed information about a specific role. Requires `roleId`. |
 | `createRole` | Create a custom administrator role with per-area privileges. Preview by default. |
@@ -1430,7 +1430,7 @@ With OAuth client credentials (the only mode this server uses), controller 6.3 r
 | `getRemoteLogging` | Get the global syslog/remote logging configuration, including syslo.... | `getRemoteLogging` |
 | `getRetention` | Get the data retention configuration for the controller, including .... | `getRetention` |
 | `getRoamingSetting` | Get the client roaming configuration, including 802.11r/k/v setting.... | `getRoamingSetting` |
-| `getRoutingTable` | Get the live routing table for a site filtered by type. | `getRoutingTable` |
+| `getRoutingTable` | Get the live routing table of the gateway or the routing switches. | `getRoutingTable` |
 | `getServiceTypeSummary` | Get a summary of service type profiles for the site, including pred.... | `getServiceTypeSummary` |
 | `getSiteToSiteVpnInfo` | Get detailed information about a specific site-to-site VPN by ID, i.... | `getSiteToSiteVpnInfo` |
 | `getSsidsBySite` | Get a flat SSID list filtered by device type. | `getSsidsBySite` |

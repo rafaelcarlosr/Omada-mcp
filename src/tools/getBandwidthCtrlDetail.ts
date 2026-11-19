@@ -7,7 +7,8 @@ export function registerGetBandwidthCtrlDetailTool(server: McpServer, client: Om
     server.registerTool(
         'getBandwidthCtrlDetail',
         {
-            description: 'Get gateway bandwidth control detail settings for a site, including per-IP and per-SSID bandwidth limits.',
+            description:
+                'Get gateway bandwidth control detail settings for a site, including per-IP and per-SSID bandwidth limits. Returns up to 1000 rules.',
             inputSchema: siteInputSchema.shape,
         },
         wrapToolHandler('getBandwidthCtrlDetail', async ({ siteId, customHeaders }) =>

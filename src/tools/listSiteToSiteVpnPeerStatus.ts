@@ -5,7 +5,11 @@ import type { OmadaClient } from '../omadaClient/index.js';
 import { siteInputSchema, toToolResult, wrapToolHandler } from '../server/common.js';
 
 const inputSchema = siteInputSchema.extend({
-    vpnId: z.string().trim().min(1).describe('Site-to-site VPN ID from listSiteToSiteVpns or listSiteToSiteVpnStatus.'),
+    vpnId: z
+        .string()
+        .trim()
+        .min(1)
+        .describe('Tunnel ID: the id field of listSiteToSiteVpnStatus, not the VPN configuration ID (that one is rejected with -1001).'),
 });
 
 type Client = Pick<OmadaClient, 'listSiteToSiteVpnPeerStatus'>;

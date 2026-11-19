@@ -13,15 +13,13 @@ export function registerListGlobalAlertsTool(server: McpServer, client: OmadaCli
             .int()
             .optional()
             .describe(
-                'Filter alerts after this time. Unix timestamp in milliseconds (e.g. Date.now() - 86400000 for last 24h). Both startTime and endTime must be provided together.'
+                'Filter alerts after this time. Unix timestamp in milliseconds (e.g. Date.now() - 86400000 for last 24h). Defaults to 24 hours before endTime.'
             ),
         endTime: z
             .number()
             .int()
             .optional()
-            .describe(
-                'Filter alerts before this time. Unix timestamp in milliseconds (e.g. Date.now()). Both startTime and endTime must be provided together.'
-            ),
+            .describe('Filter alerts before this time. Unix timestamp in milliseconds (e.g. Date.now()). Defaults to now.'),
         searchKey: z.string().optional().describe('Keyword to filter alerts by description or device name.'),
         customHeaders: customHeadersSchema,
     });
@@ -30,7 +28,7 @@ export function registerListGlobalAlertsTool(server: McpServer, client: OmadaCli
         'listGlobalAlerts',
         {
             description:
-                'List alert logs across all sites on the controller: threshold breaches, device failures, security events, etc. Use startTime/endTime (both required if filtering by time) to narrow the range.',
+                'List alert logs across all sites on the controller: threshold breaches, device failures, security events, etc. The controller needs a time window: startTime/endTime default to the last 24 hours.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('listGlobalAlerts', async (args) =>

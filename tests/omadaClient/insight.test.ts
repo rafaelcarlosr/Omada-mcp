@@ -42,13 +42,16 @@ describe('InsightOperations', () => {
             };
             const mockResponse: OmadaApiResponse<PaginatedResult<unknown>> = { errorCode: 0, result: mockResult };
             vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+            vi.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000);
 
             const result = await insightOps.listSiteThreatManagement({ page: 1, pageSize: 10 }, 'site-123');
+            vi.restoreAllMocks();
 
             expect(mockSite.resolveSiteId).toHaveBeenCalledWith('site-123');
+            // The controller requires archived and a window in seconds; they default to current threats of the last day.
             expect(mockRequest.get).toHaveBeenCalledWith(
                 '/openapi/v1/test-omadac/sites/site-123/ips/grid/threat-management',
-                { page: 1, pageSize: 10 },
+                { archived: false, page: 1, pageSize: 10, 'filters.startTime': 1_700_000_000 - 86_400, 'filters.endTime': 1_700_000_000 },
                 undefined
             );
             expect(result).toEqual(mockResult);
@@ -62,13 +65,14 @@ describe('InsightOperations', () => {
             vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
 
             await insightOps.listSiteThreatManagement(
-                { page: 1, pageSize: 10, startTime: 1000000, endTime: 2000000, searchKey: 'attack' },
+                { page: 1, pageSize: 10, startTime: 1000000, endTime: 2000000, archived: true, searchKey: 'attack' },
                 'site-123'
             );
 
             expect(mockRequest.get).toHaveBeenCalledWith(
                 expect.any(String),
                 expect.objectContaining({
+                    archived: true,
                     'filters.startTime': 1000000,
                     'filters.endTime': 2000000,
                     searchKey: 'attack',
@@ -80,13 +84,12 @@ describe('InsightOperations', () => {
 
     describe('getWids', () => {
         it('should fetch WIDS information', async () => {
-            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: { attacks: 0 } };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([{ attackType: 1 }]);
 
             const result = await insightOps.getWids('site-123');
 
-            expect(result).toEqual({ attacks: 0 });
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/insight/wids', undefined, undefined);
+            expect(result).toEqual([{ attackType: 1 }]);
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/insight/wids', {}, undefined);
         });
     });
 

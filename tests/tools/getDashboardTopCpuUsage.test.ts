@@ -46,7 +46,7 @@ describe('tools/getDashboardTopCpuUsage', () => {
 
             const result = await toolHandler({}, { sessionId: 'test-session' });
 
-            expect(mockClient.getDashboardTopCpuUsage).toHaveBeenCalledWith(undefined, undefined);
+            expect(mockClient.getDashboardTopCpuUsage).toHaveBeenCalledWith(undefined, undefined, { start: undefined, end: undefined });
             expect(result).toEqual({
                 content: [{ type: 'text', text: JSON.stringify(mockData, null, 2) }],
             });
@@ -58,9 +58,9 @@ describe('tools/getDashboardTopCpuUsage', () => {
 
             registerGetDashboardTopCpuUsageTool(mockServer, mockClient);
 
-            await toolHandler({ siteId: 'test-site' }, { sessionId: 'test-session' });
+            await toolHandler({ siteId: 'test-site', start: 100, end: 200 }, { sessionId: 'test-session' });
 
-            expect(mockClient.getDashboardTopCpuUsage).toHaveBeenCalledWith('test-site', undefined);
+            expect(mockClient.getDashboardTopCpuUsage).toHaveBeenCalledWith('test-site', undefined, { start: 100, end: 200 });
         });
 
         it('should handle errors', async () => {
