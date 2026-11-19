@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { siteInputSchema, toToolResult, wrapToolHandler } from '../server/common.js';
+import { redactPasswords } from './hotspotAccountShared.js';
 
 const inputSchema = siteInputSchema.extend({
     operatorId: z.string().trim().min(1).describe('Operator ID from listHotspotOperators.'),
@@ -18,7 +19,7 @@ export function registerGetHotspotOperatorTool(server: McpServer, client: Client
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getHotspotOperator', async ({ operatorId, siteId, customHeaders }) =>
-            toToolResult(await client.getHotspotOperator(operatorId, siteId, customHeaders))
+            toToolResult(redactPasswords([await client.getHotspotOperator(operatorId, siteId, customHeaders)])[0])
         )
     );
 }

@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { siteInputSchema, toToolResult, wrapToolHandler } from '../server/common.js';
+import { redactPasswords } from './hotspotAccountShared.js';
 
 const inputSchema = siteInputSchema.extend({
     userId: z.string().trim().min(1).describe('Local user ID from listHotspotLocalUsers.'),
@@ -18,7 +19,7 @@ export function registerGetHotspotLocalUserTool(server: McpServer, client: Clien
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getHotspotLocalUser', async ({ userId, siteId, customHeaders }) =>
-            toToolResult(await client.getHotspotLocalUser(userId, siteId, customHeaders))
+            toToolResult(redactPasswords([await client.getHotspotLocalUser(userId, siteId, customHeaders)])[0])
         )
     );
 }

@@ -40,6 +40,13 @@ describe('tools/getHotspotLocalUser', () => {
         expect(() => definition.inputSchema.userId.parse('')).toThrow();
     });
 
+    it('redacts the password before returning the record', async () => {
+        client.getHotspotLocalUser.mockResolvedValueOnce({ id: 'x', name: 'n', password: 'clear-text-secret' });
+        const result = await handler({ userId: 'x' }, {});
+        expect(result.content[0].text).not.toContain('clear-text-secret');
+        expect(JSON.parse(result.content[0].text)).toMatchObject({ id: 'x', password: '[redacted]' });
+    });
+
     it('propagates read failures', async () => {
         client.getHotspotLocalUser.mockRejectedValueOnce(new Error('boom'));
         await expect(handler({ userId: 'u-1', siteId: 'site-1' }, {})).rejects.toThrow('boom');
