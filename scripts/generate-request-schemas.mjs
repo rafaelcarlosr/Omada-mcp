@@ -117,6 +117,7 @@ const TARGETS = [
             'CreateApGroupOpenApiVO',
             'UpdateApGroupOpenApiVO',
             'UpdateSsidBindApGroupOpenApiVO',
+            'LanMulticastVO',
         ],
     },
     {
@@ -160,7 +161,7 @@ const TARGETS = [
     {
         file: '04.7-site-network-setting-transmission.json',
         suffix: '',
-        names: ['ALGSetting', 'PortForwardingConfig', 'OtoNatOpenApiVO', 'StaticRoutingConfig', 'PolicyRoutingConfig'],
+        names: ['ALGSetting', 'PortForwardingConfig', 'OtoNatOpenApiVO', 'StaticRoutingConfig', 'PolicyRoutingConfig', 'OuiBasedVlanApOpenApiVO'],
     },
     {
         file: '04.8-site-network-setting-vpn.json',
@@ -188,6 +189,9 @@ const TARGETS = [
         suffix: '',
         names: [
             'CreateDdnsOpenApiVO',
+            'DnsCacheOpenApiVO',
+            'DnsProxySettingOpenApiVO',
+            'IPMacBindingGeneralSetting',
             'UpnpSettingOpenApiVO',
             'MacFiltering',
             'IPMacBinding',

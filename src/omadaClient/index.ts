@@ -55,6 +55,7 @@ import {
 import { GlobalSecurityOperations } from './globalSecurity.js';
 import { type authSurveyPayloadSchema, HotspotAdminOperations, type secondsRangeSchema, type VoucherGroupQuery } from './hotspotAdmin.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
+import { LanServiceOperations, type lanMulticastPayloadSchema } from './lanServices.js';
 import { LogOperations, type LogQueryOptions } from './log.js';
 import { LogAdminOperations, type logNotificationBodySchema, type logSelectionSchema } from './logAdmin.js';
 import type { FileServerConfig, SiteFileRestoreInfo, SiteRestoreInfo } from './maintenance.js';
@@ -144,6 +145,7 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
     private readonly authProfileOps: AuthProfileOperations;
+    private readonly lanServiceOps: LanServiceOperations;
     private readonly firewallMaintenanceOps: FirewallMaintenanceOperations;
     private readonly networkSecurityOps: NetworkSecurityOperations;
     private readonly globalSecurityOps: GlobalSecurityOperations;
@@ -203,6 +205,7 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.lanServiceOps = new LanServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.firewallMaintenanceOps = new FirewallMaintenanceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.networkSecurityOps = new NetworkSecurityOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.globalSecurityOps = new GlobalSecurityOperations(this.request, (path) => this.buildOmadaPath(path));
@@ -3097,6 +3100,89 @@ export class OmadaClient {
 
     public async getSwitchOuiAutoAddVlanAllSupport(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
+    }
+
+    // ---- LAN services (LanServiceOperations) ----
+    public async getLanNetwork(networkId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.getLanNetwork(networkId, siteId, h);
+    }
+
+    public async listAllLanNetworks(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.listAllLanNetworks(siteId, h);
+    }
+
+    public async listDhcpClients(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.lanServiceOps.listDhcpClients(siteId, h);
+    }
+
+    public async listDhcpReservationTargets(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.listDhcpReservationTargets(siteId, h);
+    }
+
+    public async setDnsCacheSetting(payload: z.input<typeof schemas.dnsCacheOpenApiVOSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.setDnsCacheSetting(payload, siteId, h);
+    }
+
+    public async clearDnsCache(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.clearDnsCache(siteId, h);
+    }
+
+    public async setDnsProxy(payload: z.input<typeof schemas.dnsProxySettingOpenApiVOSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.setDnsProxy(payload, siteId, h);
+    }
+
+    public async setIpMacBindingGeneralSetting(
+        payload: z.input<typeof schemas.iPMacBindingGeneralSettingSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.lanServiceOps.setIpMacBindingGeneralSetting(payload, siteId, h);
+    }
+
+    public async listLanMulticasts(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.lanServiceOps.listLanMulticasts(siteId, h);
+    }
+
+    public async createLanMulticast(payload: z.input<typeof lanMulticastPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.createLanMulticast(payload, siteId, h);
+    }
+
+    public async updateLanMulticast(
+        multicastId: string,
+        payload: z.input<typeof lanMulticastPayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.lanServiceOps.updateLanMulticast(multicastId, payload, siteId, h);
+    }
+
+    public async deleteLanMulticast(multicastId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.deleteLanMulticast(multicastId, siteId, h);
+    }
+
+    public async listApOuiRules(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.lanServiceOps.listApOuiRules(siteId, h);
+    }
+
+    public async createApOuiRule(
+        payload: z.input<typeof schemas.ouiBasedVlanApOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.lanServiceOps.createApOuiRule(payload, siteId, h);
+    }
+
+    public async updateApOuiRule(
+        ruleId: string,
+        payload: z.input<typeof schemas.ouiBasedVlanApOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.lanServiceOps.updateApOuiRule(ruleId, payload, siteId, h);
+    }
+
+    public async deleteApOuiRule(ruleId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.lanServiceOps.deleteApOuiRule(ruleId, siteId, h);
     }
 
     // ---- VPN reads and SSL VPN locked tunnels (VpnOperations) ----

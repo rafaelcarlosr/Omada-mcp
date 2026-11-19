@@ -233,6 +233,16 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `setDnsCacheSetting` | Turn the gateway DNS cache on or off and set its TTL. | `network-lan:rw` |
+| `clearDnsCache` | Clear the cached DNS records of the site gateway. | `network-lan:rw` |
+| `setDnsProxy` | Change the DNS proxy: DNSSEC, DNS over HTTPS/TLS or DNS override. | `network-lan:rw` |
+| `setIpMacBindingGeneralSetting` | Turn IP-MAC binding enforcement on or off for LANs and WANs. | `network-lan:rw` |
+| `createLanMulticast` | Create an IGMP or MLD snooping configuration. | `network-lan:rw` |
+| `updateLanMulticast` | Change a multicast snooping configuration; unlisted fields are kept. | `network-lan:rw` |
+| `deleteLanMulticast` | Delete a multicast snooping configuration. | `network-lan:rw` |
+| `createApOuiRule` | Create an AP OUI-based VLAN rule for SSIDs. | `network-lan:rw` |
+| `updateApOuiRule` | Change an AP OUI-based VLAN rule; unlisted fields are kept. | `network-lan:rw` |
+| `deleteApOuiRule` | Delete an AP OUI-based VLAN rule. | `network-lan:rw` |
 | `createSslVpnLockedTunnel` | Lock SSL VPN access for a user name or IP for some minutes. | `vpn:rw` |
 | `updateSslVpnLockedTunnel` | Change a locked SSL VPN tunnel, usually its lock time. | `vpn:rw` |
 | `deleteSslVpnLockedTunnels` | Unlock SSL VPN tunnels by ID. | `vpn:rw` |
@@ -805,6 +815,12 @@ WAN/LAN configuration, SSIDs, WLAN groups, routing, NAT, DHCP, DNS, firewall set
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getLanNetwork` | Gets one LAN network. |
+| `listAllLanNetworks` | Lists every network of a site without paging. |
+| `listDhcpClients` | Lists the DHCP leases of every DHCP server of a site. |
+| `listDhcpReservationTargets` | Lists networks that accept DHCP reservations and their servers. |
+| `listLanMulticasts` | Lists multicast snooping configurations. |
+| `listApOuiRules` | Lists AP OUI-based VLAN rules. |
 | `getSiteToSiteVpn` | Gets one site-to-site VPN; keys redacted. |
 | `getClientToSiteVpnServer` | Gets one client-to-site VPN server; keys redacted. |
 | `getClientToSiteVpnClient` | Gets one client-to-site VPN client; secrets redacted. |
