@@ -334,7 +334,9 @@ describe('omadaClient/site', () => {
                 const siteOps = new SiteOperations(mockRequest, buildPath);
                 const result = await siteOps.getSiteTemplateList();
 
-                expect(mockRequest.get).toHaveBeenCalledWith('/api/sitetemplates', undefined, undefined);
+                expect(mockRequest.get).toHaveBeenCalledWith('/api/sitetemplates', { page: 1, pageSize: 100 }, undefined);
+                await siteOps.getSiteTemplateList(2, 5);
+                expect(mockRequest.get).toHaveBeenLastCalledWith('/api/sitetemplates', { page: 2, pageSize: 5 }, undefined);
                 expect(result).toEqual(mockResult);
             });
         });

@@ -39,7 +39,7 @@ describe('tools/getSiteTemplateList', () => {
             (mockClient.getSiteTemplateList as ReturnType<typeof vi.fn>).mockResolvedValue(mockData);
             registerGetSiteTemplateListTool(mockServer, mockClient);
             const result = await toolHandler({}, { sessionId: 'test' });
-            expect(mockClient.getSiteTemplateList).toHaveBeenCalledWith(undefined);
+            expect(mockClient.getSiteTemplateList).toHaveBeenCalledWith(1, 100, undefined);
             expect(result).toEqual({
                 structuredContent: mockData,
                 content: [{ type: 'text', text: JSON.stringify(mockData, null, 2) }],

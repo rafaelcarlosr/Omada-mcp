@@ -459,6 +459,14 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `setSiteJumbo` | Set the jumbo frame size (1518-9216 bytes) of the switches in the site. | `sites:rw` |
 | `setSiteLagHashAlgorithm` | Set how switches spread traffic over LAG members (MAC or IP based). | `sites:rw` |
 | `setSiteDeviceAccount` | Change the device login (web UI and SSH) of every device in the site. The password is masked in results. | `sites:rw` |
+| `createSiteTemplate` | Create a site template with optional setting modules. | `sites:rw` |
+| `renameSiteTemplate` | Rename a site template. | `sites:rw` |
+| `copySiteTemplate` | Copy a site template under a new name. | `sites:rw` |
+| `deleteSiteTemplate` | Delete a site template; refused while sites are bound to it. | `sites:rw` |
+| `createSiteFromTemplate` | Create a site bound to a site template. | `sites:rw` |
+| `bindSiteToTemplate` | Bind a site to a template; the template settings replace the site settings. | `sites:rw` |
+| `unbindSitesFromTemplate` | Unbind sites from a template; they keep their current settings. | `sites:rw` |
+| `syncSitesWithTemplate` | Re-apply a template to bound sites, discarding their overrides. | `sites:rw` |
 
 #### Controller settings
 
@@ -528,7 +536,7 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 Site listing, client monitoring, and client-level operational controls (rate limits, block/unblock, reconnect).
 
 <details>
-<summary>Read tools (31)</summary>
+<summary>Read tools (37)</summary>
 
 | Tool | Description |
 |---|---|
@@ -542,6 +550,12 @@ Site listing, client monitoring, and client-level operational controls (rate lim
 | `getSiteHealthOverview` | Get the global-map health overview of a site (device and client health, incidents, alerts). |
 | `getSiteJumbo` | Get the switch jumbo frame size of the site. |
 | `getSiteLagHashAlgorithm` | Get the switch LAG hash algorithm of the site. |
+| `listSiteTemplateModules` | Setting modules a new site template can include. |
+| `listSiteTemplateAllModules` | Every site template module for basic and pro sites. |
+| `getSiteTemplateSpecification` | Features a site template supports. |
+| `getSiteTemplateCapacity` | Capacity limits of a site template. |
+| `listSiteTemplateBoundSites` | Sites bound to a template with sync status and overrides (paginated). |
+| `listSitesAvailableForTemplate` | Sites that can be bound to a template (paginated). |
 | `getSiteDetail` | Get detailed information about a site, including name, region, timezone, and configuration. |
 | `getSiteDeviceAccount` | Get device account settings for a site. |
 | `getSiteNtpStatus` | Get NTP server status and configuration for a site. |
@@ -550,7 +564,7 @@ Site listing, client monitoring, and client-level operational controls (rate lim
 | `getSiteUrl` | Get the URL associated with a site for OpenAPI access. |
 | `getSiteTemplateConfig` | Get configuration settings for a site template. Requires `siteTemplateId`. |
 | `getSiteTemplateDetail` | Get detailed information about a site template. Requires `siteTemplateId`. |
-| `getSiteTemplateList` | List all site templates configured on the controller. |
+| `getSiteTemplateList` | List the site templates with their bound-site counts (paginated). |
 | `listClients` | Lists active client devices for a site. |
 | `getClient` | [DEPRECATED] Use `listClients` instead. When you have a client MAC, `getClientDetail` is also available. This tool filters the site client list in-process. |
 | `listMostActiveClients` | Gets the most active clients sorted by traffic usage. |

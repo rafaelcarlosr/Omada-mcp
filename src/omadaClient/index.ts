@@ -82,6 +82,7 @@ import {
     type poeSchedulePayloadSchema,
     SiteServiceOperations,
 } from './siteServices.js';
+import { SiteTemplateOperations, type siteTemplateCreateSchema } from './siteTemplates.js';
 import { type healthRangeSchema, SwitchOperations, type switchGeneralSettingsSchema } from './switches.js';
 import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
 import { VpnOperations } from './vpn.js';
@@ -136,6 +137,7 @@ export class OmadaClient {
     private readonly dashboardOps: DashboardOperations;
     private readonly logAdminOps: LogAdminOperations;
     private readonly monitoringOps: MonitoringOperations;
+    private readonly siteTemplateOps: SiteTemplateOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -189,6 +191,7 @@ export class OmadaClient {
         this.dashboardOps = new DashboardOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.logAdminOps = new LogAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.monitoringOps = new MonitoringOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.siteTemplateOps = new SiteTemplateOperations(this.request, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -1700,8 +1703,8 @@ export class OmadaClient {
         return await this.siteOps.getSiteCapacity(siteId, customHeaders);
     }
 
-    public async getSiteTemplateList(customHeaders?: CustomHeaders): Promise<unknown> {
-        return await this.siteOps.getSiteTemplateList(customHeaders);
+    public async getSiteTemplateList(page?: number, pageSize?: number, customHeaders?: CustomHeaders): Promise<unknown> {
+        return await this.siteOps.getSiteTemplateList(page, pageSize, customHeaders);
     }
 
     public async getSiteTemplateDetail(siteTemplateId: string, customHeaders?: CustomHeaders): Promise<unknown> {
@@ -4024,5 +4027,72 @@ export class OmadaClient {
 
     public async deleteReportTabs(tabIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.monitoringOps.deleteReportTabs(tabIds, siteId, h);
+    }
+
+    // ---- Site templates (SiteTemplateOperations) ----
+    public async listSiteTemplateModules(h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.listSiteTemplateModules(h);
+    }
+
+    public async listSiteTemplateAllModules(h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.listSiteTemplateAllModules(h);
+    }
+
+    public async getSiteTemplateSpecification(siteTemplateId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.getSiteTemplateSpecification(siteTemplateId, h);
+    }
+
+    public async getSiteTemplateCapacity(siteTemplateId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.getSiteTemplateCapacity(siteTemplateId, h);
+    }
+
+    public async listSiteTemplateBoundSites(siteTemplateId: string, page: number, pageSize: number, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.listSiteTemplateBoundSites(siteTemplateId, page, pageSize, h);
+    }
+
+    public async listSitesAvailableForTemplate(
+        siteTemplateId: string,
+        page: number,
+        pageSize: number,
+        searchKey?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteTemplateOps.listSitesAvailableForTemplate(siteTemplateId, page, pageSize, searchKey, h);
+    }
+
+    public async createSiteTemplate(payload: z.input<typeof siteTemplateCreateSchema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.createSiteTemplate(payload, h);
+    }
+
+    public async renameSiteTemplate(siteTemplateId: string, name: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.renameSiteTemplate(siteTemplateId, name, h);
+    }
+
+    public async deleteSiteTemplate(siteTemplateId: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.deleteSiteTemplate(siteTemplateId, h);
+    }
+
+    public async copySiteTemplate(siteTemplateId: string, name: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.copySiteTemplate(siteTemplateId, name, h);
+    }
+
+    public async createSiteFromTemplate(payload: z.input<typeof schemas.createSiteByTemplate02Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.createSiteFromTemplate(payload, h);
+    }
+
+    public async bindSiteToTemplate(
+        siteTemplateId: string,
+        payload: z.input<typeof schemas.bindSiteOpenApiVO02Schema>,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.siteTemplateOps.bindSiteToTemplate(siteTemplateId, payload, h);
+    }
+
+    public async unbindSitesFromTemplate(siteTemplateId: string, siteIds: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.unbindSitesFromTemplate(siteTemplateId, siteIds, h);
+    }
+
+    public async syncSitesWithTemplate(siteTemplateId: string, siteIds: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.siteTemplateOps.syncSitesWithTemplate(siteTemplateId, siteIds, h);
     }
 }

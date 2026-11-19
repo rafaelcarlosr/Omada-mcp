@@ -9,12 +9,14 @@ import { registerBackupControllerTool } from './backupController.js';
 import { registerBackupControllerToFileServerTool } from './backupControllerToFileServer.js';
 import { registerBackupSitesTool } from './backupSites.js';
 import { registerBackupSitesToFileServerTool } from './backupSitesToFileServer.js';
+import { registerBindSiteToTemplateTool } from './bindSiteToTemplate.js';
 import { registerBlockClientTool } from './blockClient.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
 import { registerClearExpiredVouchersTool } from './clearExpiredVouchers.js';
 import { registerClearLocalUserDynamicMacTool } from './clearLocalUserDynamicMac.js';
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
+import { registerCopySiteTemplateTool } from './copySiteTemplate.js';
 import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
 import { registerCreateApnProfileTool } from './createApnProfile.js';
 import { registerCreateAuthSurveyTool } from './createAuthSurvey.js';
@@ -48,7 +50,9 @@ import { registerCreateSamlIdpTool } from './createSamlIdp.js';
 import { registerCreateScenarioTool } from './createScenario.js';
 import { registerCreateServiceTypeTool } from './createServiceType.js';
 import { registerCreateSiteTool } from './createSite.js';
+import { registerCreateSiteFromTemplateTool } from './createSiteFromTemplate.js';
 import { registerCreateSiteTagTool } from './createSiteTag.js';
+import { registerCreateSiteTemplateTool } from './createSiteTemplate.js';
 import { registerCreateSsidTool } from './createSsid.js';
 import { registerCreateSslVpnLockTool } from './createSslVpnLock.js';
 import { registerCreateSslVpnResourceTool } from './createSslVpnResource.js';
@@ -108,6 +112,7 @@ import { registerDeleteSiteTool } from './deleteSite.js';
 import { registerDeleteSiteAlertLogsTool } from './deleteSiteAlertLogs.js';
 import { registerDeleteSiteEventLogsTool } from './deleteSiteEventLogs.js';
 import { registerDeleteSiteTagTool } from './deleteSiteTag.js';
+import { registerDeleteSiteTemplateTool } from './deleteSiteTemplate.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
 import { registerDeleteSslVpnLockTool } from './deleteSslVpnLock.js';
@@ -429,9 +434,11 @@ import { registerGetSitesGatewaysSimCardUsedTool } from './getSitesGatewaysSimCa
 import { registerGetSitesHealthGatewaysWansDetailsTool } from './getSitesHealthGatewaysWansDetails.js';
 import { registerGetSitesSwitchesEsTool } from './getSitesSwitchesEs.js';
 import { registerGetSitesSwitchesEsGeneralConfigTool } from './getSitesSwitchesEsGeneralConfig.js';
+import { registerGetSiteTemplateCapacityTool } from './getSiteTemplateCapacity.js';
 import { registerGetSiteTemplateConfigTool } from './getSiteTemplateConfig.js';
 import { registerGetSiteTemplateDetailTool } from './getSiteTemplateDetail.js';
 import { registerGetSiteTemplateListTool } from './getSiteTemplateList.js';
+import { registerGetSiteTemplateSpecificationTool } from './getSiteTemplateSpecification.js';
 import { registerGetSiteToSiteVpnInfoTool } from './getSiteToSiteVpnInfo.js';
 import { registerGetSiteUrlTool } from './getSiteUrl.js';
 import { registerGetSnmpSettingTool } from './getSnmpSetting.js';
@@ -574,11 +581,15 @@ import { registerListSiteAuditLogsTool } from './listSiteAuditLogs.js';
 import { registerListSiteEventsTool } from './listSiteEvents.js';
 import { registerListSitesTool } from './listSites.js';
 import { registerListSitesApsPortsTool } from './listSitesApsPorts.js';
+import { registerListSitesAvailableForTemplateTool } from './listSitesAvailableForTemplate.js';
 import { registerListSitesCableTestSwitchesIncrementResultsTool } from './listSitesCableTestSwitchesIncrementResults.js';
 import { registerListSitesCableTestSwitchesPortsTool } from './listSitesCableTestSwitchesPorts.js';
 import { registerListSitesSettingIotDevicesTool } from './listSitesSettingIotDevices.js';
 import { registerListSitesStacksTool } from './listSitesStacks.js';
 import { registerListSiteTagsTool } from './listSiteTags.js';
+import { registerListSiteTemplateAllModulesTool } from './listSiteTemplateAllModules.js';
+import { registerListSiteTemplateBoundSitesTool } from './listSiteTemplateBoundSites.js';
+import { registerListSiteTemplateModulesTool } from './listSiteTemplateModules.js';
 import { registerListSiteThreatManagementTool } from './listSiteThreatManagement.js';
 import { registerListSiteToSiteVpnPeerStatusTool } from './listSiteToSiteVpnPeerStatus.js';
 import { registerListSiteToSiteVpnStatusTool } from './listSiteToSiteVpnStatus.js';
@@ -627,6 +638,7 @@ import { registerRebootDeviceTool } from './rebootDevice.js';
 import { registerReconnectClientTool } from './reconnectClient.js';
 import { registerRecoverSwitchPortPoeTool } from './recoverSwitchPortPoe.js';
 import { registerRenameDashboardTabTool } from './renameDashboardTab.js';
+import { registerRenameSiteTemplateTool } from './renameSiteTemplate.js';
 import { registerResetDashboardTabTool } from './resetDashboardTab.js';
 import { registerResetGlobalLogNotificationsTool } from './resetGlobalLogNotifications.js';
 import { registerResetSiteLogNotificationsTool } from './resetSiteLogNotifications.js';
@@ -700,8 +712,10 @@ import { registerSetVoucherGroupPatternTool } from './setVoucherGroupPattern.js'
 import { registerStartApRfScanTool } from './startApRfScan.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
 import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
+import { registerSyncSitesWithTemplateTool } from './syncSitesWithTemplate.js';
 import { registerTestWebhookTool } from './testWebhook.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
+import { registerUnbindSitesFromTemplateTool } from './unbindSitesFromTemplate.js';
 import { registerUnblockClientTool } from './unblockClient.js';
 import { registerUpdateApnProfileTool } from './updateApnProfile.js';
 import { registerUpdateAuthSurveyTool } from './updateAuthSurvey.js';
@@ -799,6 +813,20 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerSetSiteJumboTool, category: 'sites', permission: 'write' },
     { fn: registerSetSiteLagHashAlgorithmTool, category: 'sites', permission: 'write' },
     { fn: registerSetSiteDeviceAccountTool, category: 'sites', permission: 'write' },
+    { fn: registerListSiteTemplateModulesTool, category: 'sites', permission: 'read' },
+    { fn: registerListSiteTemplateAllModulesTool, category: 'sites', permission: 'read' },
+    { fn: registerGetSiteTemplateSpecificationTool, category: 'sites', permission: 'read' },
+    { fn: registerGetSiteTemplateCapacityTool, category: 'sites', permission: 'read' },
+    { fn: registerListSiteTemplateBoundSitesTool, category: 'sites', permission: 'read' },
+    { fn: registerListSitesAvailableForTemplateTool, category: 'sites', permission: 'read' },
+    { fn: registerCreateSiteTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerRenameSiteTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerDeleteSiteTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerCopySiteTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerCreateSiteFromTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerBindSiteToTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerUnbindSitesFromTemplateTool, category: 'sites', permission: 'write' },
+    { fn: registerSyncSitesWithTemplateTool, category: 'sites', permission: 'write' },
     { fn: registerGetClientRecognitionTool, category: 'controller', permission: 'read' },
     { fn: registerGetClientDetailInformationTool, category: 'controller', permission: 'read' },
     { fn: registerGetControllerDstInfoTool, category: 'controller', permission: 'read' },
