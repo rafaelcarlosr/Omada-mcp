@@ -87,6 +87,7 @@ import { type healthRangeSchema, SwitchOperations, type switchGeneralSettingsSch
 import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
 import { scopeTemplatePath } from './templateScope.js';
 import { VpnOperations } from './vpn.js';
+import { type SsidSection, WirelessOperations } from './wireless.js';
 
 export type { LogQueryOptions, SiteThreatListOptions };
 
@@ -132,6 +133,7 @@ export class OmadaClient {
     private readonly apOps: ApOperations;
     private readonly profileOps: ProfileOperations;
     private readonly siteServiceOps: SiteServiceOperations;
+    private readonly wirelessOps: WirelessOperations;
     private readonly siteAdminOps: SiteAdminOperations;
     private readonly controllerSettingOps: ControllerSettingOperations;
     private readonly hotspotAdminOps: HotspotAdminOperations;
@@ -186,6 +188,7 @@ export class OmadaClient {
         this.apOps = new ApOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.profileOps = new ProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3077,6 +3080,76 @@ export class OmadaClient {
 
     public async getSwitchOuiAutoAddVlanAllSupport(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
+    }
+
+    // ---- SSIDs by ID and AP groups (WirelessOperations) ----
+    public async getSsidConfig(ssidId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.getSsidConfig(ssidId, siteId, h);
+    }
+
+    public async listDuplicateSsidNames(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.listDuplicateSsidNames(siteId, h);
+    }
+
+    public async listSsidApGroups(ssidId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.listSsidApGroups(ssidId, siteId, h);
+    }
+
+    public async setSsidApGroups(ssidId: string, apGroupIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.setSsidApGroups(ssidId, apGroupIds, siteId, h);
+    }
+
+    public async setSsidSection(
+        ssidId: string,
+        section: Exclude<SsidSection, 'rate-control'>,
+        payload: Record<string, unknown>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.wirelessOps.setSsidSection(ssidId, section, payload as never, siteId, h);
+    }
+
+    public async setSsidRateControl(
+        wlanId: string,
+        ssidId: string,
+        payload: z.input<typeof schemas.updateSsidRateControlOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.wirelessOps.setSsidRateControl(wlanId, ssidId, payload, siteId, h);
+    }
+
+    public async listApGroups(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.wirelessOps.listApGroups(siteId, h);
+    }
+
+    public async getApGroup(apGroupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.getApGroup(apGroupId, siteId, h);
+    }
+
+    public async listApGroupAps(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.wirelessOps.listApGroupAps(siteId, h);
+    }
+
+    public async getApGroupCount(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.getApGroupCount(siteId, h);
+    }
+
+    public async createApGroup(payload: z.input<typeof schemas.createApGroupOpenApiVOSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.createApGroup(payload, siteId, h);
+    }
+
+    public async updateApGroup(
+        apGroupId: string,
+        payload: z.input<typeof schemas.updateApGroupOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.wirelessOps.updateApGroup(apGroupId, payload, siteId, h);
+    }
+
+    public async deleteApGroup(apGroupId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.wirelessOps.deleteApGroup(apGroupId, siteId, h);
     }
 
     // ---- Site services and settings (SiteServiceOperations) ----

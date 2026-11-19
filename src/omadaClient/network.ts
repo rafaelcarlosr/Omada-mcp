@@ -634,13 +634,25 @@ export class NetworkOperations {
     }
 
     /**
-     * List wireless SSIDs across all WLAN groups.
-     * OperationId: getSsidListAll
+     * List wireless SSIDs of APs and wireless routers across all WLAN groups, one entry per SSID and group.
+     * OperationId: getSsidsBySite
      */
     public async listAllSsids(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
-        const resolvedSiteId = await this.site.resolveSiteId(siteId);
-        const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/wireless-network/ssids`);
-        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
+        // Controller 6.3 requires the device type on this route (1 AP, 2 wireless router; 3 returns nothing in the lab).
+        const seen = new Set<string>();
+        const ssids: Record<string, unknown>[] = [];
+        for (const type of [1, 2]) {
+            const groups = await this.getSsidsBySite(type, siteId, customHeaders);
+            for (const group of Array.isArray(groups) ? (groups as { wlanId?: unknown; wlanName?: unknown; ssidList?: unknown }[]) : []) {
+                for (const ssid of Array.isArray(group?.ssidList) ? (group.ssidList as Record<string, unknown>[]) : []) {
+                    const key = `${String(group.wlanId)}/${String(ssid.ssidId ?? ssid.id)}`;
+                    if (seen.has(key)) continue;
+                    seen.add(key);
+                    ssids.push({ ...ssid, wlanId: group.wlanId, wlanName: group.wlanName });
+                }
+            }
+        }
+        return ssids;
     }
 
     /**

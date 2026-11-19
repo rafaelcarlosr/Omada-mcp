@@ -1288,14 +1288,37 @@ describe('NetworkOperations', () => {
     });
 
     describe('listAllSsids', () => {
-        it('should list all SSIDs across WLAN groups', async () => {
-            const mockData = [{ id: 'ssid-1', name: 'Corp-WiFi' }];
-            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue(mockData);
+        it('should list every AP and wireless router SSID once with its WLAN group', async () => {
+            const groups = [{ wlanId: 'w1', wlanName: 'Default', ssidList: [{ ssidId: 's1', ssidName: 'Corp-WiFi' }] }, { wlanId: 'w2' }];
+            vi.mocked(mockRequest.get)
+                .mockResolvedValueOnce({ errorCode: 0, result: groups })
+                .mockResolvedValueOnce({ errorCode: 0, result: [...groups, { wlanId: 'w3', ssidList: [{ id: 's9' }] }] });
+            vi.mocked(mockRequest.ensureSuccess).mockImplementation((response: OmadaApiResponse<unknown>) => response.result);
 
             const result = await networkOps.listAllSsids('site-123');
 
-            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/wireless-network/ssids', {}, undefined);
-            expect(result).toEqual(mockData);
+            expect(mockRequest.get).toHaveBeenNthCalledWith(
+                1,
+                '/openapi/v1/test-omadac/sites/site-123/wireless-network/ssids',
+                { type: 1 },
+                undefined
+            );
+            expect(mockRequest.get).toHaveBeenNthCalledWith(
+                2,
+                '/openapi/v1/test-omadac/sites/site-123/wireless-network/ssids',
+                { type: 2 },
+                undefined
+            );
+            expect(result).toEqual([
+                { ssidId: 's1', ssidName: 'Corp-WiFi', wlanId: 'w1', wlanName: 'Default' },
+                { id: 's9', wlanId: 'w3', wlanName: undefined },
+            ]);
+        });
+
+        it('should return no SSIDs when the controller returns no list', async () => {
+            vi.mocked(mockRequest.get).mockResolvedValue({ errorCode: 0, result: null });
+            vi.mocked(mockRequest.ensureSuccess).mockImplementation((response: OmadaApiResponse<unknown>) => response.result);
+            await expect(networkOps.listAllSsids('site-123')).resolves.toEqual([]);
         });
     });
 

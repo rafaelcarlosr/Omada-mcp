@@ -18,6 +18,7 @@ import { registerClearLocalUserDynamicMacTool } from './clearLocalUserDynamicMac
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
 import { registerCopySiteTemplateTool } from './copySiteTemplate.js';
 import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
+import { registerCreateApGroupTool } from './createApGroup.js';
 import { registerCreateApnProfileTool } from './createApnProfile.js';
 import { registerCreateAuthSurveyTool } from './createAuthSurvey.js';
 import { registerCreateDashboardTabTool } from './createDashboardTab.js';
@@ -69,6 +70,7 @@ import { registerCreateWebhookTool } from './createWebhook.js';
 import { registerCreateWifiCallingProfileTool } from './createWifiCallingProfile.js';
 import { registerCreateWlanGroupTool } from './createWlanGroup.js';
 import { registerDeleteAclTool } from './deleteAcl.js';
+import { registerDeleteApGroupTool } from './deleteApGroup.js';
 import { registerDeleteApnProfileTool } from './deleteApnProfile.js';
 import { registerDeleteAppControlRuleTool } from './deleteAppControlRule.js';
 import { registerDeleteAuthedRecordTool } from './deleteAuthedRecord.js';
@@ -159,6 +161,8 @@ import { registerGetApAfcStatusTool } from './getApAfcStatus.js';
 import { registerGetApDensityTool } from './getApDensity.js';
 import { registerGetApDetailTool } from './getApDetail.js';
 import { registerGetApGeneralConfigTool } from './getApGeneralConfig.js';
+import { registerGetApGroupTool } from './getApGroup.js';
+import { registerGetApGroupCountTool } from './getApGroupCount.js';
 import { registerGetApHealthDetailTool } from './getApHealthDetail.js';
 import { registerGetApHealthTimelineTool } from './getApHealthTimeline.js';
 import { registerGetApInterferenceDetectionStatusTool } from './getApInterferenceDetectionStatus.js';
@@ -445,6 +449,7 @@ import { registerGetSnmpSettingTool } from './getSnmpSetting.js';
 import { registerGetSpeedTestResultsTool } from './getSpeedTestResults.js';
 import { registerGetSpeedTestSettingTool } from './getSpeedTestSetting.js';
 import { registerGetSshSettingTool } from './getSshSetting.js';
+import { registerGetSsidConfigTool } from './getSsidConfig.js';
 import { registerGetSsidDetailTool } from './getSsidDetail.js';
 import { registerGetSsidListTool } from './getSsidList.js';
 import { registerGetSsidsBySiteTool } from './getSsidsBySite.js';
@@ -527,6 +532,8 @@ import { registerListAllowedAppsTool } from './listAllowedApps.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
 import { registerListAnomalyIncidentsTool } from './listAnomalyIncidents.js';
 import { registerListAnomalySettingsTool } from './listAnomalySettings.js';
+import { registerListApGroupApsTool } from './listApGroupAps.js';
+import { registerListApGroupsTool } from './listApGroups.js';
 import { registerListApnProfilesTool } from './listApnProfiles.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
 import { registerListAppCategoriesTool } from './listAppCategories.js';
@@ -544,6 +551,7 @@ import { registerListDashboardTabsWithoutOverallTool } from './listDashboardTabs
 import { registerListDeviceIncidentsTool } from './listDeviceIncidents.js';
 import { registerListDevicesTool } from './listDevices.js';
 import { registerListDevicesStatsTool } from './listDevicesStats.js';
+import { registerListDuplicateSsidNamesTool } from './listDuplicateSsidNames.js';
 import { registerListEapAclsTool } from './listEapAcls.js';
 import { registerListExternalUserGroupsTool } from './listExternalUserGroups.js';
 import { registerListExternalUsersTool } from './listExternalUsers.js';
@@ -594,6 +602,7 @@ import { registerListSiteThreatManagementTool } from './listSiteThreatManagement
 import { registerListSiteToSiteVpnPeerStatusTool } from './listSiteToSiteVpnPeerStatus.js';
 import { registerListSiteToSiteVpnStatusTool } from './listSiteToSiteVpnStatus.js';
 import { registerListSiteToSiteVpnsTool } from './listSiteToSiteVpns.js';
+import { registerListSsidApGroupsTool } from './listSsidApGroups.js';
 import { registerListSslVpnLocksTool } from './listSslVpnLocks.js';
 import { registerListSslVpnResourceGroupsTool } from './listSslVpnResourceGroups.js';
 import { registerListSslVpnResourcesTool } from './listSslVpnResources.js';
@@ -703,6 +712,8 @@ import { registerSetSiteMailServerTool } from './setSiteMailServer.js';
 import { registerSetSiteRememberSettingTool } from './setSiteRememberSetting.js';
 import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
 import { registerSetSpeedTestSettingTool } from './setSpeedTestSetting.js';
+import { registerSetSsidApGroupsTool } from './setSsidApGroups.js';
+import { registerSetSsidConfigTool } from './setSsidConfig.js';
 import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
 import { registerSetUiInterfaceTool } from './setUiInterface.js';
@@ -718,6 +729,7 @@ import { registerTestWebhookTool } from './testWebhook.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
 import { registerUnbindSitesFromTemplateTool } from './unbindSitesFromTemplate.js';
 import { registerUnblockClientTool } from './unblockClient.js';
+import { registerUpdateApGroupTool } from './updateApGroup.js';
 import { registerUpdateApnProfileTool } from './updateApnProfile.js';
 import { registerUpdateAuthSurveyTool } from './updateAuthSurvey.js';
 import { registerUpdateClientToSiteVpnClientTool } from './updateClientToSiteVpnClient.js';
@@ -1189,6 +1201,18 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetSsidListTool, category: 'wireless-ssid', permission: 'read' },
     { fn: registerGetSsidDetailTool, category: 'wireless-ssid', permission: 'read' },
     { fn: registerListAllSsidsTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerGetSsidConfigTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerListDuplicateSsidNamesTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerListSsidApGroupsTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerListApGroupsTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerGetApGroupTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerListApGroupApsTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerGetApGroupCountTool, category: 'wireless-ssid', permission: 'read' },
+    { fn: registerCreateApGroupTool, category: 'wireless-ssid', permission: 'write' },
+    { fn: registerUpdateApGroupTool, category: 'wireless-ssid', permission: 'write' },
+    { fn: registerDeleteApGroupTool, category: 'wireless-ssid', permission: 'write' },
+    { fn: registerSetSsidApGroupsTool, category: 'wireless-ssid', permission: 'write' },
+    { fn: registerSetSsidConfigTool, category: 'wireless-ssid', permission: 'write' },
     { fn: registerGetSsidsBySiteTool, category: 'wireless-ssid', permission: 'read' },
 
     // --- Wireless radio ---
