@@ -24,6 +24,8 @@ const SENSITIVE_KEY_SUBSTRINGS = [
     'securitykey',
     'passphrase',
     'community',
+    'authcode',
+    'passcode',
 ] as const;
 
 /**

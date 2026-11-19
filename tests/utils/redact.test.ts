@@ -13,6 +13,8 @@ describe('redact', () => {
             expect(isSensitiveKey('client_id')).toBe(true);
             expect(isSensitiveKey('clientId')).toBe(true);
             expect(isSensitiveKey('customHeaders')).toBe(true);
+            expect(isSensitiveKey('authCode')).toBe(true);
+            expect(isSensitiveKey('passcode')).toBe(true);
             expect(isSensitiveKey('PSK')).toBe(true);
             expect(isSensitiveKey('key')).toBe(true);
             expect(isSensitiveKey('pin')).toBe(true);

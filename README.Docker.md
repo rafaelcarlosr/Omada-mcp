@@ -336,6 +336,28 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateOuiProfile` | Replace the name and OUIs of an OUI profile. | `wireless-auth:rw` |
 | `deleteOuiProfile` | Delete an OUI profile. | `wireless-auth:rw` |
 
+#### Site services and settings
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `createPoeSchedule` | Power switch PoE ports only inside a time range profile. | `schedules:rw` |
+| `updatePoeSchedule` | Replace a PoE schedule (status, time range, ports). | `schedules:rw` |
+| `deletePoeSchedule` | Delete a PoE schedule; its ports return to always-on PoE. | `schedules:rw` |
+| `createIpMacBinding` | Create a gateway IP-MAC (ARP) binding on a LAN network or WAN port. | `network-lan:rw` |
+| `updateIpMacBinding` | Replace an IP-MAC binding; fields left out, such as the description, are cleared. | `network-lan:rw` |
+| `deleteIpMacBinding` | Delete an IP-MAC binding. | `network-lan:rw` |
+| `createIotServer` | Create an IoT transport stream that APs send Bluetooth reports to. | `profiles:rw` |
+| `updateIotServer` | Replace an IoT transport stream. | `profiles:rw` |
+| `deleteIotServer` | Delete an IoT transport stream. | `profiles:rw` |
+| `setIotRadioSetting` | Change the AP Bluetooth (IoT) radio setting; partial changes are merged over the current values. | `profiles:rw` |
+| `setSiteMailServer` | Create or update the site mail server for alert emails; it cannot be removed through the Open API. | `profiles:rw` |
+| `setSiteLed` | Turn the LEDs of every device in the site on or off. | `profiles:rw` |
+| `setMulticastRateLimit` | Change the site multicast/broadcast rate limits; rates for disabled protocols are refused. | `profiles:rw` |
+| `setSiteRememberSetting` | Turn "remember devices" on or off for the site. | `profiles:rw` |
+| `setSpeedTestSetting` | Schedule automatic gateway speed tests or turn them off. | `profiles:rw` |
+| `setPortalLogoutSetting` | Change the domain of the captive portal logout URL. | `profiles:rw` |
+| `setIntelliRecoverSetting` | Turn automatic intelli-recover (PoE cycling of unreachable devices) on or off and set its intervals. | `profiles:rw` |
+
 ### Site & Client
 
 | Tool                         | Description                                                                  |
@@ -699,6 +721,14 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `listSwitchOuiAutoAddVlanSwitches` | List switches that can add OUI rule VLANs to ports automatically (paginated). |
 | `getSwitchOuiAutoAddVlan` | Show whether the site adds OUI rule VLANs to switch ports automatically. |
 | `getSwitchOuiAutoAddVlanAllSupport` | Show whether every switch supports adding OUI rule VLANs automatically. |
+| `listIotServers` | List IoT transport streams. Tokens and client IDs are masked. |
+| `getSiteMailServer` | Get the site mail server. The authorization code is masked. |
+| `getMldSetting` | Get the site MLD setting and gateway support. |
+| `getSpeedTestSetting` | Get the scheduled gateway speed test setting. |
+| `getPortalLogoutSetting` | Get the captive portal logout domain. |
+| `listPortalsWithLogout` | List captive portals with logout enabled. |
+| `getIotRadioSetting` | Get the AP Bluetooth (IoT) radio setting. The passcode is masked. |
+| `getIntelliRecoverSetting` | Get the automatic intelli-recover setting. |
 ### Logs
 
 | Tool                | Description                                                  |
