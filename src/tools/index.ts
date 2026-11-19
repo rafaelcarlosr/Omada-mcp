@@ -11,6 +11,7 @@ import { registerBackupSitesTool } from './backupSites.js';
 import { registerBackupSitesToFileServerTool } from './backupSitesToFileServer.js';
 import { registerBlockClientTool } from './blockClient.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
+import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
 import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
 import { registerCreateApnProfileTool } from './createApnProfile.js';
@@ -55,6 +56,7 @@ import { registerCreateTimeRangeProfileTool } from './createTimeRangeProfile.js'
 import { registerCreateUrlFilterRuleTool } from './createUrlFilterRule.js';
 import { registerCreateVoucherGroupTool } from './createVoucherGroup.js';
 import { registerCreateVpnUserTool } from './createVpnUser.js';
+import { registerCreateWebhookTool } from './createWebhook.js';
 import { registerCreateWifiCallingProfileTool } from './createWifiCallingProfile.js';
 import { registerCreateWlanGroupTool } from './createWlanGroup.js';
 import { registerDeleteAclTool } from './deleteAcl.js';
@@ -102,6 +104,7 @@ import { registerDeleteTimeRangeProfileTool } from './deleteTimeRangeProfile.js'
 import { registerDeleteUrlFilterRuleTool } from './deleteUrlFilterRule.js';
 import { registerDeleteVoucherGroupTool } from './deleteVoucherGroup.js';
 import { registerDeleteVpnUserTool } from './deleteVpnUser.js';
+import { registerDeleteWebhookTool } from './deleteWebhook.js';
 import { registerDeleteWifiCallingProfileTool } from './deleteWifiCallingProfile.js';
 import { registerDeleteWireguardTool } from './deleteWireguard.js';
 import { registerDeleteWireguardPeerTool } from './deleteWireguardPeer.js';
@@ -169,11 +172,13 @@ import { registerGetClientActiveTimeoutTool } from './getClientActiveTimeout.js'
 import { registerGetClientConnectionHistoryTool } from './getClientConnectionHistory.js';
 import { registerGetClientCorrectionOptionsTool } from './getClientCorrectionOptions.js';
 import { registerGetClientDetailTool } from './getClientDetail.js';
+import { registerGetClientDetailInformationTool } from './getClientDetailInformation.js';
 import { registerGetClientHealthDetailTool } from './getClientHealthDetail.js';
 import { registerGetClientHealthTimelineTool } from './getClientHealthTimeline.js';
 import { registerGetClientHistoryDataEnableTool } from './getClientHistoryDataEnable.js';
 import { registerGetClientIncidentCountsTool } from './getClientIncidentCounts.js';
 import { registerGetClientLinkTopologyTool } from './getClientLinkTopology.js';
+import { registerGetClientRecognitionTool } from './getClientRecognition.js';
 import { registerGetClientSearchFieldOptionsTool } from './getClientSearchFieldOptions.js';
 import { registerGetClientStatsTool } from './getClientStats.js';
 import { registerGetClientsDistributionTool } from './getClientsDistribution.js';
@@ -181,6 +186,7 @@ import { registerGetClientTimelineTool } from './getClientTimeline.js';
 import { registerGetClientToSiteVpnServerInfoTool } from './getClientToSiteVpnServerInfo.js';
 import { registerGetCloudAccessStatusTool } from './getCloudAccessStatus.js';
 import { registerGetCloudUserInfoTool } from './getCloudUserInfo.js';
+import { registerGetControllerDstInfoTool } from './getControllerDstInfo.js';
 import { registerGetControllerPortTool } from './getControllerPort.js';
 import { registerGetControllerStatusTool } from './getControllerStatus.js';
 import { registerGetDashboardMostActiveEapsTool } from './getDashboardMostActiveEaps.js';
@@ -310,6 +316,7 @@ import { registerGetPPSKProfilesTool } from './getPPSKProfiles.js';
 import { registerGetPpskNetworkProfileTool } from './getPpskNetworkProfile.js';
 import { registerGetPpskUserGroupTool } from './getPpskUserGroup.js';
 import { registerGetPpskUserListTool } from './getPpskUserList.js';
+import { registerGetPrivacyPolicyStatusTool } from './getPrivacyPolicyStatus.js';
 import { registerGetQosMarkingRuleTool } from './getQosMarkingRule.js';
 import { registerGetQosPolicyTool } from './getQosPolicy.js';
 import { registerGetQosPolicyRuleTool } from './getQosPolicyRule.js';
@@ -345,6 +352,7 @@ import { registerGetSiteBackupResultTool } from './getSiteBackupResult.js';
 import { registerGetSiteCapacityTool } from './getSiteCapacity.js';
 import { registerGetSiteDetailTool } from './getSiteDetail.js';
 import { registerGetSiteDeviceAccountTool } from './getSiteDeviceAccount.js';
+import { registerGetSiteDstInfoTool } from './getSiteDstInfo.js';
 import { registerGetSiteHealthOverviewTool } from './getSiteHealthOverview.js';
 import { registerGetSiteJumboTool } from './getSiteJumbo.js';
 import { registerGetSiteLagHashAlgorithmTool } from './getSiteLagHashAlgorithm.js';
@@ -409,6 +417,7 @@ import { registerGetUiInterfaceTool } from './getUiInterface.js';
 import { registerGetUpgradeLogsTool } from './getUpgradeLogs.js';
 import { registerGetUpgradeOverviewCriticalTool } from './getUpgradeOverviewCritical.js';
 import { registerGetUpgradeOverviewTryBetaTool } from './getUpgradeOverviewTryBeta.js';
+import { registerGetUpgradePortTool } from './getUpgradePort.js';
 import { registerGetUpgradeScheduleListTool } from './getUpgradeScheduleList.js';
 import { registerGetUplinkWiredDetailTool } from './getUplinkWiredDetail.js';
 import { registerGetUpnpSettingTool } from './getUpnpSetting.js';
@@ -457,6 +466,7 @@ import { registerListExternalUserGroupsTool } from './listExternalUserGroups.js'
 import { registerListExternalUsersTool } from './listExternalUsers.js';
 import { registerListGlobalAlertsTool } from './listGlobalAlerts.js';
 import { registerListGlobalEventsTool } from './listGlobalEvents.js';
+import { registerListGlobalGatewayWanStatusTool } from './listGlobalGatewayWanStatus.js';
 import { registerListGroupProfilesTool } from './listGroupProfiles.js';
 import { registerListHotspotAuthRecordsTool } from './listHotspotAuthRecords.js';
 import { registerListHotspotLocalUsersTool } from './listHotspotLocalUsers.js';
@@ -533,6 +543,7 @@ import { registerRestoreControllerFromFileServerTool } from './restoreController
 import { registerRestoreSitesTool } from './restoreSites.js';
 import { registerRestoreSitesFromFileServerTool } from './restoreSitesFromFileServer.js';
 import { registerSearchDevicesTool } from './searchDevices.js';
+import { registerSendTestMailTool } from './sendTestMail.js';
 import { registerSetAccessControlTool } from './setAccessControl.js';
 import { registerSetAclConfigTypeSettingTool } from './setAclConfigTypeSetting.js';
 import { registerSetAlgSettingTool } from './setAlgSetting.js';
@@ -545,20 +556,31 @@ import { registerSetApSsidOverridesTool } from './setApSsidOverrides.js';
 import { registerSetAttackDefenseSettingTool } from './setAttackDefenseSetting.js';
 import { registerSetBackupScheduleTool } from './setBackupSchedule.js';
 import { registerSetBandwidthControlRuleTool } from './setBandwidthControlRule.js';
+import { registerSetClientActiveTimeoutTool } from './setClientActiveTimeout.js';
+import { registerSetClientDetailInformationTool } from './setClientDetailInformation.js';
 import { registerSetClientLockToApTool } from './setClientLockToAp.js';
 import { registerSetClientNameTool } from './setClientName.js';
 import { registerSetClientRateLimitTool } from './setClientRateLimit.js';
 import { registerSetClientRateLimitProfileTool } from './setClientRateLimitProfile.js';
+import { registerSetClientRecognitionTool } from './setClientRecognition.js';
+import { registerSetControllerLoggingTool } from './setControllerLogging.js';
+import { registerSetControllerRetentionTool } from './setControllerRetention.js';
+import { registerSetDataRetentionTool } from './setDataRetention.js';
+import { registerSetDeviceAccessManagementTool } from './setDeviceAccessManagement.js';
 import { registerSetDeviceLedTool } from './setDeviceLed.js';
 import { registerSetEoGreTunnelConfigTool } from './setEoGreTunnelConfig.js';
+import { registerSetExperienceImprovementTool } from './setExperienceImprovement.js';
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
 import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
+import { registerSetGeneralSettingsTool } from './setGeneralSettings.js';
 import { registerSetIntelliRecoverSettingTool } from './setIntelliRecoverSetting.js';
 import { registerSetIotRadioSettingTool } from './setIotRadioSetting.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
 import { registerSetMfaStatusTool } from './setMfaStatus.js';
 import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
 import { registerSetPortalLogoutSettingTool } from './setPortalLogoutSetting.js';
+import { registerSetRadiusProxyTool } from './setRadiusProxy.js';
+import { registerSetRemoteLoggingTool } from './setRemoteLogging.js';
 import { registerSetSiteDeviceAccountTool } from './setSiteDeviceAccount.js';
 import { registerSetSiteJumboTool } from './setSiteJumbo.js';
 import { registerSetSiteLagHashAlgorithmTool } from './setSiteLagHashAlgorithm.js';
@@ -569,10 +591,12 @@ import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
 import { registerSetSpeedTestSettingTool } from './setSpeedTestSetting.js';
 import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
+import { registerSetUiInterfaceTool } from './setUiInterface.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
 import { registerStartApRfScanTool } from './startApRfScan.js';
 import { registerStartDeviceOnlineUpgradeTool } from './startDeviceOnlineUpgrade.js';
 import { registerStartSwitchCableTestTool } from './startSwitchCableTest.js';
+import { registerTestWebhookTool } from './testWebhook.js';
 import { registerUnauthorizeHotspotClientTool } from './unauthorizeHotspotClient.js';
 import { registerUnblockClientTool } from './unblockClient.js';
 import { registerUpdateApnProfileTool } from './updateApnProfile.js';
@@ -618,6 +642,7 @@ import { registerUpdateSwitchPortTagTool } from './updateSwitchPortTag.js';
 import { registerUpdateTimeRangeProfileTool } from './updateTimeRangeProfile.js';
 import { registerUpdateUrlFilterRuleTool } from './updateUrlFilterRule.js';
 import { registerUpdateVpnUserTool } from './updateVpnUser.js';
+import { registerUpdateWebhookTool } from './updateWebhook.js';
 import { registerUpdateWifiCallingProfileTool } from './updateWifiCallingProfile.js';
 import { registerUpdateWireguardTool } from './updateWireguard.js';
 import { registerUpdateWlanGroupTool } from './updateWlanGroup.js';
@@ -668,6 +693,31 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerSetSiteJumboTool, category: 'sites', permission: 'write' },
     { fn: registerSetSiteLagHashAlgorithmTool, category: 'sites', permission: 'write' },
     { fn: registerSetSiteDeviceAccountTool, category: 'sites', permission: 'write' },
+    { fn: registerGetClientRecognitionTool, category: 'controller', permission: 'read' },
+    { fn: registerGetClientDetailInformationTool, category: 'controller', permission: 'read' },
+    { fn: registerGetControllerDstInfoTool, category: 'controller', permission: 'read' },
+    { fn: registerGetSiteDstInfoTool, category: 'controller', permission: 'read' },
+    { fn: registerGetPrivacyPolicyStatusTool, category: 'controller', permission: 'read' },
+    { fn: registerGetUpgradePortTool, category: 'controller', permission: 'read' },
+    { fn: registerListGlobalGatewayWanStatusTool, category: 'controller', permission: 'read' },
+    { fn: registerSetClientActiveTimeoutTool, category: 'controller', permission: 'write' },
+    { fn: registerSetControllerRetentionTool, category: 'controller', permission: 'write' },
+    { fn: registerSetDataRetentionTool, category: 'controller', permission: 'write' },
+    { fn: registerSetDeviceAccessManagementTool, category: 'controller', permission: 'write' },
+    { fn: registerSetUiInterfaceTool, category: 'controller', permission: 'write' },
+    { fn: registerSetExperienceImprovementTool, category: 'controller', permission: 'write' },
+    { fn: registerSetGeneralSettingsTool, category: 'controller', permission: 'write' },
+    { fn: registerSetRadiusProxyTool, category: 'controller', permission: 'write' },
+    { fn: registerSetRemoteLoggingTool, category: 'controller', permission: 'write' },
+    { fn: registerSetControllerLoggingTool, category: 'controller', permission: 'write' },
+    { fn: registerSetClientRecognitionTool, category: 'controller', permission: 'write' },
+    { fn: registerSetClientDetailInformationTool, category: 'controller', permission: 'write' },
+    { fn: registerCreateWebhookTool, category: 'controller', permission: 'write' },
+    { fn: registerUpdateWebhookTool, category: 'controller', permission: 'write' },
+    { fn: registerDeleteWebhookTool, category: 'controller', permission: 'write' },
+    { fn: registerTestWebhookTool, category: 'controller', permission: 'write' },
+    { fn: registerSendTestMailTool, category: 'controller', permission: 'write' },
+    { fn: registerCheckControllerUpdateTool, category: 'controller', permission: 'write' },
 
     // --- Devices (general) ---
     { fn: registerListDevicesTool, category: 'devices-general', permission: 'read' },

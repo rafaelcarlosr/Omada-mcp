@@ -374,6 +374,31 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `setSiteLagHashAlgorithm` | Set how switches spread traffic over LAG members (MAC or IP based). | `sites:rw` |
 | `setSiteDeviceAccount` | Change the device login (web UI and SSH) of every device in the site. The password is masked in results. | `sites:rw` |
 
+#### Controller settings
+
+The controller, portal and upgrade port writes are not implemented on purpose: a wrong value cuts access to the controller.
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `setClientActiveTimeout` | Set the minutes (3-10) without traffic before a client is marked inactive. | `controller:rw` |
+| `setControllerRetention` | Change data retention through the controller-settings route. | `controller:rw` |
+| `setDataRetention` | Change history data retention through the maintenance route. | `controller:rw` |
+| `setDeviceAccessManagement` | Turn device web management (HTTP/HTTPS) and app discovery on or off. | `controller:rw` |
+| `setUiInterface` | Change the UI time zone display and refresh rate; other UI fields are kept. | `controller:rw` |
+| `setExperienceImprovement` | Join or leave the TP-Link user experience improvement program. | `controller:rw` |
+| `setGeneralSettings` | Change the controller name, region, time zone and DST. | `controller:rw` |
+| `setRadiusProxy` | Turn the controller RADIUS proxy on or off, with port and options. | `controller:rw` |
+| `setRemoteLogging` | Send controller logs to a remote syslog server, or stop. | `controller:rw` |
+| `setControllerLogging` | Set the controller log level: AUTO, or CUSTOM per module. | `controller:rw` |
+| `setClientRecognition` | Turn client recognition on or off. | `controller:rw` |
+| `setClientDetailInformation` | Turn client recognition, health, history and data trend recording on or off. | `controller:rw` |
+| `createWebhook` | Create a controller webhook (1-3 URLs, retry policy, template, secret). | `controller:rw` |
+| `updateWebhook` | Change a webhook URLs, retry policy, template or secret. | `controller:rw` |
+| `deleteWebhook` | Delete a controller webhook. | `controller:rw` |
+| `testWebhook` | Send a test event to webhook URLs and return the delivery status. | `controller:rw` |
+| `sendTestMail` | Send a test email through an SMTP server. | `controller:rw` |
+| `checkControllerUpdate` | Check TP-Link for a newer controller version; nothing is installed. | `controller:rw` |
+
 ### Site & Client
 
 | Tool                         | Description                                                                  |
@@ -773,6 +798,13 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `getExperienceImprovement` | Get the experience improvement program setting (telemetry). |
 | `getGlobalDashboardOverview` | Get global controller dashboard overview without client data. |
 | `getPortalPort` | Get portal port configuration for the controller web interface. |
+| `getClientRecognition` | Show whether client recognition is on. |
+| `getClientDetailInformation` | Show the client recognition, health, history and data trend switches. |
+| `getControllerDstInfo` | Get the controller daylight saving time state. |
+| `getSiteDstInfo` | Get the daylight saving time state of a site. |
+| `getPrivacyPolicyStatus` | Show whether the privacy policy has been accepted. |
+| `getUpgradePort` | Get the HTTPS port devices use to download firmware. |
+| `listGlobalGatewayWanStatus` | List gateway WAN status across all sites (paginated). |
 ### Maintenance
 
 | Tool                          | Description                                                                              |
