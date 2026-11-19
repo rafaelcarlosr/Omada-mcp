@@ -15,6 +15,7 @@ import { registerBlockCountryTool } from './blockCountry.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
 import { registerClearAclHitCountsTool } from './clearAclHitCounts.js';
+import { registerClearDnsCacheTool } from './clearDnsCache.js';
 import { registerClearExpiredVouchersTool } from './clearExpiredVouchers.js';
 import { registerClearLocalUserDynamicMacTool } from './clearLocalUserDynamicMac.js';
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
@@ -22,6 +23,7 @@ import { registerCopySiteTemplateTool } from './copySiteTemplate.js';
 import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
 import { registerCreateApGroupTool } from './createApGroup.js';
 import { registerCreateApnProfileTool } from './createApnProfile.js';
+import { registerCreateApOuiRuleTool } from './createApOuiRule.js';
 import { registerCreateAuthSurveyTool } from './createAuthSurvey.js';
 import { registerCreateDashboardTabTool } from './createDashboardTab.js';
 import { registerCreateDdnsEntryTool } from './createDdnsEntry.js';
@@ -37,6 +39,7 @@ import { registerCreateIotServerTool } from './createIotServer.js';
 import { registerCreateIpMacBindingTool } from './createIpMacBinding.js';
 import { registerCreateIpsAllowEntryTool } from './createIpsAllowEntry.js';
 import { registerCreateLanDnsRuleTool } from './createLanDnsRule.js';
+import { registerCreateLanMulticastTool } from './createLanMulticast.js';
 import { registerCreateLanNetworkTool } from './createLanNetwork.js';
 import { registerCreateLanProfileTool } from './createLanProfile.js';
 import { registerCreateLdapProfileTool } from './createLdapProfile.js';
@@ -79,6 +82,7 @@ import { registerCreateWlanGroupTool } from './createWlanGroup.js';
 import { registerDeleteAclTool } from './deleteAcl.js';
 import { registerDeleteApGroupTool } from './deleteApGroup.js';
 import { registerDeleteApnProfileTool } from './deleteApnProfile.js';
+import { registerDeleteApOuiRuleTool } from './deleteApOuiRule.js';
 import { registerDeleteAppControlRuleTool } from './deleteAppControlRule.js';
 import { registerDeleteAuthedRecordTool } from './deleteAuthedRecord.js';
 import { registerDeleteAuthSurveyTool } from './deleteAuthSurvey.js';
@@ -104,6 +108,7 @@ import { registerDeleteIpsAllowEntryTool } from './deleteIpsAllowEntry.js';
 import { registerDeleteIpsBlockEntryTool } from './deleteIpsBlockEntry.js';
 import { registerDeleteIpsSignatureTool } from './deleteIpsSignature.js';
 import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
+import { registerDeleteLanMulticastTool } from './deleteLanMulticast.js';
 import { registerDeleteLanNetworkTool } from './deleteLanNetwork.js';
 import { registerDeleteLanProfileTool } from './deleteLanProfile.js';
 import { registerDeleteLdapProfileTool } from './deleteLdapProfile.js';
@@ -344,6 +349,7 @@ import { registerGetIspBandScanTool } from './getIspBandScan.js';
 import { registerGetIspLoadTool } from './getIspLoad.js';
 import { registerGetLanClientCountTool } from './getLanClientCount.js';
 import { registerGetLanDnsRulesTool } from './getLanDnsRules.js';
+import { registerGetLanNetworkTool } from './getLanNetwork.js';
 import { registerGetLanNetworkListTool } from './getLanNetworkList.js';
 import { registerGetLanNetworkListV2Tool } from './getLanNetworkListV2.js';
 import { registerGetLanProfileEsUsageTool } from './getLanProfileEsUsage.js';
@@ -547,6 +553,7 @@ import { registerGetWireguardSummaryTool } from './getWireguardSummary.js';
 import { registerGetWirelessIdsConfigTool } from './getWirelessIdsConfig.js';
 import { registerGetWirelessIpsConfigTool } from './getWirelessIpsConfig.js';
 import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
+import { registerListAllLanNetworksTool } from './listAllLanNetworks.js';
 import { registerListAllowedAppsTool } from './listAllowedApps.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
 import { registerListAnomalyIncidentsTool } from './listAnomalyIncidents.js';
@@ -554,6 +561,7 @@ import { registerListAnomalySettingsTool } from './listAnomalySettings.js';
 import { registerListApGroupApsTool } from './listApGroupAps.js';
 import { registerListApGroupsTool } from './listApGroups.js';
 import { registerListApnProfilesTool } from './listApnProfiles.js';
+import { registerListApOuiRulesTool } from './listApOuiRules.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
 import { registerListAppCategoriesTool } from './listAppCategories.js';
 import { registerListApSsidOverrideAuditLogsTool } from './listApSsidOverrideAuditLogs.js';
@@ -572,6 +580,8 @@ import { registerListDashboardTabsWithoutOverallTool } from './listDashboardTabs
 import { registerListDeviceIncidentsTool } from './listDeviceIncidents.js';
 import { registerListDevicesTool } from './listDevices.js';
 import { registerListDevicesStatsTool } from './listDevicesStats.js';
+import { registerListDhcpClientsTool } from './listDhcpClients.js';
+import { registerListDhcpReservationTargetsTool } from './listDhcpReservationTargets.js';
 import { registerListDuplicateSsidNamesTool } from './listDuplicateSsidNames.js';
 import { registerListEapAclsTool } from './listEapAcls.js';
 import { registerListExternalUserGroupsTool } from './listExternalUserGroups.js';
@@ -588,6 +598,7 @@ import { registerListHotspotRateLimitProfilesTool } from './listHotspotRateLimit
 import { registerListInfluencingClientsTool } from './listInfluencingClients.js';
 import { registerListInfluencingDevicesTool } from './listInfluencingDevices.js';
 import { registerListIotServersTool } from './listIotServers.js';
+import { registerListLanMulticastsTool } from './listLanMulticasts.js';
 import { registerListLockToApApsTool } from './listLockToApAps.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
 import { registerListMdnsRulesTool } from './listMdnsRules.js';
@@ -713,6 +724,8 @@ import { registerSetDashboardTabCardsTool } from './setDashboardTabCards.js';
 import { registerSetDataRetentionTool } from './setDataRetention.js';
 import { registerSetDeviceAccessManagementTool } from './setDeviceAccessManagement.js';
 import { registerSetDeviceLedTool } from './setDeviceLed.js';
+import { registerSetDnsCacheSettingTool } from './setDnsCacheSetting.js';
+import { registerSetDnsProxyTool } from './setDnsProxy.js';
 import { registerSetEoGreTunnelConfigTool } from './setEoGreTunnelConfig.js';
 import { registerSetExperienceImprovementTool } from './setExperienceImprovement.js';
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
@@ -724,6 +737,7 @@ import { registerSetGlobalLogNotificationsTool } from './setGlobalLogNotificatio
 import { registerSetIncidentStatusTool } from './setIncidentStatus.js';
 import { registerSetIntelliRecoverSettingTool } from './setIntelliRecoverSetting.js';
 import { registerSetIotRadioSettingTool } from './setIotRadioSetting.js';
+import { registerSetIpMacBindingGeneralSettingTool } from './setIpMacBindingGeneralSetting.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
 import { registerSetMfaStatusTool } from './setMfaStatus.js';
 import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
@@ -764,6 +778,7 @@ import { registerUnblockClientTool } from './unblockClient.js';
 import { registerUnblockCountryTool } from './unblockCountry.js';
 import { registerUpdateApGroupTool } from './updateApGroup.js';
 import { registerUpdateApnProfileTool } from './updateApnProfile.js';
+import { registerUpdateApOuiRuleTool } from './updateApOuiRule.js';
 import { registerUpdateAuthSurveyTool } from './updateAuthSurvey.js';
 import { registerUpdateClientToSiteVpnClientTool } from './updateClientToSiteVpnClient.js';
 import { registerUpdateClientToSiteVpnServerTool } from './updateClientToSiteVpnServer.js';
@@ -781,6 +796,7 @@ import { registerUpdateIpMacBindingTool } from './updateIpMacBinding.js';
 import { registerUpdateIpsAllowEntryTool } from './updateIpsAllowEntry.js';
 import { registerUpdateIpsSignatureTool } from './updateIpsSignature.js';
 import { registerUpdateLanDnsRuleTool } from './updateLanDnsRule.js';
+import { registerUpdateLanMulticastTool } from './updateLanMulticast.js';
 import { registerUpdateLanNetworkTool } from './updateLanNetwork.js';
 import { registerUpdateLanProfileTool } from './updateLanProfile.js';
 import { registerUpdateLdapProfileTool } from './updateLdapProfile.js';
@@ -1202,6 +1218,22 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetGridIpMacBindingTool, category: 'network-lan', permission: 'read' },
     { fn: registerGetDnsCacheSettingTool, category: 'network-lan', permission: 'read' },
     { fn: registerGetDnsProxyTool, category: 'network-lan', permission: 'read' },
+    { fn: registerGetLanNetworkTool, category: 'network-lan', permission: 'read' },
+    { fn: registerListAllLanNetworksTool, category: 'network-lan', permission: 'read' },
+    { fn: registerListDhcpClientsTool, category: 'network-lan', permission: 'read' },
+    { fn: registerListDhcpReservationTargetsTool, category: 'network-lan', permission: 'read' },
+    { fn: registerListLanMulticastsTool, category: 'network-lan', permission: 'read' },
+    { fn: registerListApOuiRulesTool, category: 'network-lan', permission: 'read' },
+    { fn: registerSetDnsCacheSettingTool, category: 'network-lan', permission: 'write' },
+    { fn: registerClearDnsCacheTool, category: 'network-lan', permission: 'write' },
+    { fn: registerSetDnsProxyTool, category: 'network-lan', permission: 'write' },
+    { fn: registerSetIpMacBindingGeneralSettingTool, category: 'network-lan', permission: 'write' },
+    { fn: registerCreateLanMulticastTool, category: 'network-lan', permission: 'write' },
+    { fn: registerUpdateLanMulticastTool, category: 'network-lan', permission: 'write' },
+    { fn: registerDeleteLanMulticastTool, category: 'network-lan', permission: 'write' },
+    { fn: registerCreateApOuiRuleTool, category: 'network-lan', permission: 'write' },
+    { fn: registerUpdateApOuiRuleTool, category: 'network-lan', permission: 'write' },
+    { fn: registerDeleteApOuiRuleTool, category: 'network-lan', permission: 'write' },
     { fn: registerGetIgmpTool, category: 'network-lan', permission: 'read' },
     { fn: registerGetSwitchVlanInterfaceTool, category: 'network-lan', permission: 'read' },
     { fn: registerGetLanDnsRulesTool, category: 'network-lan', permission: 'read' },
