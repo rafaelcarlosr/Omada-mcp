@@ -12,6 +12,8 @@ const idSchema = z.string().trim().min(1, 'An identifier is required.');
 
 /** VPN types accepted by the status lists (0 L2TP, 1 PPTP, 2 IPsec, 3 OpenVPN, 4 WireGuard, 5 SSL VPN). */
 export const vpnStatusTypeSchema = z.number().int().min(0).max(5);
+/** VPN user protocol: 0 L2TP or PPTP, 1 OpenVPN, 2 SSL VPN. */
+export const vpnProtocolSchema = z.number().int().min(0).max(2);
 
 /** The VPN status lists reject pageSize above 100 (observed on 6.3: "pageSize should between 1 and 100"). */
 const STATUS_PAGE_SIZE = 100;
@@ -213,6 +215,102 @@ export class VpnOperations {
     }
     public async deleteSslVpnLock(lockId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.send('DELETE', siteId, `/vpn/ssl-vpn-server/locked-users/${seg(lockId)}`, undefined, h, 'v1');
+    }
+
+    // ---- SSL VPN locked tunnels ----
+    public async listSslVpnLockedTunnels(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/vpn/ssl-vpn-server/locked-tunnels', h, 'v1');
+    }
+    public async createSslVpnLockedTunnel(
+        payload: Input<typeof schemas.sslVpnLockCreateAndModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send(
+            'POST',
+            siteId,
+            '/vpn/ssl-vpn-server/locked-tunnels',
+            schemas.sslVpnLockCreateAndModifyOpenApiVOSchema.parse(payload),
+            h,
+            'v1'
+        );
+    }
+    public async updateSslVpnLockedTunnel(
+        lockTunnelId: string,
+        payload: Input<typeof schemas.sslVpnLockCreateAndModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.send(
+            'PUT',
+            siteId,
+            `/vpn/ssl-vpn-server/locked-tunnels/${seg(lockTunnelId)}`,
+            schemas.sslVpnLockCreateAndModifyOpenApiVOSchema.parse(payload),
+            h,
+            'v1'
+        );
+    }
+    public async deleteSslVpnLockedTunnel(lockTunnelId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('DELETE', siteId, `/vpn/ssl-vpn-server/locked-tunnels/${seg(lockTunnelId)}`, undefined, h, 'v1');
+    }
+    /** Only the listed IDs are deleted, never all of them. */
+    public async deleteSslVpnLockedTunnels(lockTunnelIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        const ids = z.array(idSchema).min(1, 'At least one ID is required.').max(1000).parse(lockTunnelIds);
+        return await this.send('DELETE', siteId, '/vpn/ssl-vpn-server/locked-tunnels', { ids, selectAll: false }, h, 'v1');
+    }
+
+    // ---- VPN policy reads (v2 summaries and details, user and resource lookups) ----
+    public async getSiteToSiteVpn(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, `/vpn/site-to-site-vpns/${seg(vpnId)}`, undefined, h, 'v2');
+    }
+    public async getClientToSiteVpnServer(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, `/vpn/client-to-site-vpn-servers/${seg(vpnId)}`, undefined, h, 'v2');
+    }
+    public async getClientToSiteVpnClient(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, `/vpn/client-to-site-vpn-clients/${seg(vpnId)}`, undefined, h, 'v2');
+    }
+    public async listSiteToSiteVpnSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/vpn/site-to-site-vpns', h, 'v2');
+    }
+    public async listVpnServerSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/vpn/client-to-site-vpn-servers', h, 'v2');
+    }
+    public async listVpnClientSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/vpn/client-to-site-vpn-clients', h, 'v2');
+    }
+    public async checkVpnUsage(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, `/vpn/${seg(vpnId)}/checkUsed`, undefined, h, 'v1');
+    }
+    public async listVpnIpPools(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/vpn/ippool', undefined, h, 'v1');
+    }
+    public async listVpnServersForUsers(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/vpn/userServers', undefined, h, 'v1');
+    }
+    /** protocol: 0 L2TP or PPTP, 1 OpenVPN, 2 SSL VPN. */
+    public async listVpnUsersByProtocol(protocol: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, `/vpn/userlist/${seg(String(vpnProtocolSchema.parse(protocol)))}`, undefined, h, 'v1');
+    }
+    public async listVpnServerUserNames(serverId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, `/vpn/userlist/server/${seg(serverId)}`, undefined, h, 'v1');
+    }
+    public async listVpnServerUsers(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, `/vpn/${seg(vpnId)}/users`, h, 'v3');
+    }
+    public async listVpnBriefUserGroups(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.list(siteId, '/vpn/briefusergroups', h, 'v1');
+    }
+    public async listSslVpnBriefUserGroups(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/vpn/ssl-vpn-server/briefusergroups', undefined, h, 'v1');
+    }
+    public async listSslVpnBriefResources(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/vpn/ssl-vpn-server/briefresources', undefined, h, 'v1');
+    }
+    public async listSslVpnBriefResourceGroups(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/vpn/ssl-vpn-server/briefresourcegroups', undefined, h, 'v1');
+    }
+    public async listSslVpnRadiusProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.send('GET', siteId, '/vpn/ssl-vpn-server/radius', undefined, h, 'v1');
     }
 
     // ---- EoGRE tunnel ----

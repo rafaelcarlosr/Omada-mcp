@@ -27,3 +27,10 @@ export const vpnUserPayloadSchema = vpnUserConfigVOSchema.extend({
     password: z.string().min(1).describe('Password of the VPN user. Write-only: these tools never return it.'),
     protocol: z.number().int().min(0).max(2).describe('Protocol: 0 L2TP or PPTP, 1 OpenVPN, 2 SSL VPN.'),
 });
+
+/** A locked SSL VPN tunnel names its target by type: 0 needs username, 1 needs ip. */
+export function checkSslVpnLock(lock: Record<string, unknown>): void {
+    if (lock.type === 0 && !lock.username) throw new Error('type 0 (user name) needs username. No request was sent.');
+    if (lock.type === 1 && !lock.ip) throw new Error('type 1 (IP) needs ip. No request was sent.');
+    if (lock.type !== 0 && lock.type !== 1) throw new Error('type must be 0 (user name) or 1 (IP). No request was sent.');
+}
