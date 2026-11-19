@@ -400,19 +400,25 @@ describe('parseToolCategories', () => {
 
     it('should return warning for future category and skip it from the map', () => {
         const warnSpy = vi.spyOn(loggerModule.logger, 'warn');
-        const { categories, warnings } = parseToolCategories('insights:r');
-        expect(categories.has('insights')).toBe(false);
+        const { categories, warnings } = parseToolCategories('voip:r');
+        expect(categories.has('voip')).toBe(false);
         expect(warnings).toHaveLength(1);
-        expect(warnings[0]).toContain('"insights"');
+        expect(warnings[0]).toContain('"voip"');
         expect(warnings[0]).toContain('future phase');
         expect(warnSpy).not.toHaveBeenCalled();
         vi.restoreAllMocks();
     });
 
     it('should warn for future atomic categories used directly', () => {
-        const { categories, warnings } = parseToolCategories('insights:r');
-        expect(categories.has('insights')).toBe(false);
-        expect(warnings.some((w) => w.includes('insights'))).toBe(true);
+        const { categories, warnings } = parseToolCategories('olt:r');
+        expect(categories.has('olt')).toBe(false);
+        expect(warnings.some((w) => w.includes('olt'))).toBe(true);
+    });
+
+    it('accepts the insights category, active since incident and health tools exist', () => {
+        const { categories, warnings } = parseToolCategories('insights:rw');
+        expect(categories.get('insights')).toEqual(new Set(['read', 'write']));
+        expect(warnings).toEqual([]);
     });
 
     it('network-all no longer contains future categories and expands without warnings', () => {
@@ -478,7 +484,7 @@ describe('loadConfigFromEnv (startupWarnings)', () => {
             OMADA_CLIENT_ID: 'client-id',
             OMADA_CLIENT_SECRET: 'client-secret',
             OMADA_OMADAC_ID: 'omadac-id',
-            OMADA_TOOL_CATEGORIES: 'insights:r',
+            OMADA_TOOL_CATEGORIES: 'voip:r',
         };
         const config = loadConfigFromEnv(env as NodeJS.ProcessEnv);
         expect(config.startupWarnings.some((w) => w.includes('future phase'))).toBe(true);

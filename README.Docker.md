@@ -457,6 +457,18 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `deleteGlobalEventLogs` | Delete selected controller-wide event logs by ID (never "all"). | `logs:rw` |
 | `deleteGlobalAlertLogs` | Delete selected controller-wide alert logs by ID (never "all"). | `logs:rw` |
 
+#### Incidents and reports
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `setIncidentStatus` | Mark selected incidents unresolved, resolved or ignored, by ID (never "all"). | `insights:rw` |
+| `deleteIncidents` | Delete selected incidents by ID (never "all"). | `insights:rw` |
+| `setAnomalyEventSetting` | Turn detection of one anomaly on or off, with severity and thresholds. | `insights:rw` |
+| `setAnomalyNotification` | Change which incidents are emailed; merged over the current setting. | `insights:rw` |
+| `createReportTab` | Create a custom network report tab. | `dashboard:rw` |
+| `updateReportTab` | Replace a custom network report tab; built-in tabs are refused. | `dashboard:rw` |
+| `deleteReportTabs` | Delete custom network report tabs by ID; built-in tabs are refused. | `dashboard:rw` |
+
 ### Site & Client
 
 | Tool                         | Description                                                                  |
@@ -788,6 +800,8 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `listMostActiveEapsByTraffic` | APs with the most traffic over a period (v2). |
 | `listDashboardTabs` | Dashboard tabs with their card IDs. |
 | `listDashboardTabsWithoutOverall` | Dashboard tabs except Overall. |
+| `listReportTabs` | Network report tabs with their card groups. |
+| `getReportTab` | One network report tab. |
 | `getChannels` | Gets channel distribution and utilization across all APs. |
 | `getInterference` | Gets top RF interference sources detected by APs. |
 | `getGridDashboardTunnelStats` | Gets VPN tunnel statistics. Required: `type` (integer: `0` = Server, `1` = Client). |
@@ -802,6 +816,25 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 | `getWids` | Gets WIDS (Wireless Intrusion Detection) information for a site. |
 | `getRogueAps` | Gets rogue access points detected in a site. |
 | `getVpnTunnelStats` | Gets VPN tunnel statistics for a site. |
+| `listAnomalyIncidents` | Incidents (detected anomalies) over a period, with counts by status and level (paginated, epoch ms). |
+| `getAnomalyIncident` | One incident with its object, timeline and suggestions. |
+| `getUnresolvedIncidentCount` | Number of active incidents. |
+| `getAnomalyStatistics` | Incident counts over a period by status, category and level. |
+| `getAnomalyIncidentDistribution` | Incidents per hour over a period. |
+| `getAnomalyCategoryIncidents` | Incident counts per anomaly code in one category (11-19). |
+| `listInfluencingDevices` | Devices affected by an incident (paginated). |
+| `listInfluencingClients` | Clients affected by an incident (paginated). |
+| `listDeviceIncidents` | Incidents of one device over a period (paginated). |
+| `listStackIncidents` | Incidents of one switch stack over a period (paginated). |
+| `getIncidentRanking` | Ranking of one anomaly code over a period. |
+| `getIncidentObjectRanking` | Devices and clients most affected by one anomaly code. |
+| `listAnomalySettings` | Incident detection settings per anomaly code (paginated). |
+| `getAnomalyNotificationSetting` | Incident email notification setting. |
+| `getWifiHealthTimeline` | Wi-Fi health score over a period (epoch ms). |
+| `getWifiSubHealthTimeline` | Wi-Fi health sub-scores over a period (epoch ms). |
+| `getApHealthDetail` | AP health with CPU, memory, interference and client factors (epoch ms). |
+| `getApHealthTimeline` | AP health score over a period (epoch ms). |
+| `listWifiHealthTopClients` | Devices and clients with the worst Wi-Fi health at a point in time. |
 ### VPN
 
 | Tool                          | Description                                                                              |
