@@ -33,7 +33,12 @@ const SENSITIVE_KEY_SUBSTRINGS = [
  */
 export function isSensitiveKey(key: string): boolean {
     const normalized = key.toLowerCase();
-    return /^(key|psk|pin)$/.test(normalized) || SENSITIVE_KEY_SUBSTRINGS.some((substring) => normalized.includes(substring));
+    // Keys ending in "pwd" (radiusPwd, accountingServerPwd) are passwords; flags such as hidePwd are not.
+    return (
+        /^(key|psk|pin)$/.test(normalized) ||
+        /(?<!hide)pwd$/.test(normalized) ||
+        SENSITIVE_KEY_SUBSTRINGS.some((substring) => normalized.includes(substring))
+    );
 }
 
 /**

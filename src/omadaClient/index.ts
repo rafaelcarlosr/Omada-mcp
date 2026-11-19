@@ -28,6 +28,7 @@ import { AccountOperations } from './account.js';
 import { ActionOperations } from './actions.js';
 import { ApOperations } from './aps.js';
 import { AuthManager } from './auth.js';
+import { AuthProfileOperations } from './authProfiles.js';
 import { ClientOperations, type clientStatGranularitySchema, type clientTimelineTypeSchema, type msRangeSchema } from './client.js';
 import { ControllerOperations } from './controller.js';
 import {
@@ -134,6 +135,7 @@ export class OmadaClient {
     private readonly profileOps: ProfileOperations;
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
+    private readonly authProfileOps: AuthProfileOperations;
     private readonly siteAdminOps: SiteAdminOperations;
     private readonly controllerSettingOps: ControllerSettingOperations;
     private readonly hotspotAdminOps: HotspotAdminOperations;
@@ -189,6 +191,7 @@ export class OmadaClient {
         this.profileOps = new ProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3082,6 +3085,70 @@ export class OmadaClient {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
     }
 
+    // ---- RADIUS/LDAP profiles and built-in RADIUS users (AuthProfileOperations) ----
+    public async createRadiusProfile(
+        payload: z.input<typeof schemas.createRadiusProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.authProfileOps.createRadiusProfile(payload, siteId, h);
+    }
+
+    public async updateRadiusProfile(
+        radiusProfileId: string,
+        payload: z.input<typeof schemas.createRadiusProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.authProfileOps.updateRadiusProfile(radiusProfileId, payload, siteId, h);
+    }
+
+    public async deleteRadiusProfile(radiusProfileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.authProfileOps.deleteRadiusProfile(radiusProfileId, siteId, h);
+    }
+
+    public async createLdapProfile(
+        payload: z.input<typeof schemas.createLdapProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.authProfileOps.createLdapProfile(payload, siteId, h);
+    }
+
+    public async updateLdapProfile(
+        ldapProfileId: string,
+        payload: z.input<typeof schemas.createLdapProfileOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.authProfileOps.updateLdapProfile(ldapProfileId, payload, siteId, h);
+    }
+
+    public async deleteLdapProfile(ldapProfileId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.authProfileOps.deleteLdapProfile(ldapProfileId, siteId, h);
+    }
+
+    public async createRadiusUser(
+        payload: z.input<typeof schemas.createRadiusUserOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.authProfileOps.createRadiusUser(payload, siteId, h);
+    }
+
+    public async updateRadiusUser(
+        userId: string,
+        payload: z.input<typeof schemas.createRadiusUserOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.authProfileOps.updateRadiusUser(userId, payload, siteId, h);
+    }
+
+    public async deleteRadiusUser(userId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.authProfileOps.deleteRadiusUser(userId, siteId, h);
+    }
+
     // ---- SSIDs by ID and AP groups (WirelessOperations) ----
     public async getSsidConfig(ssidId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.wirelessOps.getSsidConfig(ssidId, siteId, h);
@@ -3421,6 +3488,10 @@ export class OmadaClient {
 
     public async setGeneralSettings(payload: z.input<typeof generalSettingsPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
         return await this.controllerSettingOps.setGeneralSettings(payload, h);
+    }
+
+    public async setRadiusServer(payload: z.input<typeof schemas.builtInRADIUSServerConfigRequestBody21Schema>, h?: CustomHeaders): Promise<unknown> {
+        return await this.controllerSettingOps.setRadiusServer(payload, h);
     }
 
     public async setRadiusProxy(payload: z.input<typeof radiusProxyPayloadSchema>, h?: CustomHeaders): Promise<unknown> {

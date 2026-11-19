@@ -136,6 +136,10 @@ export class ControllerSettingOperations {
         const data = generalSettingsPayloadSchema.parse(payload);
         return await this.call({ url: this.buildPath('/global/controller/setting/general'), method: 'PATCH', data }, h);
     }
+    public async setRadiusServer(payload: In<typeof schemas.builtInRADIUSServerConfigRequestBody21Schema>, h?: CustomHeaders): Promise<unknown> {
+        const data = schemas.builtInRADIUSServerConfigRequestBody21Schema.parse(payload);
+        return await this.call({ url: this.buildPath('/global/controller/setting/network/radius-server'), method: 'PATCH', data }, h);
+    }
     public async setRadiusProxy(payload: In<typeof radiusProxyPayloadSchema>, h?: CustomHeaders): Promise<unknown> {
         const data = radiusProxyPayloadSchema.parse(payload);
         return await this.call({ url: this.buildPath('/global/controller/setting/network/radius-proxy'), method: 'PATCH', data }, h);

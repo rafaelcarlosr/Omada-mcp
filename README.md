@@ -233,6 +233,16 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `createRadiusProfile` | Create a RADIUS profile; server passwords are redacted in responses. | `auth-profiles:rw` |
+| `updateRadiusProfile` | Change listed RADIUS profile fields; the rest, passwords included, is kept. Built-in profile refused. | `auth-profiles:rw` |
+| `deleteRadiusProfile` | Delete a RADIUS profile; the built-in profile is refused. | `auth-profiles:rw` |
+| `createLdapProfile` | Create an LDAP profile; the bind password is redacted in responses. | `auth-profiles:rw` |
+| `updateLdapProfile` | Change listed LDAP profile fields; the rest, the bind password included, is kept. | `auth-profiles:rw` |
+| `deleteLdapProfile` | Delete an LDAP profile. | `auth-profiles:rw` |
+| `createRadiusUser` | Create a built-in RADIUS server user (password or MAC auth). | `auth-profiles:rw` |
+| `updateRadiusUser` | Change listed built-in RADIUS user fields; the password is kept unless changed. | `auth-profiles:rw` |
+| `deleteRadiusUser` | Delete a built-in RADIUS server user. | `auth-profiles:rw` |
+| `setRadiusServer` | Change the controller built-in RADIUS server; other fields only persist while it is enabled. | `auth-profiles:rw` |
 | `createApGroup` | Create an AP group, optionally moving APs into it. SSIDs are broadcast per AP group. | `wireless-ssid:rw` |
 | `updateApGroup` | Rename an AP group and add or remove APs. | `wireless-ssid:rw` |
 | `deleteApGroup` | Delete an AP group; the default group is refused. | `wireless-ssid:rw` |
