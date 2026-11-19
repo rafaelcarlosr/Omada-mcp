@@ -1,8 +1,9 @@
 import { type RecordLike, runSettings } from './resourceMutationShared.js';
 
-/** IDs ordered by their 1-based index field. */
+/** IDs ordered by their 1-based index field, or in list order when the rows carry no valid index (6.3 reports -1). */
 export function orderOf(rows: RecordLike[]): string[] {
-    return [...rows].sort((a, b) => Number(a.index) - Number(b.index)).map((row) => String(row.id));
+    const indexed = rows.every((row) => Number.isInteger(row.index) && Number(row.index) >= 0);
+    return (indexed ? [...rows].sort((a, b) => Number(a.index) - Number(b.index)) : rows).map((row) => String(row.id));
 }
 
 /**

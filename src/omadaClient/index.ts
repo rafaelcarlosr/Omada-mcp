@@ -81,6 +81,7 @@ import { RequestHandler } from './request.js';
 import type * as schemas from './requestSchemas.js';
 import { ScheduleOperations } from './schedules.js';
 import { SecurityOperations } from './security.js';
+import { ServiceSettingOperations, type sshSettingPayloadSchema } from './serviceSettings.js';
 import { SiteOperations } from './site.js';
 import { SiteAdminOperations } from './siteAdmin.js';
 import { type Input, type macFilterListSchema, SiteConfigOperations, type urlFilterTypeSchema } from './siteConfig.js';
@@ -145,6 +146,7 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
     private readonly authProfileOps: AuthProfileOperations;
+    private readonly serviceSettingOps: ServiceSettingOperations;
     private readonly lanServiceOps: LanServiceOperations;
     private readonly firewallMaintenanceOps: FirewallMaintenanceOperations;
     private readonly networkSecurityOps: NetworkSecurityOperations;
@@ -205,6 +207,7 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.serviceSettingOps = new ServiceSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.lanServiceOps = new LanServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.firewallMaintenanceOps = new FirewallMaintenanceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.networkSecurityOps = new NetworkSecurityOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3281,6 +3284,100 @@ export class OmadaClient {
 
     public async listSslVpnRadiusProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.vpnOps.listSslVpnRadiusProfiles(siteId, h);
+    }
+
+    // ---- Site service settings (ServiceSettingOperations) ----
+    public async setSessionLimit(payload: z.input<typeof schemas.sessionLimitEntitySchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.setSessionLimit(payload, siteId, h);
+    }
+
+    public async createSessionLimitRule(
+        payload: z.input<typeof schemas.sessionLimitRuleOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.serviceSettingOps.createSessionLimitRule(payload, siteId, h);
+    }
+
+    public async updateSessionLimitRule(
+        ruleId: string,
+        payload: z.input<typeof schemas.sessionLimitRuleOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.serviceSettingOps.updateSessionLimitRule(ruleId, payload, siteId, h);
+    }
+
+    public async deleteSessionLimitRule(ruleId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.deleteSessionLimitRule(ruleId, siteId, h);
+    }
+
+    public async reorderSessionLimitRules(indexes: Record<string, number>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.reorderSessionLimitRules(indexes, siteId, h);
+    }
+
+    public async setBandwidthControl(payload: z.input<typeof schemas.bandwidthControlSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.setBandwidthControl(payload, siteId, h);
+    }
+
+    public async reorderBandwidthControlRules(indexes: Record<string, number>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.reorderBandwidthControlRules(indexes, siteId, h);
+    }
+
+    public async reorderPolicyRoutes(indexes: Record<string, number>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.reorderPolicyRoutes(indexes, siteId, h);
+    }
+
+    public async setLldpSetting(payload: z.input<typeof schemas.siteLldpSettingSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.setLldpSetting(payload, siteId, h);
+    }
+
+    public async getRemoteLoggingTip(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.getRemoteLoggingTip(siteId, h);
+    }
+
+    public async setSiteRemoteLogging(
+        payload: z.input<typeof schemas.siteRemoteLoggingSettingSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.serviceSettingOps.setSiteRemoteLogging(payload, siteId, h);
+    }
+
+    public async setSshSetting(payload: z.input<typeof sshSettingPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.setSshSetting(payload, siteId, h);
+    }
+
+    public async listSnmpIncompatibleDevices(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.serviceSettingOps.listSnmpIncompatibleDevices(siteId, h);
+    }
+
+    public async setMacAuthSetting(
+        payload: z.input<typeof schemas.updateMacAuthOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.serviceSettingOps.setMacAuthSetting(payload, siteId, h);
+    }
+
+    public async setMacFilteringGeneralSetting(
+        payload: z.input<typeof schemas.macFilteringGeneralSettingSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.serviceSettingOps.setMacFilteringGeneralSetting(payload, siteId, h);
+    }
+
+    public async setEapDot1xSetting(payload: z.input<typeof schemas.dot1xEapOpenApiVOSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.setEapDot1xSetting(payload, siteId, h);
+    }
+
+    public async listEapDot1xCandidates(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.listEapDot1xCandidates(siteId, h);
+    }
+
+    public async listSwitchDot1xCandidates(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.serviceSettingOps.listSwitchDot1xCandidates(siteId, h);
     }
 
     // ---- Firewall maintenance (FirewallMaintenanceOperations) ----

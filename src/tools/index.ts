@@ -61,6 +61,7 @@ import { registerCreateRoleTool } from './createRole.js';
 import { registerCreateSamlIdpTool } from './createSamlIdp.js';
 import { registerCreateScenarioTool } from './createScenario.js';
 import { registerCreateServiceTypeTool } from './createServiceType.js';
+import { registerCreateSessionLimitRuleTool } from './createSessionLimitRule.js';
 import { registerCreateSiteTool } from './createSite.js';
 import { registerCreateSiteFromTemplateTool } from './createSiteFromTemplate.js';
 import { registerCreateSiteTagTool } from './createSiteTag.js';
@@ -131,6 +132,7 @@ import { registerDeleteRoleTool } from './deleteRole.js';
 import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
 import { registerDeleteScenarioTool } from './deleteScenario.js';
 import { registerDeleteServiceTypeTool } from './deleteServiceType.js';
+import { registerDeleteSessionLimitRuleTool } from './deleteSessionLimitRule.js';
 import { registerDeleteSiteTool } from './deleteSite.js';
 import { registerDeleteSiteAlertLogsTool } from './deleteSiteAlertLogs.js';
 import { registerDeleteSiteEventLogsTool } from './deleteSiteEventLogs.js';
@@ -420,6 +422,7 @@ import { registerGetRebootScheduleListTool } from './getRebootScheduleList.js';
 import { registerGetRemoteBindingStatusTool } from './getRemoteBindingStatus.js';
 import { registerGetRemoteLoggingTool } from './getRemoteLogging.js';
 import { registerGetRemoteLoggingSettingTool } from './getRemoteLoggingSetting.js';
+import { registerGetRemoteLoggingTipTool } from './getRemoteLoggingTip.js';
 import { registerGetReportTabTool } from './getReportTab.js';
 import { registerGetRestoreResultTool } from './getRestoreResult.js';
 import { registerGetRetentionTool } from './getRetention.js';
@@ -590,6 +593,7 @@ import { registerListDhcpClientsTool } from './listDhcpClients.js';
 import { registerListDhcpReservationTargetsTool } from './listDhcpReservationTargets.js';
 import { registerListDuplicateSsidNamesTool } from './listDuplicateSsidNames.js';
 import { registerListEapAclsTool } from './listEapAcls.js';
+import { registerListEapDot1xCandidatesTool } from './listEapDot1xCandidates.js';
 import { registerListExternalUserGroupsTool } from './listExternalUserGroups.js';
 import { registerListExternalUsersTool } from './listExternalUsers.js';
 import { registerListFailedUpgradeDevicesTool } from './listFailedUpgradeDevices.js';
@@ -641,6 +645,7 @@ import { registerListSiteToSiteVpnPeerStatusTool } from './listSiteToSiteVpnPeer
 import { registerListSiteToSiteVpnStatusTool } from './listSiteToSiteVpnStatus.js';
 import { registerListSiteToSiteVpnSummariesTool } from './listSiteToSiteVpnSummaries.js';
 import { registerListSiteToSiteVpnsTool } from './listSiteToSiteVpns.js';
+import { registerListSnmpIncompatibleDevicesTool } from './listSnmpIncompatibleDevices.js';
 import { registerListSsidApGroupsTool } from './listSsidApGroups.js';
 import { registerListSslVpnBriefResourceGroupsTool } from './listSslVpnBriefResourceGroups.js';
 import { registerListSslVpnBriefResourcesTool } from './listSslVpnBriefResources.js';
@@ -656,6 +661,7 @@ import { registerListStackIncidentsTool } from './listStackIncidents.js';
 import { registerListStaticRoutesTool } from './listStaticRoutes.js';
 import { registerListSurveyResultsTool } from './listSurveyResults.js';
 import { registerListSwitchDhcpUsersTool } from './listSwitchDhcpUsers.js';
+import { registerListSwitchDot1xCandidatesTool } from './listSwitchDot1xCandidates.js';
 import { registerListSwitchInterfacesTool } from './listSwitchInterfaces.js';
 import { registerListSwitchLldpNeighborsTool } from './listSwitchLldpNeighbors.js';
 import { registerListSwitchNetworksTool } from './listSwitchNetworks.js';
@@ -702,7 +708,10 @@ import { registerRecoverSwitchPortPoeTool } from './recoverSwitchPortPoe.js';
 import { registerRenameDashboardTabTool } from './renameDashboardTab.js';
 import { registerRenameSiteTemplateTool } from './renameSiteTemplate.js';
 import { registerReorderAclsTool } from './reorderAcls.js';
+import { registerReorderBandwidthControlRulesTool } from './reorderBandwidthControlRules.js';
 import { registerReorderGatewayCustomAclsTool } from './reorderGatewayCustomAcls.js';
+import { registerReorderPolicyRoutesTool } from './reorderPolicyRoutes.js';
+import { registerReorderSessionLimitRulesTool } from './reorderSessionLimitRules.js';
 import { registerReorderUrlFilterRulesTool } from './reorderUrlFilterRules.js';
 import { registerResetAttackDefenseSettingTool } from './resetAttackDefenseSetting.js';
 import { registerResetDashboardTabTool } from './resetDashboardTab.js';
@@ -730,6 +739,7 @@ import { registerSetApRadioTool } from './setApRadio.js';
 import { registerSetApSsidOverridesTool } from './setApSsidOverrides.js';
 import { registerSetAttackDefenseSettingTool } from './setAttackDefenseSetting.js';
 import { registerSetBackupScheduleTool } from './setBackupSchedule.js';
+import { registerSetBandwidthControlTool } from './setBandwidthControl.js';
 import { registerSetBandwidthControlRuleTool } from './setBandwidthControlRule.js';
 import { registerSetClientActiveTimeoutTool } from './setClientActiveTimeout.js';
 import { registerSetClientDetailInformationTool } from './setClientDetailInformation.js';
@@ -746,6 +756,7 @@ import { registerSetDeviceAccessManagementTool } from './setDeviceAccessManageme
 import { registerSetDeviceLedTool } from './setDeviceLed.js';
 import { registerSetDnsCacheSettingTool } from './setDnsCacheSetting.js';
 import { registerSetDnsProxyTool } from './setDnsProxy.js';
+import { registerSetEapDot1xSettingTool } from './setEapDot1xSetting.js';
 import { registerSetEoGreTunnelConfigTool } from './setEoGreTunnelConfig.js';
 import { registerSetExperienceImprovementTool } from './setExperienceImprovement.js';
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
@@ -759,12 +770,16 @@ import { registerSetIntelliRecoverSettingTool } from './setIntelliRecoverSetting
 import { registerSetIotRadioSettingTool } from './setIotRadioSetting.js';
 import { registerSetIpMacBindingGeneralSettingTool } from './setIpMacBindingGeneralSetting.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
+import { registerSetLldpSettingTool } from './setLldpSetting.js';
+import { registerSetMacAuthSettingTool } from './setMacAuthSetting.js';
+import { registerSetMacFilteringGeneralSettingTool } from './setMacFilteringGeneralSetting.js';
 import { registerSetMfaStatusTool } from './setMfaStatus.js';
 import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
 import { registerSetPortalLogoutSettingTool } from './setPortalLogoutSetting.js';
 import { registerSetRadiusProxyTool } from './setRadiusProxy.js';
 import { registerSetRadiusServerTool } from './setRadiusServer.js';
 import { registerSetRemoteLoggingTool } from './setRemoteLogging.js';
+import { registerSetSessionLimitTool } from './setSessionLimit.js';
 import { registerSetSiteAuditNotificationsTool } from './setSiteAuditNotifications.js';
 import { registerSetSiteDeviceAccountTool } from './setSiteDeviceAccount.js';
 import { registerSetSiteJumboTool } from './setSiteJumbo.js';
@@ -773,8 +788,10 @@ import { registerSetSiteLedTool } from './setSiteLed.js';
 import { registerSetSiteLogNotificationsTool } from './setSiteLogNotifications.js';
 import { registerSetSiteMailServerTool } from './setSiteMailServer.js';
 import { registerSetSiteRememberSettingTool } from './setSiteRememberSetting.js';
+import { registerSetSiteRemoteLoggingTool } from './setSiteRemoteLogging.js';
 import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
 import { registerSetSpeedTestSettingTool } from './setSpeedTestSetting.js';
+import { registerSetSshSettingTool } from './setSshSetting.js';
 import { registerSetSsidApGroupsTool } from './setSsidApGroups.js';
 import { registerSetSsidConfigTool } from './setSsidConfig.js';
 import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
@@ -836,6 +853,7 @@ import { registerUpdateReportTabTool } from './updateReportTab.js';
 import { registerUpdateRoleTool } from './updateRole.js';
 import { registerUpdateSamlIdpTool } from './updateSamlIdp.js';
 import { registerUpdateServiceTypeTool } from './updateServiceType.js';
+import { registerUpdateSessionLimitRuleTool } from './updateSessionLimitRule.js';
 import { registerUpdateSiteTool } from './updateSite.js';
 import { registerUpdateSiteTagTool } from './updateSiteTag.js';
 import { registerUpdateSiteToSiteVpnTool } from './updateSiteToSiteVpn.js';
@@ -1293,6 +1311,24 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetRemoteLoggingSettingTool, category: 'network-services', permission: 'read' },
     { fn: registerGetAccessControlTool, category: 'network-services', permission: 'read' },
     { fn: registerGetSshSettingTool, category: 'network-services', permission: 'read' },
+    { fn: registerGetRemoteLoggingTipTool, category: 'network-services', permission: 'read' },
+    { fn: registerListSnmpIncompatibleDevicesTool, category: 'network-services', permission: 'read' },
+    { fn: registerSetSessionLimitTool, category: 'network-services', permission: 'write' },
+    { fn: registerCreateSessionLimitRuleTool, category: 'network-services', permission: 'write' },
+    { fn: registerUpdateSessionLimitRuleTool, category: 'network-services', permission: 'write' },
+    { fn: registerDeleteSessionLimitRuleTool, category: 'network-services', permission: 'write' },
+    { fn: registerReorderSessionLimitRulesTool, category: 'network-services', permission: 'write' },
+    { fn: registerSetBandwidthControlTool, category: 'network-services', permission: 'write' },
+    { fn: registerReorderBandwidthControlRulesTool, category: 'network-services', permission: 'write' },
+    { fn: registerSetLldpSettingTool, category: 'network-services', permission: 'write' },
+    { fn: registerSetSiteRemoteLoggingTool, category: 'network-services', permission: 'write' },
+    { fn: registerSetSshSettingTool, category: 'network-services', permission: 'write' },
+    { fn: registerReorderPolicyRoutesTool, category: 'network-routing', permission: 'write' },
+    { fn: registerSetMacAuthSettingTool, category: 'wireless-auth', permission: 'write' },
+    { fn: registerSetMacFilteringGeneralSettingTool, category: 'wireless-auth', permission: 'write' },
+    { fn: registerListEapDot1xCandidatesTool, category: 'wireless-auth', permission: 'read' },
+    { fn: registerListSwitchDot1xCandidatesTool, category: 'wireless-auth', permission: 'read' },
+    { fn: registerSetEapDot1xSettingTool, category: 'wireless-auth', permission: 'write' },
     { fn: registerGetDnsCacheDataListTool, category: 'network-services', permission: 'read' },
     { fn: registerGetIptvSettingTool, category: 'network-services', permission: 'read' },
     { fn: registerGetNtpSettingTool, category: 'network-services', permission: 'read' },
