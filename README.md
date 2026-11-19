@@ -485,6 +485,16 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `sendTestMail` | Send a test email through an SMTP server. | `controller:rw` |
 | `checkControllerUpdate` | Check TP-Link for a newer controller version; nothing is installed. | `controller:rw` |
 
+#### Dashboard tabs
+
+| Tool | Description | Category |
+| --- | --- | --- |
+| `createDashboardTab` | Create an empty custom dashboard tab. | `dashboard:rw` |
+| `renameDashboardTab` | Rename a dashboard tab. | `dashboard:rw` |
+| `resetDashboardTab` | Reset a built-in tab to its defaults; custom tabs are refused. | `dashboard:rw` |
+| `deleteDashboardTab` | Delete a dashboard tab; the Overall tab is refused. | `dashboard:rw` |
+| `setDashboardTabCards` | Set the cards of one tab; every other tab is sent unchanged so none is deleted. | `dashboard:rw` |
+
 ### Site & Client
 
 Site listing, client monitoring, and client-level operational controls (rate limits, block/unblock, reconnect).
@@ -885,7 +895,7 @@ Single-call tools that internally aggregate multiple Omada API calls in parallel
 Site dashboard widgets: WiFi and switch summaries, PoE usage, CPU/memory top-N, traffic activities, VPN tunnel stats, and RF analytics.
 
 <details>
-<summary>Read tools (16)</summary>
+<summary>Read tools (43)</summary>
 
 | Tool | Description |
 |---|---|
@@ -901,6 +911,33 @@ Site dashboard widgets: WiFi and switch summaries, PoE usage, CPU/memory top-N, 
 | `getTrafficDistribution` | Gets traffic distribution by protocol/app type over a time range. Requires `start` and `end` timestamps (seconds). |
 | `getRetryAndDroppedRate` | Gets wireless retry rate and dropped packet rate over a time range. Requires `start` and `end` timestamps (seconds). |
 | `getIspLoad` | Gets per-WAN ISP link load over a time range. Requires `start` and `end` timestamps (seconds). |
+| `getTopAps` | Top APs over a period by retry and dropped rate (start/end seconds). |
+| `getMostActiveApps` | Applications with the most traffic over a period (needs gateway DPI). |
+| `getAllNetworkActivity` | Total, upload and download traffic over a period in 5-minute buckets. |
+| `getClientAssociationActivities` | Wireless client association times over a period, in buckets. |
+| `getClientAssociationTimeDistribution` | Distribution of wireless association times and failures over a period. |
+| `getClientAppTraffic` | Applications a client used over a period (needs DPI). |
+| `getAppClientTraffic` | Clients that used an application over a period (needs DPI). |
+| `getCategoryClientTraffic` | Clients that used an application category over a period. |
+| `getCategoryAppTraffic` | Applications of a category over a period. |
+| `listClientTraffic` | Client traffic over a period (paginated). |
+| `searchClientTraffic` | Search client traffic by name, network or VLAN (v2 query). |
+| `listAppCategories` | Application categories with traffic over a period (paginated). |
+| `listBlockedApps` | Applications blocked by application control (paginated). |
+| `listAllowedApps` | Applications allowed by application control (paginated). |
+| `getLongestClientUptime` | Clients connected the longest. |
+| `getCurrentClientCount` | Current wired and wireless client counts. |
+| `getClientsBubble` | Wireless client bubble chart data. |
+| `getClientSsidDistribution` | Wireless clients per SSID. |
+| `getClientSignalDistribution` | Wireless clients per signal quality and band. |
+| `getClientRssiDistribution` | Wireless clients per RSSI range and band. |
+| `getClientFrequencyDistribution` | Wireless clients per frequency band. |
+| `getApDensity` | Whether the site has APs and APs with clients. |
+| `getGatewayIspLoad` | Current ISP load of the gateway WAN ports. |
+| `getNetworkOverviewCard` | Gateway, AP and switch counts and connection state. |
+| `listMostActiveEapsByTraffic` | APs with the most traffic over a period (v2). |
+| `listDashboardTabs` | Dashboard tabs with their card IDs. |
+| `listDashboardTabsWithoutOverall` | Dashboard tabs except Overall. |
 | `getChannels` | Gets channel distribution and utilization across all APs. |
 | `getInterference` | Gets top RF interference sources detected by APs. |
 | `getGridDashboardTunnelStats` | Gets VPN tunnel statistics. Required: `type` (0 = Server, 1 = Client). |

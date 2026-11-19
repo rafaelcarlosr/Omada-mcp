@@ -108,7 +108,11 @@ const TARGETS = [
             'OuiProfileOpenApiVO',
         ],
     },
-    { file: '04.6-site-network-setting-security.json', suffix: '', names: ['UrlFilteringOpenApiVO', 'AttackDefenseSetting', 'IpsInfo'] },
+    {
+        file: '04.6-site-network-setting-security.json',
+        suffix: '',
+        names: ['UrlFilteringOpenApiVO', 'AttackDefenseSetting', 'IpsInfo', 'ClientTrafficOpenApiQueryDataVO'],
+    },
     {
         file: '04.7-site-network-setting-transmission.json',
         suffix: '',
@@ -171,6 +175,7 @@ const TARGETS = [
             'SelectLocalUsersOpenApiVO',
         ],
     },
+    { file: '13-monitor.json', suffix: '', names: ['CreateTabOpenApiVO', 'UpdateTabOpenApiVO', 'BatchEditTabs'] },
     { file: '14-maintenance.json', suffix: '08', names: ['AutoBackupOpenApiVO', 'ModifyHistoryRetentionOpenApiVO'] },
     {
         file: '21-global-setting.json',
