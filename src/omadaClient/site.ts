@@ -159,9 +159,10 @@ export class SiteOperations {
      * Get site template list.
      * OperationId: getSiteTemplateList
      */
-    public async getSiteTemplateList(customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getSiteTemplateList(page = 1, pageSize = 100, customHeaders?: CustomHeaders): Promise<unknown> {
         const path = this.buildPath('/sitetemplates');
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
+        // Controller 6.3 rejects this route with HTTP 400 unless page and pageSize are sent.
+        const response = await this.request.get<OmadaApiResponse<unknown>>(path, { page, pageSize }, customHeaders);
         return this.request.ensureSuccess(response);
     }
 

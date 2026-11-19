@@ -41,7 +41,20 @@ const TARGETS = [
     {
         file: '02-organization.json',
         suffix: '02',
-        names: ['CreateSiteEntity', 'UpdateSiteEntity', 'CreateSiteTagOpenApiVO', 'Site Tag', 'Scenario', 'DeviceAccountSettingOpenApiVO'],
+        names: [
+            'CreateSiteEntity',
+            'UpdateSiteEntity',
+            'CreateSiteTagOpenApiVO',
+            'Site Tag',
+            'Scenario',
+            'DeviceAccountSettingOpenApiVO',
+            'CreateSiteTemplateEntity',
+            'CreateSiteByTemplate',
+            'UpdateSiteByTemplate',
+            'CopySiteTemplateOpenApiVO',
+            'BindSiteOpenApiVO',
+            'BatchSyncSitesOpenApiVO',
+        ],
     },
     {
         file: '03-device.json',

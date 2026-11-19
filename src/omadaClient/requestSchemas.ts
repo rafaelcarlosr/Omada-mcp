@@ -33,6 +33,20 @@ export const siteTag02Schema = z.object({ "name": z.string().regex(new RegExp("^
 
 export const scenario02Schema = z.object({ "name": z.string().regex(new RegExp("^(?:^[^ ]$|^[^ ].{0,126}[^ ]$)$")).describe("Scenario name should contain 1 to 128 visible ASCII characters.") }).strict();
 
+export const createSiteTemplateEntity02Schema = z.object({ "name": z.string().regex(new RegExp("^(?:^[^ \\+\\-\\@\\=]$|^[^ \\+\\-\\@\\=].{0,62}[^ ]$)$")).describe("Name of the site template should contain 1 to 64 characters."), "type": z.number().int().optional().describe("This param has been deprecated. Please do not use it."), "settings": z.array(z.string()).optional().describe("Settings of the site template support. Optional settings are as follows: AIRFPlaning, firewall, wirelessIdsIps, siteCLI, abnormal, sim, log, auditLogs, applicationControl, servicesRebootSchedule, servicesPortSchedule") }).strict();
+
+export const createSiteByTemplate02Schema = z.object({ "siteTemplateId": z.string().describe("Site template ID."), "name": z.string().regex(new RegExp("^(?:^[^ \\+\\-\\@\\=]$|^[^ \\+\\-\\@\\=].{0,62}[^ ]$)$")).describe("Name of the site should contain 1 to 64 characters."), "region": z.string().describe("Country/Region of the site; For the values of region, refer to the abbreviation of the ISO country code; For example, you need to input \"United States\" for the United States of America."), "scenario": z.string().describe("For the values of the scenario of the site, refer to result of the interface for Get scenario list."), "tagIds": z.array(z.string()).optional().describe("Site tag ID, Site tag ID can be created using \"Create new site tag\" interface, and site tag ID can be obtained from \"Get site tag list\" interface"), "longitude": z.number().finite().optional().describe("Longitude of the site should be within the range of -180 - 180."), "latitude": z.number().finite().optional().describe("Latitude of the site should be within the range of -90 - 90."), "address": z.string().optional().describe("Address of the site"), "deviceAccountSetting": deviceAccountSettingOpenApiVO02Schema, "supportES": z.boolean().optional().describe("Whether the site supports adopting Agile Series switches"), "supportL2": z.boolean().optional().describe("Whether the site supports adopting Non-Agile Series switches") }).strict();
+
+export const updateSiteByTemplate02Schema = z.object({ "name": z.string().regex(new RegExp("^(?:^[^ \\+\\-\\@\\=]$|^[^ \\+\\-\\@\\=].{0,62}[^ ]$)$")).describe("Name of the site should contain 1 to 64 characters.") }).strict();
+
+export const copySiteTemplateOpenApiVO02Schema = z.object({ "name": z.string().regex(new RegExp("^(?:^[^ \\+\\-\\@\\=]$|^[^ \\+\\-\\@\\=].{0,62}[^ ]$)$")).describe("Name of the site should contain 1 to 64 characters.") }).strict();
+
+export const deviceBindOpenApiVO02Schema = z.object({ "mac": z.string().optional().describe("Switch MAC address, like AA-BB-CC-DD-EE-FF."), "deviceTemplateId": z.string().optional().describe("Switch device template ID.") }).strict();
+
+export const bindSiteOpenApiVO02Schema = z.object({ "siteId": z.string().describe("Site ID to bind."), "switches": z.array(deviceBindOpenApiVO02Schema).optional().describe("Switch choose for binding device template.") }).strict();
+
+export const batchSyncSitesOpenApiVO02Schema = z.object({ "siteIds": z.array(z.string()).describe("Site IDs to sync with site template.") }).strict();
+
 // ---- docs/openapi/03-device.json ----
 export const apUpdateWlanGroupOpenApiVO03Schema = z.object({ "wlanGroupId": z.string().describe("The wlan group Id that the AP should switch to, must be in the same site as the AP and cannot be the current wlan group.") }).strict();
 
