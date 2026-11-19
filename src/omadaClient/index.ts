@@ -97,6 +97,7 @@ import { SiteTemplateOperations, type siteTemplateCreateSchema } from './siteTem
 import { type healthRangeSchema, SwitchOperations, type switchGeneralSettingsSchema } from './switches.js';
 import { type SwitchPortChange, SwitchPortOperations, type SwitchPortPatch } from './switchPorts.js';
 import { scopeTemplatePath } from './templateScope.js';
+import { type captureDeviceTypeSchema, type ReportTabRecord, TopologyOperations, type topologyRootNodeSchema } from './topology.js';
 import { VpnOperations } from './vpn.js';
 import { type SsidSection, WirelessOperations } from './wireless.js';
 
@@ -146,6 +147,7 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
     private readonly authProfileOps: AuthProfileOperations;
+    private readonly topologyOps: TopologyOperations;
     private readonly serviceSettingOps: ServiceSettingOperations;
     private readonly lanServiceOps: LanServiceOperations;
     private readonly firewallMaintenanceOps: FirewallMaintenanceOperations;
@@ -207,6 +209,7 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.topologyOps = new TopologyOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.serviceSettingOps = new ServiceSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.lanServiceOps = new LanServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.firewallMaintenanceOps = new FirewallMaintenanceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3378,6 +3381,124 @@ export class OmadaClient {
 
     public async listSwitchDot1xCandidates(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.serviceSettingOps.listSwitchDot1xCandidates(siteId, h);
+    }
+
+    // ---- Topology, capture lookups and report order (TopologyOperations) ----
+    public async getSiteTopology(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getSiteTopology(siteId, h);
+    }
+
+    public async getSiteTopologyByStatus(deviceStatus: '0' | '1' | '0,1', siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getSiteTopologyByStatus(deviceStatus, siteId, h);
+    }
+
+    public async refreshTopology(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.refreshTopology(siteId, h);
+    }
+
+    public async listTopologyNodes(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.listTopologyNodes(siteId, h);
+    }
+
+    public async setTopologyRootNode(payload: z.input<typeof topologyRootNodeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.setTopologyRootNode(payload, siteId, h);
+    }
+
+    public async listTopologyClientsOfDevices(
+        deviceMacs: string[],
+        clientType: '0' | '1' | '0,1',
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.topologyOps.listTopologyClientsOfDevices(deviceMacs, clientType, siteId, h);
+    }
+
+    public async listTopologyDeviceClients(deviceMac: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.listTopologyDeviceClients(deviceMac, siteId, h);
+    }
+
+    public async listTopologyDeviceAllClients(
+        deviceMac: string,
+        clientType: '0' | '1' | '0,1',
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.topologyOps.listTopologyDeviceAllClients(deviceMac, clientType, siteId, h);
+    }
+
+    public async getTopologyAvailableNetworks(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getTopologyAvailableNetworks(siteId, h);
+    }
+
+    public async getTopologyAvailableVlans(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getTopologyAvailableVlans(siteId, h);
+    }
+
+    public async listTopologyAvailableSsids(searchKey: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.topologyOps.listTopologyAvailableSsids(searchKey, siteId, h);
+    }
+
+    public async getTopologyDiscoveryStatus(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getTopologyDiscoveryStatus(siteId, h);
+    }
+
+    public async listTopologyIsolatedDevices(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.listTopologyIsolatedDevices(siteId, h);
+    }
+
+    public async searchTopology(searchKey: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.topologyOps.searchTopology(searchKey, siteId, h);
+    }
+
+    public async listTopologyVlanDevices(networkId: string, vlan: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.listTopologyVlanDevices(networkId, vlan, siteId, h);
+    }
+
+    public async listTopologySsidDevices(ssidId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.listTopologySsidDevices(ssidId, siteId, h);
+    }
+
+    public async listCaptureCapableDevices(
+        deviceType: z.input<typeof captureDeviceTypeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown[]> {
+        return await this.topologyOps.listCaptureCapableDevices(deviceType, siteId, h);
+    }
+
+    public async listCaptureInterfaces(
+        deviceType: z.input<typeof captureDeviceTypeSchema>,
+        deviceMac: string,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.topologyOps.listCaptureInterfaces(deviceType, deviceMac, siteId, h);
+    }
+
+    public async getCaptureStatus(
+        deviceType: z.input<typeof captureDeviceTypeSchema>,
+        deviceMac: string,
+        requestId: string,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.topologyOps.getCaptureStatus(deviceType, deviceMac, requestId, siteId, h);
+    }
+
+    public async getLastCaptureDevice(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getLastCaptureDevice(siteId, h);
+    }
+
+    public async getReportEmailSchedule(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getReportEmailSchedule(siteId, h);
+    }
+
+    public async reorderReportTabs(tabs: ReportTabRecord[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.reorderReportTabs(tabs, siteId, h);
+    }
+
+    public async getMultiSiteTopology(siteIds: string[], h?: CustomHeaders): Promise<unknown> {
+        return await this.topologyOps.getMultiSiteTopology(siteIds, h);
     }
 
     // ---- Firewall maintenance (FirewallMaintenanceOperations) ----

@@ -233,6 +233,9 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `refreshTopology` | Ask the controller to rediscover the site topology. | `insights:rw` |
+| `setTopologyRootNode` | Choose the root device of the topology map, or automatic discovery. | `insights:rw` |
+| `reorderReportTabs` | Set the order of network report tabs (complete list, cards kept). | `dashboard:rw` |
 | `setSessionLimit` | Turn gateway session limiting on or off. | `network-services:rw` |
 | `createSessionLimitRule` | Create a session limit rule. | `network-services:rw` |
 | `updateSessionLimitRule` | Change a session limit rule; unlisted fields are kept. | `network-services:rw` |
@@ -829,6 +832,24 @@ WAN/LAN configuration, SSIDs, WLAN groups, routing, NAT, DHCP, DNS, firewall set
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getSiteTopology` | Gets the site topology (v2, or v3 with a status filter). |
+| `listTopologyNodes` | Lists candidate topology root nodes. |
+| `listTopologyDeviceClients` | Lists clients attached to one device. |
+| `listTopologyClientsOfDevices` | Lists clients of several devices. |
+| `getTopologyAvailableNetworks` | Lists networks and SSIDs the map can filter by. |
+| `getTopologyAvailableVlans` | Lists VLANs the map can filter by. |
+| `listTopologyAvailableSsids` | Lists SSIDs the map can filter by. |
+| `getTopologyDiscoveryStatus` | Gets the topology discovery status. |
+| `listTopologyIsolatedDevices` | Lists isolated and preconfigured devices. |
+| `searchTopology` | Searches devices and clients in the topology. |
+| `listTopologyVlanDevices` | Lists devices that carry one VLAN. |
+| `listTopologySsidDevices` | Lists devices that broadcast one SSID. |
+| `getMultiSiteTopology` | Gets the topology of several sites. |
+| `listCaptureCapableDevices` | Lists devices that support packet capture. |
+| `listCaptureInterfaces` | Lists the ports and radios a device can capture on. |
+| `getCaptureStatus` | Gets the status of a packet capture. |
+| `getLastCaptureDevice` | Gets the device of the last packet capture. |
+| `getReportEmailSchedule` | Gets the scheduled report email setting. |
 | `getRemoteLoggingTip` | Gets the effective site syslog target hint. |
 | `listSnmpIncompatibleDevices` | Lists devices that do not support the SNMP version. |
 | `listEapDot1xCandidates` | Lists APs that can take part in EAP 802.1X. |
