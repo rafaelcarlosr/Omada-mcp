@@ -218,7 +218,7 @@ for (const file of readdirSync(clientDir).filter((name) => name.endsWith('.ts') 
             const open = match.index + match[0].length - 1;
             const { args, end } = callArguments(text, open);
             const consts = localConsts(text, match.index);
-            const tail = text.slice(end, end + 600);
+            const tail = text.slice(end, end + 1500);
             const next = tail.indexOf('this.buildPath(');
             const window = next === -1 ? tail : tail.slice(0, next);
             // buildPath(...) passed directly as the request's first argument, else the next request call.

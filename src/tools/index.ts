@@ -76,6 +76,8 @@ import { registerDeleteDdnsEntryTool } from './deleteDdnsEntry.js';
 import { registerDeleteDhcpReservationTool } from './deleteDhcpReservation.js';
 import { registerDeleteExpiredAuthedRecordsTool } from './deleteExpiredAuthedRecords.js';
 import { registerDeleteExternalUserGroupTool } from './deleteExternalUserGroup.js';
+import { registerDeleteGlobalAlertLogsTool } from './deleteGlobalAlertLogs.js';
+import { registerDeleteGlobalEventLogsTool } from './deleteGlobalEventLogs.js';
 import { registerDeleteGroupProfileTool } from './deleteGroupProfile.js';
 import { registerDeleteHotspotLocalUserTool } from './deleteHotspotLocalUser.js';
 import { registerDeleteHotspotLocalUsersTool } from './deleteHotspotLocalUsers.js';
@@ -100,6 +102,8 @@ import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
 import { registerDeleteScenarioTool } from './deleteScenario.js';
 import { registerDeleteServiceTypeTool } from './deleteServiceType.js';
 import { registerDeleteSiteTool } from './deleteSite.js';
+import { registerDeleteSiteAlertLogsTool } from './deleteSiteAlertLogs.js';
+import { registerDeleteSiteEventLogsTool } from './deleteSiteEventLogs.js';
 import { registerDeleteSiteTagTool } from './deleteSiteTag.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
@@ -242,6 +246,7 @@ import { registerGetDscpConfigTool } from './getDscpConfig.js';
 import { registerGetEapDot1xSettingTool } from './getEapDot1xSetting.js';
 import { registerGetEoGreTunnelConfigTool } from './getEoGreTunnelConfig.js';
 import { registerGetExperienceImprovementTool } from './getExperienceImprovement.js';
+import { registerGetFailedUpgradeFirmwareTool } from './getFailedUpgradeFirmware.js';
 import { registerGetFirewallSettingTool } from './getFirewallSetting.js';
 import { registerGetFirmwareInfoTool } from './getFirmwareInfo.js';
 import { registerGetFirmwareUpgradePlanTool } from './getFirmwareUpgradePlan.js';
@@ -500,6 +505,7 @@ import { registerListAllSsidsTool } from './listAllSsids.js';
 import { registerListApnProfilesTool } from './listApnProfiles.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
 import { registerListAppCategoriesTool } from './listAppCategories.js';
+import { registerListApSsidOverrideAuditLogsTool } from './listApSsidOverrideAuditLogs.js';
 import { registerListAuthSurveysTool } from './listAuthSurveys.js';
 import { registerListBlockedAppsTool } from './listBlockedApps.js';
 import { registerListClientsTool } from './listClients.js';
@@ -515,6 +521,7 @@ import { registerListDevicesStatsTool } from './listDevicesStats.js';
 import { registerListEapAclsTool } from './listEapAcls.js';
 import { registerListExternalUserGroupsTool } from './listExternalUserGroups.js';
 import { registerListExternalUsersTool } from './listExternalUsers.js';
+import { registerListFailedUpgradeDevicesTool } from './listFailedUpgradeDevices.js';
 import { registerListGlobalAlertsTool } from './listGlobalAlerts.js';
 import { registerListGlobalEventsTool } from './listGlobalEvents.js';
 import { registerListGlobalGatewayWanStatusTool } from './listGlobalGatewayWanStatus.js';
@@ -597,6 +604,9 @@ import { registerReconnectClientTool } from './reconnectClient.js';
 import { registerRecoverSwitchPortPoeTool } from './recoverSwitchPortPoe.js';
 import { registerRenameDashboardTabTool } from './renameDashboardTab.js';
 import { registerResetDashboardTabTool } from './resetDashboardTab.js';
+import { registerResetGlobalLogNotificationsTool } from './resetGlobalLogNotifications.js';
+import { registerResetSiteLogNotificationsTool } from './resetSiteLogNotifications.js';
+import { registerResolveSiteAlertsTool } from './resolveSiteAlerts.js';
 import { registerRestoreControllerTool } from './restoreController.js';
 import { registerRestoreControllerFromFileServerTool } from './restoreControllerFromFileServer.js';
 import { registerRestoreSitesTool } from './restoreSites.js';
@@ -634,6 +644,8 @@ import { registerSetExperienceImprovementTool } from './setExperienceImprovement
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
 import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
 import { registerSetGeneralSettingsTool } from './setGeneralSettings.js';
+import { registerSetGlobalAuditNotificationsTool } from './setGlobalAuditNotifications.js';
+import { registerSetGlobalLogNotificationsTool } from './setGlobalLogNotifications.js';
 import { registerSetIntelliRecoverSettingTool } from './setIntelliRecoverSetting.js';
 import { registerSetIotRadioSettingTool } from './setIotRadioSetting.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
@@ -642,10 +654,12 @@ import { registerSetMulticastRateLimitTool } from './setMulticastRateLimit.js';
 import { registerSetPortalLogoutSettingTool } from './setPortalLogoutSetting.js';
 import { registerSetRadiusProxyTool } from './setRadiusProxy.js';
 import { registerSetRemoteLoggingTool } from './setRemoteLogging.js';
+import { registerSetSiteAuditNotificationsTool } from './setSiteAuditNotifications.js';
 import { registerSetSiteDeviceAccountTool } from './setSiteDeviceAccount.js';
 import { registerSetSiteJumboTool } from './setSiteJumbo.js';
 import { registerSetSiteLagHashAlgorithmTool } from './setSiteLagHashAlgorithm.js';
 import { registerSetSiteLedTool } from './setSiteLed.js';
+import { registerSetSiteLogNotificationsTool } from './setSiteLogNotifications.js';
 import { registerSetSiteMailServerTool } from './setSiteMailServer.js';
 import { registerSetSiteRememberSettingTool } from './setSiteRememberSetting.js';
 import { registerSetSnmpSettingTool } from './setSnmpSetting.js';
@@ -782,6 +796,20 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerTestWebhookTool, category: 'controller', permission: 'write' },
     { fn: registerSendTestMailTool, category: 'controller', permission: 'write' },
     { fn: registerCheckControllerUpdateTool, category: 'controller', permission: 'write' },
+    { fn: registerListApSsidOverrideAuditLogsTool, category: 'logs', permission: 'read' },
+    { fn: registerListFailedUpgradeDevicesTool, category: 'logs', permission: 'read' },
+    { fn: registerGetFailedUpgradeFirmwareTool, category: 'logs', permission: 'read' },
+    { fn: registerSetGlobalLogNotificationsTool, category: 'logs', permission: 'write' },
+    { fn: registerSetSiteLogNotificationsTool, category: 'logs', permission: 'write' },
+    { fn: registerSetGlobalAuditNotificationsTool, category: 'logs', permission: 'write' },
+    { fn: registerSetSiteAuditNotificationsTool, category: 'logs', permission: 'write' },
+    { fn: registerResetGlobalLogNotificationsTool, category: 'logs', permission: 'write' },
+    { fn: registerResetSiteLogNotificationsTool, category: 'logs', permission: 'write' },
+    { fn: registerResolveSiteAlertsTool, category: 'logs', permission: 'write' },
+    { fn: registerDeleteSiteEventLogsTool, category: 'logs', permission: 'write' },
+    { fn: registerDeleteSiteAlertLogsTool, category: 'logs', permission: 'write' },
+    { fn: registerDeleteGlobalEventLogsTool, category: 'logs', permission: 'write' },
+    { fn: registerDeleteGlobalAlertLogsTool, category: 'logs', permission: 'write' },
     { fn: registerGetTopApsTool, category: 'dashboard', permission: 'read' },
     { fn: registerGetMostActiveAppsTool, category: 'dashboard', permission: 'read' },
     { fn: registerGetAllNetworkActivityTool, category: 'dashboard', permission: 'read' },

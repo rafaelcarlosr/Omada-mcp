@@ -391,5 +391,12 @@ export const sendMailServerOpenApiVO21Schema = z.object({ "smtpEnable": z.boolea
 
 export const channelUpgrade21Schema = z.object({ "channel": z.number().int().optional().describe("Channel should be a value as follows: 0: stable; 1: Release Candidate; 2: beta.") }).strict();
 
+// ---- docs/openapi/16-log.json ----
+export const webhookConfigEditOpenApiVOSchema = z.object({ "webhookEnable": z.boolean().describe("Audit or Omada Log Notification Enable for Disable Webhook"), "webhookId": z.string().optional().describe("Webhook ID (Webhook ID should be configured in webhook setting, when Webhook Enable is true)") }).strict();
+
+export const auditLogNotificationEditOpenApiVOSchema = z.object({ "key": z.string().describe("For the values of Audit Log Notification Category Key, refer to section 5.2.1 of the Open API Access"), "webhook": z.boolean().describe("Audit Log Notification Category Enable or Disable Webhook") }).strict();
+
+export const auditLogNotificationSettingEditOpenApiVOSchema = z.object({ "webhookConfig": webhookConfigEditOpenApiVOSchema, "auditLogNotifications": z.array(auditLogNotificationEditOpenApiVOSchema).describe("Audit Log Notification List") }).strict();
+
 // ---- docs/openapi/18-intelli-recover.json ----
 export const intelliRecoverSettingSchema = z.object({ "id": z.string().optional().describe("The intelli recover setting Id."), "autoFlag": z.boolean().optional().describe("Auto recovering flag"), "firstRebootPoeInterval": z.number().int().optional().describe("First reboot uplinkDevice poe interval"), "limitNum": z.number().int().optional().describe("The limit reboot uplinkDevice poe number"), "rebootPoeInterval": z.number().int().optional().describe("Retry reboot uplinkDevice poe interval") }).strict();
