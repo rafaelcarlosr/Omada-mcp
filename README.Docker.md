@@ -179,6 +179,17 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `resetFirewallSetting` | Reset firewall timeouts and flags to the defaults; reports the setting after. | `firewall-acl:rw` |
+| `resetAttackDefenseSetting` | Reset flood and scan protection to the defaults, verified against them. | `firewall-traffic:rw` |
+| `setUrlFilterGlobalSetting` | Change the content filter block page and safe search. | `firewall-traffic:rw` |
+| `reorderUrlFilterRules` | Set the order of the gateway or AP URL filter rules (complete list). | `firewall-traffic:rw` |
+| `reorderAcls` | Set the order of gateway, switch or EAP ACLs (complete list). | `firewall-acl:rw` |
+| `reorderGatewayCustomAcls` | Set the order of gateway custom ACLs (complete list). | `firewall-acl:rw` |
+| `clearAclHitCounts` | Reset gateway or gateway custom ACL hit counters. | `firewall-acl:rw` |
+| `createGatewayCustomAcl` | Create a gateway custom ACL from addresses and subnets. | `firewall-acl:rw` |
+| `updateGatewayCustomAcl` | Change a gateway custom ACL; unlisted fields are kept. | `firewall-acl:rw` |
+| `setGatewayCustomAclsState` | Turn listed gateway custom ACLs or their logging on or off. | `firewall-acl:rw` |
+| `deleteGatewayCustomAcls` | Delete gateway custom ACLs by ID. | `firewall-acl:rw` |
 | `setWirelessIdsConfig` | Change wireless IDS status, level and detections; level only changes while enabled. | `security-wids:rw` |
 | `setWirelessIpsConfig` | Change wireless IPS; disabling also turns off deauthentication and dynamic blocking. | `security-wids:rw` |
 | `createIpsAllowEntry` | Exempt an IP, LAN network or subnet from gateway IPS blocking. | `firewall-ids:rw` |
@@ -689,6 +700,8 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getAttackDefenseDefaults` | Gets the default flood and scan protection setting. |
+| `listUrlFilterCategories` | Lists content filtering categories. |
 | `getWirelessIdsConfig` | Gets the wireless IDS setting. |
 | `getWirelessIpsConfig` | Gets the wireless IPS setting. |
 | `getThreatMap` | Gets the controller-wide IPS threat map for a period. |

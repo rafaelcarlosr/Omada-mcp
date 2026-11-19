@@ -14,6 +14,7 @@ import { registerBlockClientTool } from './blockClient.js';
 import { registerBlockCountryTool } from './blockCountry.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
+import { registerClearAclHitCountsTool } from './clearAclHitCounts.js';
 import { registerClearExpiredVouchersTool } from './clearExpiredVouchers.js';
 import { registerClearLocalUserDynamicMacTool } from './clearLocalUserDynamicMac.js';
 import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.js';
@@ -28,6 +29,7 @@ import { registerCreateDhcpReservationTool } from './createDhcpReservation.js';
 import { registerCreateEapAclTool } from './createEapAcl.js';
 import { registerCreateExternalUserGroupTool } from './createExternalUserGroup.js';
 import { registerCreateGatewayAclTool } from './createGatewayAcl.js';
+import { registerCreateGatewayCustomAclTool } from './createGatewayCustomAcl.js';
 import { registerCreateGroupProfileTool } from './createGroupProfile.js';
 import { registerCreateHotspotLocalUserTool } from './createHotspotLocalUser.js';
 import { registerCreateHotspotOperatorTool } from './createHotspotOperator.js';
@@ -88,6 +90,7 @@ import { registerDeleteDdnsEntryTool } from './deleteDdnsEntry.js';
 import { registerDeleteDhcpReservationTool } from './deleteDhcpReservation.js';
 import { registerDeleteExpiredAuthedRecordsTool } from './deleteExpiredAuthedRecords.js';
 import { registerDeleteExternalUserGroupTool } from './deleteExternalUserGroup.js';
+import { registerDeleteGatewayCustomAclsTool } from './deleteGatewayCustomAcls.js';
 import { registerDeleteGlobalAlertLogsTool } from './deleteGlobalAlertLogs.js';
 import { registerDeleteGlobalEventLogsTool } from './deleteGlobalEventLogs.js';
 import { registerDeleteGroupProfileTool } from './deleteGroupProfile.js';
@@ -198,6 +201,7 @@ import { registerGetApSnmpConfigTool } from './getApSnmpConfig.js';
 import { registerGetApSsidOverridesTool } from './getApSsidOverrides.js';
 import { registerGetApUplinkConfigTool } from './getApUplinkConfig.js';
 import { registerGetApVlanConfigTool } from './getApVlanConfig.js';
+import { registerGetAttackDefenseDefaultsTool } from './getAttackDefenseDefaults.js';
 import { registerGetAttackDefenseSettingTool } from './getAttackDefenseSetting.js';
 import { registerGetAuditLogSettingForGlobalTool } from './getAuditLogSettingForGlobal.js';
 import { registerGetAuditLogSettingForSiteTool } from './getAuditLogSettingForSite.js';
@@ -648,6 +652,7 @@ import { registerListUnplacedSitePositionsTool } from './listUnplacedSitePositio
 import { registerListUnusedVoucherCodesTool } from './listUnusedVoucherCodes.js';
 import { registerListUpgradeFirmwaresTool } from './listUpgradeFirmwares.js';
 import { registerListUpgradeOverviewFirmwaresTool } from './listUpgradeOverviewFirmwares.js';
+import { registerListUrlFilterCategoriesTool } from './listUrlFilterCategories.js';
 import { registerListVoucherCurrenciesTool } from './listVoucherCurrencies.js';
 import { registerListVoucherGroupOptionsTool } from './listVoucherGroupOptions.js';
 import { registerListVoucherGroupsTool } from './listVoucherGroups.js';
@@ -665,7 +670,12 @@ import { registerReconnectClientTool } from './reconnectClient.js';
 import { registerRecoverSwitchPortPoeTool } from './recoverSwitchPortPoe.js';
 import { registerRenameDashboardTabTool } from './renameDashboardTab.js';
 import { registerRenameSiteTemplateTool } from './renameSiteTemplate.js';
+import { registerReorderAclsTool } from './reorderAcls.js';
+import { registerReorderGatewayCustomAclsTool } from './reorderGatewayCustomAcls.js';
+import { registerReorderUrlFilterRulesTool } from './reorderUrlFilterRules.js';
+import { registerResetAttackDefenseSettingTool } from './resetAttackDefenseSetting.js';
 import { registerResetDashboardTabTool } from './resetDashboardTab.js';
+import { registerResetFirewallSettingTool } from './resetFirewallSetting.js';
 import { registerResetGlobalLogNotificationsTool } from './resetGlobalLogNotifications.js';
 import { registerResetSiteLogNotificationsTool } from './resetSiteLogNotifications.js';
 import { registerResolveSiteAlertsTool } from './resolveSiteAlerts.js';
@@ -707,6 +717,7 @@ import { registerSetEoGreTunnelConfigTool } from './setEoGreTunnelConfig.js';
 import { registerSetExperienceImprovementTool } from './setExperienceImprovement.js';
 import { registerSetFirewallSettingTool } from './setFirewallSetting.js';
 import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
+import { registerSetGatewayCustomAclsStateTool } from './setGatewayCustomAclsState.js';
 import { registerSetGeneralSettingsTool } from './setGeneralSettings.js';
 import { registerSetGlobalAuditNotificationsTool } from './setGlobalAuditNotifications.js';
 import { registerSetGlobalLogNotificationsTool } from './setGlobalLogNotifications.js';
@@ -736,6 +747,7 @@ import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js'
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
 import { registerSetUiInterfaceTool } from './setUiInterface.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
+import { registerSetUrlFilterGlobalSettingTool } from './setUrlFilterGlobalSetting.js';
 import { registerSetVoucherCurrencyTool } from './setVoucherCurrency.js';
 import { registerSetVoucherGroupPatternTool } from './setVoucherGroupPattern.js';
 import { registerSetWirelessIdsConfigTool } from './setWirelessIdsConfig.js';
@@ -760,6 +772,7 @@ import { registerUpdateDhcpReservationTool } from './updateDhcpReservation.js';
 import { registerUpdateEapAclTool } from './updateEapAcl.js';
 import { registerUpdateExternalUserGroupTool } from './updateExternalUserGroup.js';
 import { registerUpdateGatewayAclTool } from './updateGatewayAcl.js';
+import { registerUpdateGatewayCustomAclTool } from './updateGatewayCustomAcl.js';
 import { registerUpdateGroupProfileTool } from './updateGroupProfile.js';
 import { registerUpdateHotspotLocalUserTool } from './updateHotspotLocalUser.js';
 import { registerUpdateHotspotOperatorTool } from './updateHotspotOperator.js';
@@ -1281,6 +1294,19 @@ const TOOL_REGISTRY: ToolEntry[] = [
     // --- Firewall ACL ---
     { fn: registerGetAclConfigTypeSettingTool, category: 'firewall-acl', permission: 'read' },
     { fn: registerGetOsgCustomAclListTool, category: 'firewall-acl', permission: 'read' },
+    { fn: registerGetAttackDefenseDefaultsTool, category: 'firewall-traffic', permission: 'read' },
+    { fn: registerListUrlFilterCategoriesTool, category: 'firewall-traffic', permission: 'read' },
+    { fn: registerResetFirewallSettingTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerResetAttackDefenseSettingTool, category: 'firewall-traffic', permission: 'write' },
+    { fn: registerSetUrlFilterGlobalSettingTool, category: 'firewall-traffic', permission: 'write' },
+    { fn: registerReorderUrlFilterRulesTool, category: 'firewall-traffic', permission: 'write' },
+    { fn: registerReorderAclsTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerReorderGatewayCustomAclsTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerClearAclHitCountsTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerCreateGatewayCustomAclTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerUpdateGatewayCustomAclTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerSetGatewayCustomAclsStateTool, category: 'firewall-acl', permission: 'write' },
+    { fn: registerDeleteGatewayCustomAclsTool, category: 'firewall-acl', permission: 'write' },
     { fn: registerGetOswAclListTool, category: 'firewall-acl', permission: 'read' },
     { fn: registerGetGridAllowListTool, category: 'firewall-acl', permission: 'read' },
     { fn: registerGetGridBlockListTool, category: 'firewall-acl', permission: 'read' },

@@ -152,6 +152,9 @@ const TARGETS = [
             'New IPS allow list entry',
             'Modify IPS allow list entry',
             'IpsSignatureConfig',
+            'UrlFilterGlobalOpenApiVO',
+            'GatewayCustomACLAddEntity',
+            'Gateway Custom ACL modify entity',
         ],
     },
     {

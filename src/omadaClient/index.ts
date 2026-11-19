@@ -46,6 +46,12 @@ import {
 } from './controllerSettings.js';
 import { DashboardOperations, type secondsRangeSchema as dashboardRangeSchema } from './dashboard.js';
 import { DeviceOperations } from './device.js';
+import {
+    type aclOrderTypeSchema,
+    FirewallMaintenanceOperations,
+    type gatewayCustomAclChangesSchema,
+    type urlFilterOrderTypeSchema,
+} from './firewallMaintenance.js';
 import { GlobalSecurityOperations } from './globalSecurity.js';
 import { type authSurveyPayloadSchema, HotspotAdminOperations, type secondsRangeSchema, type VoucherGroupQuery } from './hotspotAdmin.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
@@ -138,6 +144,7 @@ export class OmadaClient {
     private readonly siteServiceOps: SiteServiceOperations;
     private readonly wirelessOps: WirelessOperations;
     private readonly authProfileOps: AuthProfileOperations;
+    private readonly firewallMaintenanceOps: FirewallMaintenanceOperations;
     private readonly networkSecurityOps: NetworkSecurityOperations;
     private readonly globalSecurityOps: GlobalSecurityOperations;
     private readonly siteAdminOps: SiteAdminOperations;
@@ -196,6 +203,7 @@ export class OmadaClient {
         this.siteServiceOps = new SiteServiceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.wirelessOps = new WirelessOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.authProfileOps = new AuthProfileOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.firewallMaintenanceOps = new FirewallMaintenanceOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.networkSecurityOps = new NetworkSecurityOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.globalSecurityOps = new GlobalSecurityOperations(this.request, (path) => this.buildOmadaPath(path));
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
@@ -3089,6 +3097,77 @@ export class OmadaClient {
 
     public async getSwitchOuiAutoAddVlanAllSupport(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
+    }
+
+    // ---- Firewall maintenance (FirewallMaintenanceOperations) ----
+    public async resetFirewallSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.resetFirewallSetting(siteId, h);
+    }
+
+    public async getAttackDefenseDefaults(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.getAttackDefenseDefaults(siteId, h);
+    }
+
+    public async resetAttackDefenseSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.resetAttackDefenseSetting(siteId, h);
+    }
+
+    public async listUrlFilterCategories(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.listUrlFilterCategories(siteId, h);
+    }
+
+    public async setUrlFilterGlobalSetting(
+        payload: z.input<typeof schemas.urlFilterGlobalOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.firewallMaintenanceOps.setUrlFilterGlobalSetting(payload, siteId, h);
+    }
+
+    public async reorderUrlFilterRules(
+        type: z.input<typeof urlFilterOrderTypeSchema>,
+        indexes: Record<string, number>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.firewallMaintenanceOps.reorderUrlFilterRules(type, indexes, siteId, h);
+    }
+
+    public async reorderAcls(
+        type: z.input<typeof aclOrderTypeSchema>,
+        indexes: Record<string, number>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.firewallMaintenanceOps.reorderAcls(type, indexes, siteId, h);
+    }
+
+    public async clearGatewayAclHitCounts(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.clearGatewayAclHitCounts(siteId, h);
+    }
+
+    public async updateGatewayCustomAcls(
+        changes: z.input<typeof gatewayCustomAclChangesSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.firewallMaintenanceOps.updateGatewayCustomAcls(changes, siteId, h);
+    }
+
+    public async reorderGatewayCustomAcls(indexes: Record<string, number>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.reorderGatewayCustomAcls(indexes, siteId, h);
+    }
+
+    public async clearGatewayCustomAclHitCounts(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.clearGatewayCustomAclHitCounts(siteId, h);
+    }
+
+    public async setGatewayCustomAclsState(ids: string[], status: 0 | 1 | 2, log: 0 | 1 | 2, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.setGatewayCustomAclsState(ids, status, log, siteId, h);
+    }
+
+    public async deleteGatewayCustomAcls(ids: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.firewallMaintenanceOps.deleteGatewayCustomAcls(ids, siteId, h);
     }
 
     // ---- Network security (NetworkSecurityOperations) ----
