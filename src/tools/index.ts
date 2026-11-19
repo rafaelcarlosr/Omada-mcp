@@ -42,6 +42,7 @@ import { registerCreatePolicyRouteTool } from './createPolicyRoute.js';
 import { registerCreatePortForwardingRuleTool } from './createPortForwardingRule.js';
 import { registerCreatePortScheduleTool } from './createPortSchedule.js';
 import { registerCreateRateLimitProfileTool } from './createRateLimitProfile.js';
+import { registerCreateReportTabTool } from './createReportTab.js';
 import { registerCreateRoleTool } from './createRole.js';
 import { registerCreateSamlIdpTool } from './createSamlIdp.js';
 import { registerCreateScenarioTool } from './createScenario.js';
@@ -82,6 +83,7 @@ import { registerDeleteGroupProfileTool } from './deleteGroupProfile.js';
 import { registerDeleteHotspotLocalUserTool } from './deleteHotspotLocalUser.js';
 import { registerDeleteHotspotLocalUsersTool } from './deleteHotspotLocalUsers.js';
 import { registerDeleteHotspotOperatorTool } from './deleteHotspotOperator.js';
+import { registerDeleteIncidentsTool } from './deleteIncidents.js';
 import { registerDeleteIotServerTool } from './deleteIotServer.js';
 import { registerDeleteIpMacBindingTool } from './deleteIpMacBinding.js';
 import { registerDeleteLanDnsRuleTool } from './deleteLanDnsRule.js';
@@ -97,6 +99,7 @@ import { registerDeletePolicyRouteTool } from './deletePolicyRoute.js';
 import { registerDeletePortForwardingRuleTool } from './deletePortForwardingRule.js';
 import { registerDeletePortScheduleTool } from './deletePortSchedule.js';
 import { registerDeleteRateLimitProfileTool } from './deleteRateLimitProfile.js';
+import { registerDeleteReportTabsTool } from './deleteReportTabs.js';
 import { registerDeleteRoleTool } from './deleteRole.js';
 import { registerDeleteSamlIdpTool } from './deleteSamlIdp.js';
 import { registerDeleteScenarioTool } from './deleteScenario.js';
@@ -142,10 +145,17 @@ import { registerGetAllLocalUsersTool } from './getAllLocalUsers.js';
 import { registerGetAllNetworkActivityTool } from './getAllNetworkActivity.js';
 import { registerGetAllRolesTool } from './getAllRoles.js';
 import { registerGetAllUsersAppTool } from './getAllUsersApp.js';
+import { registerGetAnomalyCategoryIncidentsTool } from './getAnomalyCategoryIncidents.js';
+import { registerGetAnomalyIncidentTool } from './getAnomalyIncident.js';
+import { registerGetAnomalyIncidentDistributionTool } from './getAnomalyIncidentDistribution.js';
+import { registerGetAnomalyNotificationSettingTool } from './getAnomalyNotificationSetting.js';
+import { registerGetAnomalyStatisticsTool } from './getAnomalyStatistics.js';
 import { registerGetApAfcStatusTool } from './getApAfcStatus.js';
 import { registerGetApDensityTool } from './getApDensity.js';
 import { registerGetApDetailTool } from './getApDetail.js';
 import { registerGetApGeneralConfigTool } from './getApGeneralConfig.js';
+import { registerGetApHealthDetailTool } from './getApHealthDetail.js';
+import { registerGetApHealthTimelineTool } from './getApHealthTimeline.js';
 import { registerGetApInterferenceDetectionStatusTool } from './getApInterferenceDetectionStatus.js';
 import { registerGetApIpv6ConfigTool } from './getApIpv6Config.js';
 import { registerGetApL3AccessTool } from './getApL3Access.js';
@@ -288,6 +298,8 @@ import { registerGetHotspotLocalUserTool } from './getHotspotLocalUser.js';
 import { registerGetHotspotOperatorTool } from './getHotspotOperator.js';
 import { registerGetHotspotStatisticsTool } from './getHotspotStatistics.js';
 import { registerGetIgmpTool } from './getIgmp.js';
+import { registerGetIncidentObjectRankingTool } from './getIncidentObjectRanking.js';
+import { registerGetIncidentRankingTool } from './getIncidentRanking.js';
 import { registerGetIntelliRecoverSettingTool } from './getIntelliRecoverSetting.js';
 import { registerGetInterfaceLanNetworkTool } from './getInterfaceLanNetwork.js';
 import { registerGetInterfaceLanNetworkV2Tool } from './getInterfaceLanNetworkV2.js';
@@ -373,6 +385,7 @@ import { registerGetRebootScheduleListTool } from './getRebootScheduleList.js';
 import { registerGetRemoteBindingStatusTool } from './getRemoteBindingStatus.js';
 import { registerGetRemoteLoggingTool } from './getRemoteLogging.js';
 import { registerGetRemoteLoggingSettingTool } from './getRemoteLoggingSetting.js';
+import { registerGetReportTabTool } from './getReportTab.js';
 import { registerGetRestoreResultTool } from './getRestoreResult.js';
 import { registerGetRetentionTool } from './getRetention.js';
 import { registerGetRetryAndDroppedRateTool } from './getRetryAndDroppedRate.js';
@@ -456,6 +469,7 @@ import { registerGetTrafficDistributionTool } from './getTrafficDistribution.js'
 import { registerGetTrafficPriorityTool } from './getTrafficPriority.js';
 import { registerGetTrafficStatsTool } from './getTrafficStats.js';
 import { registerGetUiInterfaceTool } from './getUiInterface.js';
+import { registerGetUnresolvedIncidentCountTool } from './getUnresolvedIncidentCount.js';
 import { registerGetUpgradeLogsTool } from './getUpgradeLogs.js';
 import { registerGetUpgradeOverviewCriticalTool } from './getUpgradeOverviewCritical.js';
 import { registerGetUpgradeOverviewTryBetaTool } from './getUpgradeOverviewTryBeta.js';
@@ -498,10 +512,14 @@ import { registerGetWebhookLogsForGlobalTool } from './getWebhookLogsForGlobal.j
 import { registerGetWidsTool } from './getWids.js';
 import { registerGetWidsBlacklistTool } from './getWidsBlacklist.js';
 import { registerGetWifiHealthSummaryTool } from './getWifiHealthSummary.js';
+import { registerGetWifiHealthTimelineTool } from './getWifiHealthTimeline.js';
+import { registerGetWifiSubHealthTimelineTool } from './getWifiSubHealthTimeline.js';
 import { registerGetWireguardSummaryTool } from './getWireguardSummary.js';
 import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
 import { registerListAllowedAppsTool } from './listAllowedApps.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
+import { registerListAnomalyIncidentsTool } from './listAnomalyIncidents.js';
+import { registerListAnomalySettingsTool } from './listAnomalySettings.js';
 import { registerListApnProfilesTool } from './listApnProfiles.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
 import { registerListAppCategoriesTool } from './listAppCategories.js';
@@ -516,6 +534,7 @@ import { registerListClientToSiteVpnServersTool } from './listClientToSiteVpnSer
 import { registerListClientTrafficTool } from './listClientTraffic.js';
 import { registerListDashboardTabsTool } from './listDashboardTabs.js';
 import { registerListDashboardTabsWithoutOverallTool } from './listDashboardTabsWithoutOverall.js';
+import { registerListDeviceIncidentsTool } from './listDeviceIncidents.js';
 import { registerListDevicesTool } from './listDevices.js';
 import { registerListDevicesStatsTool } from './listDevicesStats.js';
 import { registerListEapAclsTool } from './listEapAcls.js';
@@ -530,6 +549,8 @@ import { registerListHotspotAuthRecordsTool } from './listHotspotAuthRecords.js'
 import { registerListHotspotLocalUsersTool } from './listHotspotLocalUsers.js';
 import { registerListHotspotOperatorsTool } from './listHotspotOperators.js';
 import { registerListHotspotRateLimitProfilesTool } from './listHotspotRateLimitProfiles.js';
+import { registerListInfluencingClientsTool } from './listInfluencingClients.js';
+import { registerListInfluencingDevicesTool } from './listInfluencingDevices.js';
 import { registerListIotServersTool } from './listIotServers.js';
 import { registerListLockToApApsTool } from './listLockToApAps.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
@@ -544,6 +565,7 @@ import { registerListPolicyRoutesTool } from './listPolicyRoutes.js';
 import { registerListPortalsWithLogoutTool } from './listPortalsWithLogout.js';
 import { registerListPortForwardingRulesTool } from './listPortForwardingRules.js';
 import { registerListRadiusProfilesTool } from './listRadiusProfiles.js';
+import { registerListReportTabsTool } from './listReportTabs.js';
 import { registerListSamlIdpsTool } from './listSamlIdps.js';
 import { registerListScenariosTool } from './listScenarios.js';
 import { registerListServiceTypeTool } from './listServiceType.js';
@@ -566,6 +588,7 @@ import { registerListSslVpnResourceGroupsTool } from './listSslVpnResourceGroups
 import { registerListSslVpnResourcesTool } from './listSslVpnResources.js';
 import { registerListSslVpnUserGroupsTool } from './listSslVpnUserGroups.js';
 import { registerListSslVpnUserGroupUsersTool } from './listSslVpnUserGroupUsers.js';
+import { registerListStackIncidentsTool } from './listStackIncidents.js';
 import { registerListStaticRoutesTool } from './listStaticRoutes.js';
 import { registerListSurveyResultsTool } from './listSurveyResults.js';
 import { registerListSwitchDhcpUsersTool } from './listSwitchDhcpUsers.js';
@@ -596,6 +619,7 @@ import { registerListVpnServerClientStatusTool } from './listVpnServerClientStat
 import { registerListVpnServerStatusTool } from './listVpnServerStatus.js';
 import { registerListVpnUsersTool } from './listVpnUsers.js';
 import { registerListWifiCallingProfilesTool } from './listWifiCallingProfiles.js';
+import { registerListWifiHealthTopClientsTool } from './listWifiHealthTopClients.js';
 import { registerListWireguardTool } from './listWireguard.js';
 import { registerListWireguardPeersTool } from './listWireguardPeers.js';
 import { registerLocateDeviceTool } from './locateDevice.js';
@@ -617,6 +641,8 @@ import { registerSendTestMailTool } from './sendTestMail.js';
 import { registerSetAccessControlTool } from './setAccessControl.js';
 import { registerSetAclConfigTypeSettingTool } from './setAclConfigTypeSetting.js';
 import { registerSetAlgSettingTool } from './setAlgSetting.js';
+import { registerSetAnomalyEventSettingTool } from './setAnomalyEventSetting.js';
+import { registerSetAnomalyNotificationTool } from './setAnomalyNotification.js';
 import { registerSetApChannelLimitTool } from './setApChannelLimit.js';
 import { registerSetApConfigTool } from './setApConfig.js';
 import { registerSetApPowerSavingTool } from './setApPowerSaving.js';
@@ -646,6 +672,7 @@ import { registerSetGatewayConfigTool } from './setGatewayConfig.js';
 import { registerSetGeneralSettingsTool } from './setGeneralSettings.js';
 import { registerSetGlobalAuditNotificationsTool } from './setGlobalAuditNotifications.js';
 import { registerSetGlobalLogNotificationsTool } from './setGlobalLogNotifications.js';
+import { registerSetIncidentStatusTool } from './setIncidentStatus.js';
 import { registerSetIntelliRecoverSettingTool } from './setIntelliRecoverSetting.js';
 import { registerSetIotRadioSettingTool } from './setIotRadioSetting.js';
 import { registerSetIpsConfigTool } from './setIpsConfig.js';
@@ -703,6 +730,7 @@ import { registerUpdatePolicyRouteTool } from './updatePolicyRoute.js';
 import { registerUpdatePortForwardingRuleTool } from './updatePortForwardingRule.js';
 import { registerUpdatePortScheduleTool } from './updatePortSchedule.js';
 import { registerUpdateRateLimitProfileTool } from './updateRateLimitProfile.js';
+import { registerUpdateReportTabTool } from './updateReportTab.js';
 import { registerUpdateRoleTool } from './updateRole.js';
 import { registerUpdateSamlIdpTool } from './updateSamlIdp.js';
 import { registerUpdateServiceTypeTool } from './updateServiceType.js';
@@ -796,6 +824,34 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerTestWebhookTool, category: 'controller', permission: 'write' },
     { fn: registerSendTestMailTool, category: 'controller', permission: 'write' },
     { fn: registerCheckControllerUpdateTool, category: 'controller', permission: 'write' },
+    { fn: registerListAnomalyIncidentsTool, category: 'insights', permission: 'read' },
+    { fn: registerGetAnomalyIncidentTool, category: 'insights', permission: 'read' },
+    { fn: registerGetUnresolvedIncidentCountTool, category: 'insights', permission: 'read' },
+    { fn: registerGetAnomalyStatisticsTool, category: 'insights', permission: 'read' },
+    { fn: registerGetAnomalyIncidentDistributionTool, category: 'insights', permission: 'read' },
+    { fn: registerGetAnomalyCategoryIncidentsTool, category: 'insights', permission: 'read' },
+    { fn: registerListInfluencingDevicesTool, category: 'insights', permission: 'read' },
+    { fn: registerListInfluencingClientsTool, category: 'insights', permission: 'read' },
+    { fn: registerListDeviceIncidentsTool, category: 'insights', permission: 'read' },
+    { fn: registerListStackIncidentsTool, category: 'insights', permission: 'read' },
+    { fn: registerGetIncidentRankingTool, category: 'insights', permission: 'read' },
+    { fn: registerGetIncidentObjectRankingTool, category: 'insights', permission: 'read' },
+    { fn: registerListAnomalySettingsTool, category: 'insights', permission: 'read' },
+    { fn: registerGetAnomalyNotificationSettingTool, category: 'insights', permission: 'read' },
+    { fn: registerGetWifiHealthTimelineTool, category: 'insights', permission: 'read' },
+    { fn: registerGetWifiSubHealthTimelineTool, category: 'insights', permission: 'read' },
+    { fn: registerGetApHealthDetailTool, category: 'insights', permission: 'read' },
+    { fn: registerGetApHealthTimelineTool, category: 'insights', permission: 'read' },
+    { fn: registerListWifiHealthTopClientsTool, category: 'insights', permission: 'read' },
+    { fn: registerListReportTabsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetReportTabTool, category: 'dashboard', permission: 'read' },
+    { fn: registerSetIncidentStatusTool, category: 'insights', permission: 'write' },
+    { fn: registerDeleteIncidentsTool, category: 'insights', permission: 'write' },
+    { fn: registerSetAnomalyEventSettingTool, category: 'insights', permission: 'write' },
+    { fn: registerSetAnomalyNotificationTool, category: 'insights', permission: 'write' },
+    { fn: registerCreateReportTabTool, category: 'dashboard', permission: 'write' },
+    { fn: registerUpdateReportTabTool, category: 'dashboard', permission: 'write' },
+    { fn: registerDeleteReportTabsTool, category: 'dashboard', permission: 'write' },
     { fn: registerListApSsidOverrideAuditLogsTool, category: 'logs', permission: 'read' },
     { fn: registerListFailedUpgradeDevicesTool, category: 'logs', permission: 'read' },
     { fn: registerGetFailedUpgradeFirmwareTool, category: 'logs', permission: 'read' },

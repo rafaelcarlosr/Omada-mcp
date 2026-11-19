@@ -175,7 +175,7 @@ const TARGETS = [
             'SelectLocalUsersOpenApiVO',
         ],
     },
-    { file: '13-monitor.json', suffix: '', names: ['CreateTabOpenApiVO', 'UpdateTabOpenApiVO', 'BatchEditTabs'] },
+    { file: '13-monitor.json', suffix: '', names: ['CreateTabOpenApiVO', 'UpdateTabOpenApiVO', 'BatchEditTabs', 'ReportTab'] },
     { file: '14-maintenance.json', suffix: '08', names: ['AutoBackupOpenApiVO', 'ModifyHistoryRetentionOpenApiVO'] },
     {
         file: '21-global-setting.json',
@@ -200,6 +200,17 @@ const TARGETS = [
         ],
     },
     { file: '16-log.json', suffix: '', names: ['AuditLogNotificationSettingEditOpenApiVO'] },
+    {
+        file: '17-incident-detect.json',
+        suffix: '',
+        names: [
+            'AnomalyEventSettingEditOpenApiVO',
+            'SetNotificationOpenApiVO',
+            'AnomalyListSettingVO',
+            'DeleteAnomalyListSettingVO',
+            'IncidentRankingQueryVO',
+        ],
+    },
     { file: '18-intelli-recover.json', suffix: '', names: ['IntelliRecoverSetting'] },
 ];
 

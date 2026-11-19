@@ -52,6 +52,12 @@ import { LogAdminOperations, type logNotificationBodySchema, type logSelectionSc
 import type { FileServerConfig, SiteFileRestoreInfo, SiteRestoreInfo } from './maintenance.js';
 import { MaintenanceOperations } from './maintenance.js';
 import { MonitorOperations } from './monitor.js';
+import {
+    type IncidentFilters,
+    MonitoringOperations,
+    type msRangeSchema as monitoringRangeSchema,
+    type reportTabPayloadSchema,
+} from './monitoring.js';
 import { NetworkOperations, type SsidBasicConfig } from './network.js';
 import {
     type bonjourServicePayloadSchema,
@@ -129,6 +135,7 @@ export class OmadaClient {
     private readonly hotspotAdminOps: HotspotAdminOperations;
     private readonly dashboardOps: DashboardOperations;
     private readonly logAdminOps: LogAdminOperations;
+    private readonly monitoringOps: MonitoringOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -181,6 +188,7 @@ export class OmadaClient {
         this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.dashboardOps = new DashboardOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.logAdminOps = new LogAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.monitoringOps = new MonitoringOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3832,5 +3840,189 @@ export class OmadaClient {
 
     public async deleteGlobalAlertLogs(selection: z.input<typeof logSelectionSchema>, h?: CustomHeaders): Promise<unknown> {
         return await this.logAdminOps.deleteGlobalAlertLogs(selection, h);
+    }
+
+    // ---- Incidents, health and reports (MonitoringOperations) ----
+    public async listAnomalyIncidents(
+        range: z.input<typeof monitoringRangeSchema>,
+        page: number,
+        pageSize: number,
+        filters: IncidentFilters = {},
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.listAnomalyIncidents(range, page, pageSize, filters, siteId, h);
+    }
+
+    public async getAnomalyIncident(incidentId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getAnomalyIncident(incidentId, siteId, h);
+    }
+
+    public async getUnresolvedIncidentCount(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getUnresolvedIncidentCount(siteId, h);
+    }
+
+    public async getAnomalyStatistics(range: z.input<typeof monitoringRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getAnomalyStatistics(range, siteId, h);
+    }
+
+    public async getAnomalyIncidentDistribution(range: z.input<typeof monitoringRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getAnomalyIncidentDistribution(range, siteId, h);
+    }
+
+    public async getAnomalyCategoryIncidents(
+        range: z.input<typeof monitoringRangeSchema>,
+        category: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.getAnomalyCategoryIncidents(range, category, siteId, h);
+    }
+
+    public async listInfluencingDevices(
+        deviceMac: string,
+        anomalyCode: string,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.listInfluencingDevices(deviceMac, anomalyCode, page, pageSize, siteId, h);
+    }
+
+    public async listInfluencingClients(
+        deviceMac: string,
+        anomalyCode: string,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.listInfluencingClients(deviceMac, anomalyCode, page, pageSize, siteId, h);
+    }
+
+    public async listDeviceIncidents(
+        deviceMac: string,
+        range: z.input<typeof monitoringRangeSchema>,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.listDeviceIncidents(deviceMac, range, page, pageSize, siteId, h);
+    }
+
+    public async listStackIncidents(
+        stackId: string,
+        range: z.input<typeof monitoringRangeSchema>,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.listStackIncidents(stackId, range, page, pageSize, siteId, h);
+    }
+
+    public async getIncidentRanking(
+        query: z.input<typeof schemas.incidentRankingQueryVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.getIncidentRanking(query, siteId, h);
+    }
+
+    public async getIncidentObjectRanking(
+        query: z.input<typeof schemas.incidentRankingQueryVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.getIncidentObjectRanking(query, siteId, h);
+    }
+
+    public async setIncidentStatus(incidentIds: string[], targetStatus: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.setIncidentStatus(incidentIds, targetStatus, siteId, h);
+    }
+
+    public async deleteIncidents(incidentIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.deleteIncidents(incidentIds, siteId, h);
+    }
+
+    public async listAnomalySettings(page: number, pageSize: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.listAnomalySettings(page, pageSize, siteId, h);
+    }
+
+    public async setAnomalyEventSetting(
+        payload: z.input<typeof schemas.anomalyEventSettingEditOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.setAnomalyEventSetting(payload, siteId, h);
+    }
+
+    public async getAnomalyNotificationSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getAnomalyNotificationSetting(siteId, h);
+    }
+
+    public async setAnomalyNotification(
+        payload: z.input<typeof schemas.setNotificationOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.setAnomalyNotification(payload, siteId, h);
+    }
+
+    public async getWifiHealthTimeline(range: z.input<typeof monitoringRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getWifiHealthTimeline(range, siteId, h);
+    }
+
+    public async getWifiSubHealthTimeline(range: z.input<typeof monitoringRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getWifiSubHealthTimeline(range, siteId, h);
+    }
+
+    public async getApHealthDetail(
+        apMac: string,
+        range: z.input<typeof monitoringRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.getApHealthDetail(apMac, range, siteId, h);
+    }
+
+    public async getApHealthTimeline(
+        apMac: string,
+        range: z.input<typeof monitoringRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.getApHealthTimeline(apMac, range, siteId, h);
+    }
+
+    public async listWifiHealthTopClients(time: number, topK: number, searchKey?: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.listWifiHealthTopClients(time, topK, searchKey, siteId, h);
+    }
+
+    public async listReportTabs(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.listReportTabs(siteId, h);
+    }
+
+    public async getReportTab(tabId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.getReportTab(tabId, siteId, h);
+    }
+
+    public async createReportTab(payload: z.input<typeof reportTabPayloadSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.createReportTab(payload, siteId, h);
+    }
+
+    public async updateReportTab(
+        tabId: string,
+        payload: z.input<typeof reportTabPayloadSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.monitoringOps.updateReportTab(tabId, payload, siteId, h);
+    }
+
+    public async deleteReportTabs(tabIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.monitoringOps.deleteReportTabs(tabIds, siteId, h);
     }
 }
