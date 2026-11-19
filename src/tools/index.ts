@@ -229,6 +229,7 @@ import { registerGetBeaconControlSettingTool } from './getBeaconControlSetting.j
 import { registerGetBuiltinRadiusUsersTool } from './getBuiltinRadiusUsers.js';
 import { registerGetCableTestFullResultsTool } from './getCableTestFullResults.js';
 import { registerGetCableTestLogsTool } from './getCableTestLogs.js';
+import { registerGetCaptureStatusTool } from './getCaptureStatus.js';
 import { registerGetCategoryAppTrafficTool } from './getCategoryAppTraffic.js';
 import { registerGetCategoryClientTrafficTool } from './getCategoryClientTraffic.js';
 import { registerGetCertificateTool } from './getCertificate.js';
@@ -361,6 +362,7 @@ import { registerGetLanNetworkListTool } from './getLanNetworkList.js';
 import { registerGetLanNetworkListV2Tool } from './getLanNetworkListV2.js';
 import { registerGetLanProfileEsUsageTool } from './getLanProfileEsUsage.js';
 import { registerGetLanProfileListTool } from './getLanProfileList.js';
+import { registerGetLastCaptureDeviceTool } from './getLastCaptureDevice.js';
 import { registerGetLdapProfileListTool } from './getLdapProfileList.js';
 import { registerGetLldpSettingTool } from './getLldpSetting.js';
 import { registerGetLoggingTool } from './getLogging.js';
@@ -381,6 +383,7 @@ import { registerGetMfaStatusTool } from './getMfaStatus.js';
 import { registerGetMldSettingTool } from './getMldSetting.js';
 import { registerGetMostActiveAppsTool } from './getMostActiveApps.js';
 import { registerGetMulticastRateLimitTool } from './getMulticastRateLimit.js';
+import { registerGetMultiSiteTopologyTool } from './getMultiSiteTopology.js';
 import { registerGetNetworkHealthSummaryTool } from './getNetworkHealthSummary.js';
 import { registerGetNetworkOverviewCardTool } from './getNetworkOverviewCard.js';
 import { registerGetNtpSettingTool } from './getNtpSetting.js';
@@ -423,6 +426,7 @@ import { registerGetRemoteBindingStatusTool } from './getRemoteBindingStatus.js'
 import { registerGetRemoteLoggingTool } from './getRemoteLogging.js';
 import { registerGetRemoteLoggingSettingTool } from './getRemoteLoggingSetting.js';
 import { registerGetRemoteLoggingTipTool } from './getRemoteLoggingTip.js';
+import { registerGetReportEmailScheduleTool } from './getReportEmailSchedule.js';
 import { registerGetReportTabTool } from './getReportTab.js';
 import { registerGetRestoreResultTool } from './getRestoreResult.js';
 import { registerGetRetentionTool } from './getRetention.js';
@@ -472,6 +476,7 @@ import { registerGetSiteTemplateConfigTool } from './getSiteTemplateConfig.js';
 import { registerGetSiteTemplateDetailTool } from './getSiteTemplateDetail.js';
 import { registerGetSiteTemplateListTool } from './getSiteTemplateList.js';
 import { registerGetSiteTemplateSpecificationTool } from './getSiteTemplateSpecification.js';
+import { registerGetSiteTopologyTool } from './getSiteTopology.js';
 import { registerGetSiteToSiteVpnTool } from './getSiteToSiteVpn.js';
 import { registerGetSiteToSiteVpnInfoTool } from './getSiteToSiteVpnInfo.js';
 import { registerGetSiteUrlTool } from './getSiteUrl.js';
@@ -508,6 +513,9 @@ import { registerGetThreatDetailTool } from './getThreatDetail.js';
 import { registerGetThreatListTool } from './getThreatList.js';
 import { registerGetThreatMapTool } from './getThreatMap.js';
 import { registerGetTopApsTool } from './getTopAps.js';
+import { registerGetTopologyAvailableNetworksTool } from './getTopologyAvailableNetworks.js';
+import { registerGetTopologyAvailableVlansTool } from './getTopologyAvailableVlans.js';
+import { registerGetTopologyDiscoveryStatusTool } from './getTopologyDiscoveryStatus.js';
 import { registerGetTopThreatsTool } from './getTopThreats.js';
 import { registerGetTrafficDistributionTool } from './getTrafficDistribution.js';
 import { registerGetTrafficPriorityTool } from './getTrafficPriority.js';
@@ -577,6 +585,8 @@ import { registerListApSsidOverrideAuditLogsTool } from './listApSsidOverrideAud
 import { registerListAuthSurveysTool } from './listAuthSurveys.js';
 import { registerListBlockedAppsTool } from './listBlockedApps.js';
 import { registerListBlockedCountriesTool } from './listBlockedCountries.js';
+import { registerListCaptureCapableDevicesTool } from './listCaptureCapableDevices.js';
+import { registerListCaptureInterfacesTool } from './listCaptureInterfaces.js';
 import { registerListClientsTool } from './listClients.js';
 import { registerListClientsActivityTool } from './listClientsActivity.js';
 import { registerListClientsPastConnectionsTool } from './listClientsPastConnections.js';
@@ -677,6 +687,13 @@ import { registerListSwitchPortOverviewTool } from './listSwitchPortOverview.js'
 import { registerListSwitchPortPoeInfoTool } from './listSwitchPortPoeInfo.js';
 import { registerListSwitchPortTagsTool } from './listSwitchPortTags.js';
 import { registerListTimeRangeProfilesTool } from './listTimeRangeProfiles.js';
+import { registerListTopologyAvailableSsidsTool } from './listTopologyAvailableSsids.js';
+import { registerListTopologyClientsOfDevicesTool } from './listTopologyClientsOfDevices.js';
+import { registerListTopologyDeviceClientsTool } from './listTopologyDeviceClients.js';
+import { registerListTopologyIsolatedDevicesTool } from './listTopologyIsolatedDevices.js';
+import { registerListTopologyNodesTool } from './listTopologyNodes.js';
+import { registerListTopologySsidDevicesTool } from './listTopologySsidDevices.js';
+import { registerListTopologyVlanDevicesTool } from './listTopologyVlanDevices.js';
 import { registerListUnplacedSitePositionsTool } from './listUnplacedSitePositions.js';
 import { registerListUnusedVoucherCodesTool } from './listUnusedVoucherCodes.js';
 import { registerListUpgradeFirmwaresTool } from './listUpgradeFirmwares.js';
@@ -705,12 +722,14 @@ import { registerLocateDeviceTool } from './locateDevice.js';
 import { registerRebootDeviceTool } from './rebootDevice.js';
 import { registerReconnectClientTool } from './reconnectClient.js';
 import { registerRecoverSwitchPortPoeTool } from './recoverSwitchPortPoe.js';
+import { registerRefreshTopologyTool } from './refreshTopology.js';
 import { registerRenameDashboardTabTool } from './renameDashboardTab.js';
 import { registerRenameSiteTemplateTool } from './renameSiteTemplate.js';
 import { registerReorderAclsTool } from './reorderAcls.js';
 import { registerReorderBandwidthControlRulesTool } from './reorderBandwidthControlRules.js';
 import { registerReorderGatewayCustomAclsTool } from './reorderGatewayCustomAcls.js';
 import { registerReorderPolicyRoutesTool } from './reorderPolicyRoutes.js';
+import { registerReorderReportTabsTool } from './reorderReportTabs.js';
 import { registerReorderSessionLimitRulesTool } from './reorderSessionLimitRules.js';
 import { registerReorderUrlFilterRulesTool } from './reorderUrlFilterRules.js';
 import { registerResetAttackDefenseSettingTool } from './resetAttackDefenseSetting.js';
@@ -725,6 +744,7 @@ import { registerRestoreSitesTool } from './restoreSites.js';
 import { registerRestoreSitesFromFileServerTool } from './restoreSitesFromFileServer.js';
 import { registerSearchClientTrafficTool } from './searchClientTraffic.js';
 import { registerSearchDevicesTool } from './searchDevices.js';
+import { registerSearchTopologyTool } from './searchTopology.js';
 import { registerSendTestMailTool } from './sendTestMail.js';
 import { registerSetAccessControlTool } from './setAccessControl.js';
 import { registerSetAclConfigTypeSettingTool } from './setAclConfigTypeSetting.js';
@@ -796,6 +816,7 @@ import { registerSetSsidApGroupsTool } from './setSsidApGroups.js';
 import { registerSetSsidConfigTool } from './setSsidConfig.js';
 import { registerSetSwitchGeneralConfigTool } from './setSwitchGeneralConfig.js';
 import { registerSetSwitchPortsTool } from './setSwitchPorts.js';
+import { registerSetTopologyRootNodeTool } from './setTopologyRootNode.js';
 import { registerSetUiInterfaceTool } from './setUiInterface.js';
 import { registerSetUpnpSettingTool } from './setUpnpSetting.js';
 import { registerSetUrlFilterGlobalSettingTool } from './setUrlFilterGlobalSetting.js';
@@ -979,6 +1000,27 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerGetApHealthTimelineTool, category: 'insights', permission: 'read' },
     { fn: registerListWifiHealthTopClientsTool, category: 'insights', permission: 'read' },
     { fn: registerListReportTabsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetSiteTopologyTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologyNodesTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologyDeviceClientsTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologyClientsOfDevicesTool, category: 'insights', permission: 'read' },
+    { fn: registerGetTopologyAvailableNetworksTool, category: 'insights', permission: 'read' },
+    { fn: registerGetTopologyAvailableVlansTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologyAvailableSsidsTool, category: 'insights', permission: 'read' },
+    { fn: registerGetTopologyDiscoveryStatusTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologyIsolatedDevicesTool, category: 'insights', permission: 'read' },
+    { fn: registerSearchTopologyTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologyVlanDevicesTool, category: 'insights', permission: 'read' },
+    { fn: registerListTopologySsidDevicesTool, category: 'insights', permission: 'read' },
+    { fn: registerListCaptureCapableDevicesTool, category: 'insights', permission: 'read' },
+    { fn: registerListCaptureInterfacesTool, category: 'insights', permission: 'read' },
+    { fn: registerGetCaptureStatusTool, category: 'insights', permission: 'read' },
+    { fn: registerGetLastCaptureDeviceTool, category: 'insights', permission: 'read' },
+    { fn: registerGetMultiSiteTopologyTool, category: 'insights', permission: 'read' },
+    { fn: registerRefreshTopologyTool, category: 'insights', permission: 'write' },
+    { fn: registerSetTopologyRootNodeTool, category: 'insights', permission: 'write' },
+    { fn: registerGetReportEmailScheduleTool, category: 'dashboard', permission: 'read' },
+    { fn: registerReorderReportTabsTool, category: 'dashboard', permission: 'write' },
     { fn: registerGetReportTabTool, category: 'dashboard', permission: 'read' },
     { fn: registerSetIncidentStatusTool, category: 'insights', permission: 'write' },
     { fn: registerDeleteIncidentsTool, category: 'insights', permission: 'write' },
