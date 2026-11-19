@@ -18,6 +18,7 @@ import { registerClearSwitchPortCountersTool } from './clearSwitchPortCounters.j
 import { registerCopyWifiCallingProfileTool } from './copyWifiCallingProfile.js';
 import { registerCreateApnProfileTool } from './createApnProfile.js';
 import { registerCreateAuthSurveyTool } from './createAuthSurvey.js';
+import { registerCreateDashboardTabTool } from './createDashboardTab.js';
 import { registerCreateDdnsEntryTool } from './createDdnsEntry.js';
 import { registerCreateDhcpReservationTool } from './createDhcpReservation.js';
 import { registerCreateEapAclTool } from './createEapAcl.js';
@@ -70,6 +71,7 @@ import { registerDeleteAuthSurveyTool } from './deleteAuthSurvey.js';
 import { registerDeleteBandwidthControlRuleTool } from './deleteBandwidthControlRule.js';
 import { registerDeleteClientToSiteVpnClientTool } from './deleteClientToSiteVpnClient.js';
 import { registerDeleteClientToSiteVpnServerTool } from './deleteClientToSiteVpnServer.js';
+import { registerDeleteDashboardTabTool } from './deleteDashboardTab.js';
 import { registerDeleteDdnsEntryTool } from './deleteDdnsEntry.js';
 import { registerDeleteDhcpReservationTool } from './deleteDhcpReservation.js';
 import { registerDeleteExpiredAuthedRecordsTool } from './deleteExpiredAuthedRecords.js';
@@ -133,9 +135,11 @@ import { registerGetAlgTool } from './getAlg.js';
 import { registerGetAllCloudUsersTool } from './getAllCloudUsers.js';
 import { registerGetAllDeviceBySiteTool } from './getAllDeviceBySite.js';
 import { registerGetAllLocalUsersTool } from './getAllLocalUsers.js';
+import { registerGetAllNetworkActivityTool } from './getAllNetworkActivity.js';
 import { registerGetAllRolesTool } from './getAllRoles.js';
 import { registerGetAllUsersAppTool } from './getAllUsersApp.js';
 import { registerGetApAfcStatusTool } from './getApAfcStatus.js';
+import { registerGetApDensityTool } from './getApDensity.js';
 import { registerGetApDetailTool } from './getApDetail.js';
 import { registerGetApGeneralConfigTool } from './getApGeneralConfig.js';
 import { registerGetApInterferenceDetectionStatusTool } from './getApInterferenceDetectionStatus.js';
@@ -147,6 +151,7 @@ import { registerGetApLldpConfigTool } from './getApLldpConfig.js';
 import { registerGetApLoadBalanceTool } from './getApLoadBalance.js';
 import { registerGetApManagementWlanTool } from './getApManagementWlan.js';
 import { registerGetApOfdmaConfigTool } from './getApOfdmaConfig.js';
+import { registerGetAppClientTrafficTool } from './getAppClientTraffic.js';
 import { registerGetAppControlCategoriesTool } from './getAppControlCategories.js';
 import { registerGetAppControlRulesTool } from './getAppControlRules.js';
 import { registerGetAppGroupProfileTool } from './getAppGroupProfile.js';
@@ -176,23 +181,33 @@ import { registerGetBeaconControlSettingTool } from './getBeaconControlSetting.j
 import { registerGetBuiltinRadiusUsersTool } from './getBuiltinRadiusUsers.js';
 import { registerGetCableTestFullResultsTool } from './getCableTestFullResults.js';
 import { registerGetCableTestLogsTool } from './getCableTestLogs.js';
+import { registerGetCategoryAppTrafficTool } from './getCategoryAppTraffic.js';
+import { registerGetCategoryClientTrafficTool } from './getCategoryClientTraffic.js';
 import { registerGetCertificateTool } from './getCertificate.js';
 import { registerGetChannelLimitSettingTool } from './getChannelLimitSetting.js';
 import { registerGetChannelsTool } from './getChannels.js';
 import { registerGetClientTool } from './getClient.js';
 import { registerGetClientActiveTimeoutTool } from './getClientActiveTimeout.js';
+import { registerGetClientAppTrafficTool } from './getClientAppTraffic.js';
+import { registerGetClientAssociationActivitiesTool } from './getClientAssociationActivities.js';
+import { registerGetClientAssociationTimeDistributionTool } from './getClientAssociationTimeDistribution.js';
 import { registerGetClientConnectionHistoryTool } from './getClientConnectionHistory.js';
 import { registerGetClientCorrectionOptionsTool } from './getClientCorrectionOptions.js';
 import { registerGetClientDetailTool } from './getClientDetail.js';
 import { registerGetClientDetailInformationTool } from './getClientDetailInformation.js';
+import { registerGetClientFrequencyDistributionTool } from './getClientFrequencyDistribution.js';
 import { registerGetClientHealthDetailTool } from './getClientHealthDetail.js';
 import { registerGetClientHealthTimelineTool } from './getClientHealthTimeline.js';
 import { registerGetClientHistoryDataEnableTool } from './getClientHistoryDataEnable.js';
 import { registerGetClientIncidentCountsTool } from './getClientIncidentCounts.js';
 import { registerGetClientLinkTopologyTool } from './getClientLinkTopology.js';
 import { registerGetClientRecognitionTool } from './getClientRecognition.js';
+import { registerGetClientRssiDistributionTool } from './getClientRssiDistribution.js';
 import { registerGetClientSearchFieldOptionsTool } from './getClientSearchFieldOptions.js';
+import { registerGetClientSignalDistributionTool } from './getClientSignalDistribution.js';
+import { registerGetClientSsidDistributionTool } from './getClientSsidDistribution.js';
 import { registerGetClientStatsTool } from './getClientStats.js';
+import { registerGetClientsBubbleTool } from './getClientsBubble.js';
 import { registerGetClientsDistributionTool } from './getClientsDistribution.js';
 import { registerGetClientTimelineTool } from './getClientTimeline.js';
 import { registerGetClientToSiteVpnServerInfoTool } from './getClientToSiteVpnServerInfo.js';
@@ -201,6 +216,7 @@ import { registerGetCloudUserInfoTool } from './getCloudUserInfo.js';
 import { registerGetControllerDstInfoTool } from './getControllerDstInfo.js';
 import { registerGetControllerPortTool } from './getControllerPort.js';
 import { registerGetControllerStatusTool } from './getControllerStatus.js';
+import { registerGetCurrentClientCountTool } from './getCurrentClientCount.js';
 import { registerGetDashboardMostActiveEapsTool } from './getDashboardMostActiveEaps.js';
 import { registerGetDashboardMostActiveSwitchesTool } from './getDashboardMostActiveSwitches.js';
 import { registerGetDashboardOverviewTool } from './getDashboardOverview.js';
@@ -231,6 +247,7 @@ import { registerGetFirmwareInfoTool } from './getFirmwareInfo.js';
 import { registerGetFirmwareUpgradePlanTool } from './getFirmwareUpgradePlan.js';
 import { registerGetGatewayDetailTool } from './getGatewayDetail.js';
 import { registerGetGatewayHealthTool } from './getGatewayHealth.js';
+import { registerGetGatewayIspLoadTool } from './getGatewayIspLoad.js';
 import { registerGetGatewayLanStatusTool } from './getGatewayLanStatus.js';
 import { registerGetGatewayPortsTool } from './getGatewayPorts.js';
 import { registerGetGatewayQosClassRulesTool } from './getGatewayQosClassRules.js';
@@ -297,6 +314,7 @@ import { registerGetLogSettingForGlobalTool } from './getLogSettingForGlobal.js'
 import { registerGetLogSettingForGlobalV2Tool } from './getLogSettingForGlobalV2.js';
 import { registerGetLogSettingForSiteTool } from './getLogSettingForSite.js';
 import { registerGetLogSettingForSiteV2Tool } from './getLogSettingForSiteV2.js';
+import { registerGetLongestClientUptimeTool } from './getLongestClientUptime.js';
 import { registerGetLtePortConfigTool } from './getLtePortConfig.js';
 import { registerGetMacAuthSettingTool } from './getMacAuthSetting.js';
 import { registerGetMacAuthSsidsTool } from './getMacAuthSsids.js';
@@ -307,8 +325,10 @@ import { registerGetMeshSettingTool } from './getMeshSetting.js';
 import { registerGetMeshStatisticsTool } from './getMeshStatistics.js';
 import { registerGetMfaStatusTool } from './getMfaStatus.js';
 import { registerGetMldSettingTool } from './getMldSetting.js';
+import { registerGetMostActiveAppsTool } from './getMostActiveApps.js';
 import { registerGetMulticastRateLimitTool } from './getMulticastRateLimit.js';
 import { registerGetNetworkHealthSummaryTool } from './getNetworkHealthSummary.js';
+import { registerGetNetworkOverviewCardTool } from './getNetworkOverviewCard.js';
 import { registerGetNtpSettingTool } from './getNtpSetting.js';
 import { registerGetOsgCustomAclListTool } from './getOsgCustomAclList.js';
 import { registerGetOspfInterfaceTool } from './getOspfInterface.js';
@@ -425,6 +445,7 @@ import { registerGetSyslogConfigTool } from './getSyslogConfig.js';
 import { registerGetThreatCountTool } from './getThreatCount.js';
 import { registerGetThreatDetailTool } from './getThreatDetail.js';
 import { registerGetThreatListTool } from './getThreatList.js';
+import { registerGetTopApsTool } from './getTopAps.js';
 import { registerGetTopThreatsTool } from './getTopThreats.js';
 import { registerGetTrafficDistributionTool } from './getTrafficDistribution.js';
 import { registerGetTrafficPriorityTool } from './getTrafficPriority.js';
@@ -474,15 +495,21 @@ import { registerGetWidsBlacklistTool } from './getWidsBlacklist.js';
 import { registerGetWifiHealthSummaryTool } from './getWifiHealthSummary.js';
 import { registerGetWireguardSummaryTool } from './getWireguardSummary.js';
 import { registerGetWlanGroupListTool } from './getWlanGroupList.js';
+import { registerListAllowedAppsTool } from './listAllowedApps.js';
 import { registerListAllSsidsTool } from './listAllSsids.js';
 import { registerListApnProfilesTool } from './listApnProfiles.js';
 import { registerListApPortVlansTool } from './listApPortVlans.js';
+import { registerListAppCategoriesTool } from './listAppCategories.js';
 import { registerListAuthSurveysTool } from './listAuthSurveys.js';
+import { registerListBlockedAppsTool } from './listBlockedApps.js';
 import { registerListClientsTool } from './listClients.js';
 import { registerListClientsActivityTool } from './listClientsActivity.js';
 import { registerListClientsPastConnectionsTool } from './listClientsPastConnections.js';
 import { registerListClientToSiteVpnClientsTool } from './listClientToSiteVpnClients.js';
 import { registerListClientToSiteVpnServersTool } from './listClientToSiteVpnServers.js';
+import { registerListClientTrafficTool } from './listClientTraffic.js';
+import { registerListDashboardTabsTool } from './listDashboardTabs.js';
+import { registerListDashboardTabsWithoutOverallTool } from './listDashboardTabsWithoutOverall.js';
 import { registerListDevicesTool } from './listDevices.js';
 import { registerListDevicesStatsTool } from './listDevicesStats.js';
 import { registerListEapAclsTool } from './listEapAcls.js';
@@ -501,6 +528,7 @@ import { registerListLockToApApsTool } from './listLockToApAps.js';
 import { registerListMdnsProfileTool } from './listMdnsProfile.js';
 import { registerListMdnsRulesTool } from './listMdnsRules.js';
 import { registerListMostActiveClientsTool } from './listMostActiveClients.js';
+import { registerListMostActiveEapsByTrafficTool } from './listMostActiveEapsByTraffic.js';
 import { registerListOsgAclsTool } from './listOsgAcls.js';
 import { registerListOuiProfileSummariesTool } from './listOuiProfileSummaries.js';
 import { registerListPendingDevicesTool } from './listPendingDevices.js';
@@ -567,10 +595,13 @@ import { registerLocateDeviceTool } from './locateDevice.js';
 import { registerRebootDeviceTool } from './rebootDevice.js';
 import { registerReconnectClientTool } from './reconnectClient.js';
 import { registerRecoverSwitchPortPoeTool } from './recoverSwitchPortPoe.js';
+import { registerRenameDashboardTabTool } from './renameDashboardTab.js';
+import { registerResetDashboardTabTool } from './resetDashboardTab.js';
 import { registerRestoreControllerTool } from './restoreController.js';
 import { registerRestoreControllerFromFileServerTool } from './restoreControllerFromFileServer.js';
 import { registerRestoreSitesTool } from './restoreSites.js';
 import { registerRestoreSitesFromFileServerTool } from './restoreSitesFromFileServer.js';
+import { registerSearchClientTrafficTool } from './searchClientTraffic.js';
 import { registerSearchDevicesTool } from './searchDevices.js';
 import { registerSendTestMailTool } from './sendTestMail.js';
 import { registerSetAccessControlTool } from './setAccessControl.js';
@@ -594,6 +625,7 @@ import { registerSetClientRateLimitProfileTool } from './setClientRateLimitProfi
 import { registerSetClientRecognitionTool } from './setClientRecognition.js';
 import { registerSetControllerLoggingTool } from './setControllerLogging.js';
 import { registerSetControllerRetentionTool } from './setControllerRetention.js';
+import { registerSetDashboardTabCardsTool } from './setDashboardTabCards.js';
 import { registerSetDataRetentionTool } from './setDataRetention.js';
 import { registerSetDeviceAccessManagementTool } from './setDeviceAccessManagement.js';
 import { registerSetDeviceLedTool } from './setDeviceLed.js';
@@ -750,6 +782,38 @@ const TOOL_REGISTRY: ToolEntry[] = [
     { fn: registerTestWebhookTool, category: 'controller', permission: 'write' },
     { fn: registerSendTestMailTool, category: 'controller', permission: 'write' },
     { fn: registerCheckControllerUpdateTool, category: 'controller', permission: 'write' },
+    { fn: registerGetTopApsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetMostActiveAppsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetAllNetworkActivityTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientAssociationActivitiesTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientAssociationTimeDistributionTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientAppTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetAppClientTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetCategoryClientTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetCategoryAppTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListClientTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListAppCategoriesTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListBlockedAppsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListAllowedAppsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetLongestClientUptimeTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetCurrentClientCountTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientsBubbleTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientSsidDistributionTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientSignalDistributionTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientRssiDistributionTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetClientFrequencyDistributionTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetApDensityTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetGatewayIspLoadTool, category: 'dashboard', permission: 'read' },
+    { fn: registerGetNetworkOverviewCardTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListDashboardTabsTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListDashboardTabsWithoutOverallTool, category: 'dashboard', permission: 'read' },
+    { fn: registerListMostActiveEapsByTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerSearchClientTrafficTool, category: 'dashboard', permission: 'read' },
+    { fn: registerCreateDashboardTabTool, category: 'dashboard', permission: 'write' },
+    { fn: registerRenameDashboardTabTool, category: 'dashboard', permission: 'write' },
+    { fn: registerResetDashboardTabTool, category: 'dashboard', permission: 'write' },
+    { fn: registerDeleteDashboardTabTool, category: 'dashboard', permission: 'write' },
+    { fn: registerSetDashboardTabCardsTool, category: 'dashboard', permission: 'write' },
     { fn: registerGetVoucherGroupDetailTool, category: 'hotspot-vouchers', permission: 'read' },
     { fn: registerGetVoucherTool, category: 'hotspot-vouchers', permission: 'read' },
     { fn: registerListVoucherGroupOptionsTool, category: 'hotspot-vouchers', permission: 'read' },

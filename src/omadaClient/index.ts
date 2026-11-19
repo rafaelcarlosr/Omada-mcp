@@ -43,6 +43,7 @@ import {
     type webhookTestPayloadSchema,
     type webhookUpdatePayloadSchema,
 } from './controllerSettings.js';
+import { DashboardOperations, type secondsRangeSchema as dashboardRangeSchema } from './dashboard.js';
 import { DeviceOperations } from './device.js';
 import { type authSurveyPayloadSchema, HotspotAdminOperations, type secondsRangeSchema, type VoucherGroupQuery } from './hotspotAdmin.js';
 import { InsightOperations, type SiteThreatListOptions } from './insight.js';
@@ -125,6 +126,7 @@ export class OmadaClient {
     private readonly siteAdminOps: SiteAdminOperations;
     private readonly controllerSettingOps: ControllerSettingOperations;
     private readonly hotspotAdminOps: HotspotAdminOperations;
+    private readonly dashboardOps: DashboardOperations;
 
     private readonly scheduleOps: ScheduleOperations;
 
@@ -175,6 +177,7 @@ export class OmadaClient {
         this.siteAdminOps = new SiteAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.controllerSettingOps = new ControllerSettingOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.hotspotAdminOps = new HotspotAdminOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
+        this.dashboardOps = new DashboardOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.scheduleOps = new ScheduleOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
         this.actionOps = new ActionOperations(this.request, this.siteOps, this.buildOmadaPath.bind(this));
     }
@@ -3575,5 +3578,192 @@ export class OmadaClient {
 
     public async listHotspotRateLimitProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.hotspotAdminOps.listHotspotRateLimitProfiles(siteId, h);
+    }
+
+    // ---- Dashboard (DashboardOperations) ----
+    public async getTopAps(range: z.input<typeof dashboardRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getTopAps(range, siteId, h);
+    }
+
+    public async getMostActiveApps(range: z.input<typeof dashboardRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getMostActiveApps(range, siteId, h);
+    }
+
+    public async getAllNetworkActivity(range: z.input<typeof dashboardRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getAllNetworkActivity(range, siteId, h);
+    }
+
+    public async getClientAssociationActivities(range: z.input<typeof dashboardRangeSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getClientAssociationActivities(range, siteId, h);
+    }
+
+    public async getClientAssociationTimeDistribution(
+        range: z.input<typeof dashboardRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.getClientAssociationTimeDistribution(range, siteId, h);
+    }
+
+    public async getClientAppTraffic(
+        clientMac: string,
+        range: z.input<typeof dashboardRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.getClientAppTraffic(clientMac, range, siteId, h);
+    }
+
+    public async getAppClientTraffic(
+        applicationId: string,
+        range: z.input<typeof dashboardRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.getAppClientTraffic(applicationId, range, siteId, h);
+    }
+
+    public async getCategoryClientTraffic(
+        familyId: string,
+        range: z.input<typeof dashboardRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.getCategoryClientTraffic(familyId, range, siteId, h);
+    }
+
+    public async getCategoryAppTraffic(
+        familyId: string,
+        range: z.input<typeof dashboardRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.getCategoryAppTraffic(familyId, range, siteId, h);
+    }
+
+    public async listClientTraffic(
+        range: z.input<typeof dashboardRangeSchema>,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.listClientTraffic(range, page, pageSize, siteId, h);
+    }
+
+    public async listAppCategories(
+        range: z.input<typeof dashboardRangeSchema>,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.listAppCategories(range, page, pageSize, siteId, h);
+    }
+
+    public async listBlockedApps(
+        range: z.input<typeof dashboardRangeSchema>,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.listBlockedApps(range, page, pageSize, siteId, h);
+    }
+
+    public async listAllowedApps(
+        range: z.input<typeof dashboardRangeSchema>,
+        page: number,
+        pageSize: number,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.listAllowedApps(range, page, pageSize, siteId, h);
+    }
+
+    public async getLongestClientUptime(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getLongestClientUptime(siteId, h);
+    }
+
+    public async getCurrentClientCount(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getCurrentClientCount(siteId, h);
+    }
+
+    public async getClientsBubble(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getClientsBubble(siteId, h);
+    }
+
+    public async getClientSsidDistribution(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getClientSsidDistribution(siteId, h);
+    }
+
+    public async getClientSignalDistribution(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getClientSignalDistribution(siteId, h);
+    }
+
+    public async getClientRssiDistribution(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getClientRssiDistribution(siteId, h);
+    }
+
+    public async getClientFrequencyDistribution(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getClientFrequencyDistribution(siteId, h);
+    }
+
+    public async getApDensity(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getApDensity(siteId, h);
+    }
+
+    public async getGatewayIspLoad(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getGatewayIspLoad(siteId, h);
+    }
+
+    public async getNetworkOverviewCard(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.getNetworkOverviewCard(siteId, h);
+    }
+
+    public async listDashboardTabs(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.listDashboardTabs(siteId, h);
+    }
+
+    public async listDashboardTabsWithoutOverall(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.listDashboardTabsWithoutOverall(siteId, h);
+    }
+
+    public async listMostActiveEapsByTraffic(
+        deviceNum: number,
+        range: z.input<typeof dashboardRangeSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.listMostActiveEapsByTraffic(deviceNum, range, siteId, h);
+    }
+
+    public async searchClientTraffic(
+        payload: z.input<typeof schemas.clientTrafficOpenApiQueryDataVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.searchClientTraffic(payload, siteId, h);
+    }
+
+    public async createDashboardTab(name: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.createDashboardTab(name, siteId, h);
+    }
+
+    public async updateDashboardTab(
+        tabId: string,
+        payload: z.input<typeof schemas.updateTabOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.dashboardOps.updateDashboardTab(tabId, payload, siteId, h);
+    }
+
+    public async deleteDashboardTab(tabId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.deleteDashboardTab(tabId, siteId, h);
+    }
+
+    public async setDashboardTabs(payload: z.input<typeof schemas.batchEditTabsSchema>, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.dashboardOps.setDashboardTabs(payload, siteId, h);
     }
 }
