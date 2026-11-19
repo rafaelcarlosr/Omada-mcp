@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sortedIds, vpnUserPayloadSchema, withSortedIds } from '../../src/tools/vpnShared.js';
+import { checkSslVpnLock, sortedIds, vpnUserPayloadSchema, withSortedIds } from '../../src/tools/vpnShared.js';
 
 describe('tools/vpnShared', () => {
     it('sorts ids from strings or id objects', () => {
@@ -24,5 +24,13 @@ describe('tools/vpnShared', () => {
             protocol: 2,
             groupId: 'g',
         });
+    });
+
+    it('checks the target of a locked SSL VPN tunnel', () => {
+        expect(() => checkSslVpnLock({ type: 0, username: 'u' })).not.toThrow();
+        expect(() => checkSslVpnLock({ type: 1, ip: '10.0.0.1' })).not.toThrow();
+        expect(() => checkSslVpnLock({ type: 0 })).toThrow('needs username');
+        expect(() => checkSslVpnLock({ type: 1 })).toThrow('needs ip');
+        expect(() => checkSslVpnLock({ type: 2 })).toThrow('type must be 0');
     });
 });

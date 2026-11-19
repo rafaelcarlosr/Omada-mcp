@@ -14,6 +14,7 @@ import { registerBlockClientTool } from './blockClient.js';
 import { registerBlockCountryTool } from './blockCountry.js';
 import { registerCancelSwitchCableTestTool } from './cancelSwitchCableTest.js';
 import { registerCheckControllerUpdateTool } from './checkControllerUpdate.js';
+import { registerCheckVpnUsageTool } from './checkVpnUsage.js';
 import { registerClearAclHitCountsTool } from './clearAclHitCounts.js';
 import { registerClearExpiredVouchersTool } from './clearExpiredVouchers.js';
 import { registerClearLocalUserDynamicMacTool } from './clearLocalUserDynamicMac.js';
@@ -63,6 +64,7 @@ import { registerCreateSiteTagTool } from './createSiteTag.js';
 import { registerCreateSiteTemplateTool } from './createSiteTemplate.js';
 import { registerCreateSsidTool } from './createSsid.js';
 import { registerCreateSslVpnLockTool } from './createSslVpnLock.js';
+import { registerCreateSslVpnLockedTunnelTool } from './createSslVpnLockedTunnel.js';
 import { registerCreateSslVpnResourceTool } from './createSslVpnResource.js';
 import { registerCreateSslVpnResourceGroupTool } from './createSslVpnResourceGroup.js';
 import { registerCreateSslVpnUserGroupTool } from './createSslVpnUserGroup.js';
@@ -132,6 +134,7 @@ import { registerDeleteSiteTemplateTool } from './deleteSiteTemplate.js';
 import { registerDeleteSiteToSiteVpnTool } from './deleteSiteToSiteVpn.js';
 import { registerDeleteSsidTool } from './deleteSsid.js';
 import { registerDeleteSslVpnLockTool } from './deleteSslVpnLock.js';
+import { registerDeleteSslVpnLockedTunnelsTool } from './deleteSslVpnLockedTunnels.js';
 import { registerDeleteSslVpnResourceTool } from './deleteSslVpnResource.js';
 import { registerDeleteSslVpnResourceGroupTool } from './deleteSslVpnResourceGroup.js';
 import { registerDeleteSslVpnUserGroupTool } from './deleteSslVpnUserGroup.js';
@@ -248,6 +251,8 @@ import { registerGetClientStatsTool } from './getClientStats.js';
 import { registerGetClientsBubbleTool } from './getClientsBubble.js';
 import { registerGetClientsDistributionTool } from './getClientsDistribution.js';
 import { registerGetClientTimelineTool } from './getClientTimeline.js';
+import { registerGetClientToSiteVpnClientTool } from './getClientToSiteVpnClient.js';
+import { registerGetClientToSiteVpnServerTool } from './getClientToSiteVpnServer.js';
 import { registerGetClientToSiteVpnServerInfoTool } from './getClientToSiteVpnServerInfo.js';
 import { registerGetCloudAccessStatusTool } from './getCloudAccessStatus.js';
 import { registerGetCloudUserInfoTool } from './getCloudUserInfo.js';
@@ -458,6 +463,7 @@ import { registerGetSiteTemplateConfigTool } from './getSiteTemplateConfig.js';
 import { registerGetSiteTemplateDetailTool } from './getSiteTemplateDetail.js';
 import { registerGetSiteTemplateListTool } from './getSiteTemplateList.js';
 import { registerGetSiteTemplateSpecificationTool } from './getSiteTemplateSpecification.js';
+import { registerGetSiteToSiteVpnTool } from './getSiteToSiteVpn.js';
 import { registerGetSiteToSiteVpnInfoTool } from './getSiteToSiteVpnInfo.js';
 import { registerGetSiteUrlTool } from './getSiteUrl.js';
 import { registerGetSnmpSettingTool } from './getSnmpSetting.js';
@@ -622,9 +628,15 @@ import { registerListSiteTemplateModulesTool } from './listSiteTemplateModules.j
 import { registerListSiteThreatManagementTool } from './listSiteThreatManagement.js';
 import { registerListSiteToSiteVpnPeerStatusTool } from './listSiteToSiteVpnPeerStatus.js';
 import { registerListSiteToSiteVpnStatusTool } from './listSiteToSiteVpnStatus.js';
+import { registerListSiteToSiteVpnSummariesTool } from './listSiteToSiteVpnSummaries.js';
 import { registerListSiteToSiteVpnsTool } from './listSiteToSiteVpns.js';
 import { registerListSsidApGroupsTool } from './listSsidApGroups.js';
+import { registerListSslVpnBriefResourceGroupsTool } from './listSslVpnBriefResourceGroups.js';
+import { registerListSslVpnBriefResourcesTool } from './listSslVpnBriefResources.js';
+import { registerListSslVpnBriefUserGroupsTool } from './listSslVpnBriefUserGroups.js';
+import { registerListSslVpnLockedTunnelsTool } from './listSslVpnLockedTunnels.js';
 import { registerListSslVpnLocksTool } from './listSslVpnLocks.js';
+import { registerListSslVpnRadiusProfilesTool } from './listSslVpnRadiusProfiles.js';
 import { registerListSslVpnResourceGroupsTool } from './listSslVpnResourceGroups.js';
 import { registerListSslVpnResourcesTool } from './listSslVpnResources.js';
 import { registerListSslVpnUserGroupsTool } from './listSslVpnUserGroups.js';
@@ -656,10 +668,18 @@ import { registerListUrlFilterCategoriesTool } from './listUrlFilterCategories.j
 import { registerListVoucherCurrenciesTool } from './listVoucherCurrencies.js';
 import { registerListVoucherGroupOptionsTool } from './listVoucherGroupOptions.js';
 import { registerListVoucherGroupsTool } from './listVoucherGroups.js';
+import { registerListVpnBriefUserGroupsTool } from './listVpnBriefUserGroups.js';
 import { registerListVpnClientStatusTool } from './listVpnClientStatus.js';
+import { registerListVpnClientSummariesTool } from './listVpnClientSummaries.js';
+import { registerListVpnIpPoolsTool } from './listVpnIpPools.js';
 import { registerListVpnServerClientStatusTool } from './listVpnServerClientStatus.js';
 import { registerListVpnServerStatusTool } from './listVpnServerStatus.js';
+import { registerListVpnServerSummariesTool } from './listVpnServerSummaries.js';
+import { registerListVpnServersForUsersTool } from './listVpnServersForUsers.js';
+import { registerListVpnServerUserNamesTool } from './listVpnServerUserNames.js';
+import { registerListVpnServerUsersTool } from './listVpnServerUsers.js';
 import { registerListVpnUsersTool } from './listVpnUsers.js';
+import { registerListVpnUsersByProtocolTool } from './listVpnUsersByProtocol.js';
 import { registerListWifiCallingProfilesTool } from './listWifiCallingProfiles.js';
 import { registerListWifiHealthTopClientsTool } from './listWifiHealthTopClients.js';
 import { registerListWireguardTool } from './listWireguard.js';
@@ -805,6 +825,7 @@ import { registerUpdateSiteTagTool } from './updateSiteTag.js';
 import { registerUpdateSiteToSiteVpnTool } from './updateSiteToSiteVpn.js';
 import { registerUpdateSsidTool } from './updateSsid.js';
 import { registerUpdateSslVpnLockTool } from './updateSslVpnLock.js';
+import { registerUpdateSslVpnLockedTunnelTool } from './updateSslVpnLockedTunnel.js';
 import { registerUpdateSslVpnResourceTool } from './updateSslVpnResource.js';
 import { registerUpdateSslVpnResourceGroupTool } from './updateSslVpnResourceGroup.js';
 import { registerUpdateSslVpnUserGroupTool } from './updateSslVpnUserGroup.js';
@@ -1359,6 +1380,27 @@ const TOOL_REGISTRY: ToolEntry[] = [
 
     // --- VPN ---
     { fn: registerGetVpnSettingsTool, category: 'vpn', permission: 'read' },
+    { fn: registerGetSiteToSiteVpnTool, category: 'vpn', permission: 'read' },
+    { fn: registerGetClientToSiteVpnServerTool, category: 'vpn', permission: 'read' },
+    { fn: registerGetClientToSiteVpnClientTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSiteToSiteVpnSummariesTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnServerSummariesTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnClientSummariesTool, category: 'vpn', permission: 'read' },
+    { fn: registerCheckVpnUsageTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnIpPoolsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnServersForUsersTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnUsersByProtocolTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnServerUserNamesTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnServerUsersTool, category: 'vpn', permission: 'read' },
+    { fn: registerListVpnBriefUserGroupsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnBriefUserGroupsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnBriefResourcesTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnBriefResourceGroupsTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnRadiusProfilesTool, category: 'vpn', permission: 'read' },
+    { fn: registerListSslVpnLockedTunnelsTool, category: 'vpn', permission: 'read' },
+    { fn: registerCreateSslVpnLockedTunnelTool, category: 'vpn', permission: 'write' },
+    { fn: registerUpdateSslVpnLockedTunnelTool, category: 'vpn', permission: 'write' },
+    { fn: registerDeleteSslVpnLockedTunnelsTool, category: 'vpn', permission: 'write' },
     { fn: registerListSiteToSiteVpnsTool, category: 'vpn', permission: 'read' },
     { fn: registerGetSiteToSiteVpnInfoTool, category: 'vpn', permission: 'read' },
     { fn: registerListWireguardTool, category: 'vpn', permission: 'read' },

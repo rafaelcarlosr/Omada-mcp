@@ -37,6 +37,156 @@ const cases: {
     sendsBody: boolean;
 }[] = [
     {
+        method: 'createSslVpnLockedTunnel',
+        args: [body],
+        http: 'POST',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/locked-tunnels',
+        url: '/vpn/ssl-vpn-server/locked-tunnels',
+        version: 'v1',
+        sendsBody: true,
+    },
+    {
+        method: 'updateSslVpnLockedTunnel',
+        args: ['l1', body],
+        http: 'PUT',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/locked-tunnels/{lockTunnelId}',
+        url: '/vpn/ssl-vpn-server/locked-tunnels/l1',
+        version: 'v1',
+        sendsBody: true,
+    },
+    {
+        method: 'deleteSslVpnLockedTunnel',
+        args: ['l1'],
+        http: 'DELETE',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/locked-tunnels/{lockTunnelId}',
+        url: '/vpn/ssl-vpn-server/locked-tunnels/l1',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'getSiteToSiteVpn',
+        args: ['v1'],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/site-to-site-vpns/{vpnId}',
+        url: '/vpn/site-to-site-vpns/v1',
+        version: 'v2',
+        sendsBody: false,
+    },
+    {
+        method: 'getClientToSiteVpnServer',
+        args: ['v1'],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/client-to-site-vpn-servers/{vpnId}',
+        url: '/vpn/client-to-site-vpn-servers/v1',
+        version: 'v2',
+        sendsBody: false,
+    },
+    {
+        method: 'getClientToSiteVpnClient',
+        args: ['v1'],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/client-to-site-vpn-clients/{vpnId}',
+        url: '/vpn/client-to-site-vpn-clients/v1',
+        version: 'v2',
+        sendsBody: false,
+    },
+    {
+        method: 'checkVpnUsage',
+        args: ['v1'],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/{vpnId}/checkUsed',
+        url: '/vpn/v1/checkUsed',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listVpnIpPools',
+        args: [],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ippool',
+        url: '/vpn/ippool',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listVpnServersForUsers',
+        args: [],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/userServers',
+        url: '/vpn/userServers',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listVpnUsersByProtocol',
+        args: [2],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/userlist/{protocol}',
+        url: '/vpn/userlist/2',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listVpnServerUserNames',
+        args: ['srv1'],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/userlist/server/{serverId}',
+        url: '/vpn/userlist/server/srv1',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listSslVpnBriefUserGroups',
+        args: [],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/briefusergroups',
+        url: '/vpn/ssl-vpn-server/briefusergroups',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listSslVpnBriefResources',
+        args: [],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/briefresources',
+        url: '/vpn/ssl-vpn-server/briefresources',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listSslVpnBriefResourceGroups',
+        args: [],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/briefresourcegroups',
+        url: '/vpn/ssl-vpn-server/briefresourcegroups',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
+        method: 'listSslVpnRadiusProfiles',
+        args: [],
+        http: 'GET',
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/radius',
+        url: '/vpn/ssl-vpn-server/radius',
+        version: 'v1',
+        sendsBody: false,
+    },
+    {
         method: 'createVpnUser',
         args: [body],
         http: 'POST',
@@ -217,6 +367,60 @@ const listCases: {
     version: string;
     params: Record<string, unknown>;
 }[] = [
+    {
+        method: 'listSslVpnLockedTunnels',
+        args: [],
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/ssl-vpn-server/locked-tunnels',
+        url: '/vpn/ssl-vpn-server/locked-tunnels',
+        version: 'v1',
+        params: {},
+    },
+    {
+        method: 'listSiteToSiteVpnSummaries',
+        args: [],
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/site-to-site-vpns',
+        url: '/vpn/site-to-site-vpns',
+        version: 'v2',
+        params: {},
+    },
+    {
+        method: 'listVpnServerSummaries',
+        args: [],
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/client-to-site-vpn-servers',
+        url: '/vpn/client-to-site-vpn-servers',
+        version: 'v2',
+        params: {},
+    },
+    {
+        method: 'listVpnClientSummaries',
+        args: [],
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/client-to-site-vpn-clients',
+        url: '/vpn/client-to-site-vpn-clients',
+        version: 'v2',
+        params: {},
+    },
+    {
+        method: 'listVpnBriefUserGroups',
+        args: [],
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/briefusergroups',
+        url: '/vpn/briefusergroups',
+        version: 'v1',
+        params: {},
+    },
+    {
+        method: 'listVpnServerUsers',
+        args: ['v1'],
+        spec: '04.8-site-network-setting-vpn',
+        route: '/vpn/{vpnId}/users',
+        url: '/vpn/v1/users',
+        version: 'v3',
+        params: {},
+    },
     { method: 'listVpnUsers', args: [], spec: '04.8-site-network-setting-vpn', route: '/vpn/users', url: '/vpn/users', version: 'v2', params: {} },
     {
         method: 'listSslVpnResources',
@@ -364,6 +568,24 @@ describe('omadaClient/vpn', () => {
         const fn = operations[method] as (...input: unknown[]) => Promise<unknown>;
         await expect(fn.call(operations, ...args, 'site-9', { 'X-Request-ID': 'r1' })).resolves.toEqual([{ id: 'x' }]);
         expect(request.fetchPaginated).toHaveBeenCalledWith(`/openapi/${version}/cid/sites/site-9${url}`, params, { 'X-Request-ID': 'r1' }, pageSize);
+    });
+
+    it('deletes only the listed locked tunnels and validates the protocol', async () => {
+        await operations.deleteSslVpnLockedTunnels(['l1', 'l2'], 'site-9');
+        expect(request.request).toHaveBeenCalledWith(
+            {
+                method: 'DELETE',
+                url: '/openapi/v1/cid/sites/site-9/vpn/ssl-vpn-server/locked-tunnels',
+                data: { ids: ['l1', 'l2'], selectAll: false },
+            },
+            true,
+            undefined
+        );
+        expect(documented('04.8-site-network-setting-vpn', 'v1', '/vpn/ssl-vpn-server/locked-tunnels', 'DELETE')).toBe(true);
+        request.request.mockClear();
+        await expect(operations.deleteSslVpnLockedTunnels([])).rejects.toThrow('At least one ID is required.');
+        await expect(operations.listVpnUsersByProtocol(3)).rejects.toThrow();
+        expect(request.request).not.toHaveBeenCalled();
     });
 
     it('rejects blank identifiers and unsupported status filters before sending', async () => {

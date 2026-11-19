@@ -166,6 +166,7 @@ const TARGETS = [
         file: '04.8-site-network-setting-vpn.json',
         suffix: '',
         names: [
+            'SslVpnLockCreateAndModifyOpenApiVO',
             'SiteToSiteVpn',
             'ClientToSiteVpnServer',
             'ClientToSiteVpnClient',

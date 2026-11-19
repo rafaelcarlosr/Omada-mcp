@@ -3099,6 +3099,104 @@ export class OmadaClient {
         return await this.profileOps.getSwitchOuiAutoAddVlanAllSupport(siteId, h);
     }
 
+    // ---- VPN reads and SSL VPN locked tunnels (VpnOperations) ----
+    public async listSslVpnLockedTunnels(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSslVpnLockedTunnels(siteId, h);
+    }
+
+    public async createSslVpnLockedTunnel(
+        payload: z.input<typeof schemas.sslVpnLockCreateAndModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.createSslVpnLockedTunnel(payload, siteId, h);
+    }
+
+    public async updateSslVpnLockedTunnel(
+        lockTunnelId: string,
+        payload: z.input<typeof schemas.sslVpnLockCreateAndModifyOpenApiVOSchema>,
+        siteId?: string,
+        h?: CustomHeaders
+    ): Promise<unknown> {
+        return await this.vpnOps.updateSslVpnLockedTunnel(lockTunnelId, payload, siteId, h);
+    }
+
+    public async deleteSslVpnLockedTunnel(lockTunnelId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteSslVpnLockedTunnel(lockTunnelId, siteId, h);
+    }
+
+    public async deleteSslVpnLockedTunnels(lockTunnelIds: string[], siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.deleteSslVpnLockedTunnels(lockTunnelIds, siteId, h);
+    }
+
+    public async getSiteToSiteVpn(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.getSiteToSiteVpn(vpnId, siteId, h);
+    }
+
+    public async getClientToSiteVpnServer(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.getClientToSiteVpnServer(vpnId, siteId, h);
+    }
+
+    public async getClientToSiteVpnClient(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.getClientToSiteVpnClient(vpnId, siteId, h);
+    }
+
+    public async listSiteToSiteVpnSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listSiteToSiteVpnSummaries(siteId, h);
+    }
+
+    public async listVpnServerSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnServerSummaries(siteId, h);
+    }
+
+    public async listVpnClientSummaries(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnClientSummaries(siteId, h);
+    }
+
+    public async checkVpnUsage(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.checkVpnUsage(vpnId, siteId, h);
+    }
+
+    public async listVpnIpPools(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listVpnIpPools(siteId, h);
+    }
+
+    public async listVpnServersForUsers(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listVpnServersForUsers(siteId, h);
+    }
+
+    public async listVpnUsersByProtocol(protocol: number, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listVpnUsersByProtocol(protocol, siteId, h);
+    }
+
+    public async listVpnServerUserNames(serverId: string, siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listVpnServerUserNames(serverId, siteId, h);
+    }
+
+    public async listVpnServerUsers(vpnId: string, siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnServerUsers(vpnId, siteId, h);
+    }
+
+    public async listVpnBriefUserGroups(siteId?: string, h?: CustomHeaders): Promise<unknown[]> {
+        return await this.vpnOps.listVpnBriefUserGroups(siteId, h);
+    }
+
+    public async listSslVpnBriefUserGroups(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listSslVpnBriefUserGroups(siteId, h);
+    }
+
+    public async listSslVpnBriefResources(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listSslVpnBriefResources(siteId, h);
+    }
+
+    public async listSslVpnBriefResourceGroups(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listSslVpnBriefResourceGroups(siteId, h);
+    }
+
+    public async listSslVpnRadiusProfiles(siteId?: string, h?: CustomHeaders): Promise<unknown> {
+        return await this.vpnOps.listSslVpnRadiusProfiles(siteId, h);
+    }
+
     // ---- Firewall maintenance (FirewallMaintenanceOperations) ----
     public async resetFirewallSetting(siteId?: string, h?: CustomHeaders): Promise<unknown> {
         return await this.firewallMaintenanceOps.resetFirewallSetting(siteId, h);

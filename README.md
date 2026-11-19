@@ -233,6 +233,9 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `updateWlanGroup` | Rename an existing WLAN group. | `wireless-ssid:rw` |
 | `deleteWlanGroup` | Delete a WLAN group. The primary group is refused; the controller refuses groups still assigned to APs. | `wireless-ssid:rw` |
 | `createSsid` | Create an SSID in a WLAN group, optionally mapped to a VLAN for segmentation. APs using the group start broadcasting it after provisioning, which can briefly interrupt their radios. | `wireless-ssid:rw` |
+| `createSslVpnLockedTunnel` | Lock SSL VPN access for a user name or IP for some minutes. | `vpn:rw` |
+| `updateSslVpnLockedTunnel` | Change a locked SSL VPN tunnel, usually its lock time. | `vpn:rw` |
+| `deleteSslVpnLockedTunnels` | Unlock SSL VPN tunnels by ID. | `vpn:rw` |
 | `resetFirewallSetting` | Reset firewall timeouts and flags to the defaults; reports the setting after. | `firewall-acl:rw` |
 | `resetAttackDefenseSetting` | Reset flood and scan protection to the defaults, verified against them. | `firewall-traffic:rw` |
 | `setUrlFilterGlobalSetting` | Change the content filter block page and safe search. | `firewall-traffic:rw` |
@@ -802,6 +805,24 @@ WAN/LAN configuration, SSIDs, WLAN groups, routing, NAT, DHCP, DNS, firewall set
 | `getSsidList` | Gets the list of SSIDs in a WLAN group. |
 | `getSsidDetail` | Gets detailed information for a specific SSID. Required: `wlanId` and `ssidId`. |
 | `listAllSsids` | Lists the AP and wireless-router SSIDs of all WLAN groups, one row per SSID. |
+| `getSiteToSiteVpn` | Gets one site-to-site VPN; keys redacted. |
+| `getClientToSiteVpnServer` | Gets one client-to-site VPN server; keys redacted. |
+| `getClientToSiteVpnClient` | Gets one client-to-site VPN client; secrets redacted. |
+| `listSiteToSiteVpnSummaries` | Lists site-to-site VPNs. |
+| `listVpnServerSummaries` | Lists client-to-site VPN servers. |
+| `listVpnClientSummaries` | Lists client-to-site VPN clients. |
+| `checkVpnUsage` | Checks which features use a VPN. |
+| `listVpnIpPools` | Lists address pools available to VPN servers. |
+| `listVpnServersForUsers` | Lists VPN servers users can be assigned to. |
+| `listVpnUsersByProtocol` | Lists VPN users of one protocol. |
+| `listVpnServerUserNames` | Lists user names of one VPN server. |
+| `listVpnServerUsers` | Lists users of one VPN server. |
+| `listVpnBriefUserGroups` | Lists VPN user groups. |
+| `listSslVpnBriefUserGroups` | Lists SSL VPN user groups. |
+| `listSslVpnBriefResources` | Lists SSL VPN resources. |
+| `listSslVpnBriefResourceGroups` | Lists SSL VPN resource groups. |
+| `listSslVpnRadiusProfiles` | Lists RADIUS profiles available to the SSL VPN server. |
+| `listSslVpnLockedTunnels` | Lists locked SSL VPN tunnels. |
 | `getAttackDefenseDefaults` | Gets the default flood and scan protection setting. |
 | `listUrlFilterCategories` | Lists content filtering categories. |
 | `getWirelessIdsConfig` | Gets the wireless IDS setting. |
