@@ -3,12 +3,14 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { OmadaClient } from '../omadaClient/index.js';
 import { wrapMutationToolHandler } from '../server/common.js';
 import { deleteAclInputSchema, findAclById } from './gatewayAclShared.js';
+import { applyAndVerify, type RecordLike } from './resourceMutationShared.js';
 
 export function registerDeleteAclTool(server: McpServer, client: OmadaClient): void {
     server.registerTool(
         'deleteAcl',
         {
-            description: 'Delete an existing ACL rule by ID. Use listOsgAcls or listEapAcls first to identify the rule.',
+            description:
+                'Delete an existing gateway, EAP or switch ACL rule by ID. Use listOsgAcls, listEapAcls or getOswAclList first to identify the rule.',
             inputSchema: deleteAclInputSchema.shape,
             annotations: {
                 destructiveHint: true,
@@ -26,24 +28,27 @@ export function registerDeleteAclTool(server: McpServer, client: OmadaClient): v
                 result,
             }),
             async ({ aclId, dryRun, siteId, customHeaders }) => {
+                const lists: Array<{ label: string; list: () => Promise<unknown> }> = [
+                    { label: 'EAP ACL', list: () => client.listEapAcls(siteId, customHeaders) },
+                    { label: 'gateway ACL', list: () => client.listOsgAcls(siteId, customHeaders) },
+                    { label: 'switch ACL', list: () => client.listOswAcls(siteId, customHeaders) },
+                ];
                 const aclLookupErrors: Error[] = [];
-                let existing = undefined;
+                let found: { label: string; list: () => Promise<unknown>; existing: unknown } | undefined;
 
-                try {
-                    existing = findAclById(await client.listEapAcls(siteId, customHeaders), aclId);
-                } catch (error) {
-                    aclLookupErrors.push(error instanceof Error ? error : new Error(String(error)));
-                }
-
-                if (!existing) {
+                for (const kind of lists) {
                     try {
-                        existing = findAclById(await client.listOsgAcls(siteId, customHeaders), aclId);
+                        const existing = findAclById(await kind.list(), aclId);
+                        if (existing) {
+                            found = { ...kind, existing };
+                            break;
+                        }
                     } catch (error) {
                         aclLookupErrors.push(error instanceof Error ? error : new Error(String(error)));
                     }
                 }
 
-                if (!existing) {
+                if (!found) {
                     if (aclLookupErrors.length > 0) {
                         throw aclLookupErrors[0];
                     }
@@ -54,11 +59,20 @@ export function registerDeleteAclTool(server: McpServer, client: OmadaClient): v
                     return {
                         accepted: true,
                         dryRun: true,
-                        before: existing,
+                        aclType: found.label,
+                        before: found.existing,
                     };
                 }
 
-                return await client.deleteAcl(aclId, siteId, customHeaders);
+                const { list, label } = found;
+                const result = await applyAndVerify({
+                    label,
+                    action: 'deletion',
+                    write: () => client.deleteAcl(aclId, siteId, customHeaders),
+                    read: async () => findAclById(await list(), aclId) as RecordLike | undefined,
+                    requested: undefined,
+                });
+                return { id: aclId, aclType: label, ...result };
             }
         )
     );

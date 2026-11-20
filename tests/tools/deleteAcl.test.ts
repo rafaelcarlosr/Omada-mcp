@@ -21,6 +21,7 @@ describe('tools/deleteAcl', () => {
         mockClient = {
             listOsgAcls: vi.fn().mockResolvedValue([{ id: 'acl-1', description: 'Gateway ACL' }]),
             listEapAcls: vi.fn().mockResolvedValue([{ id: 'acl-2', description: 'EAP ACL' }]),
+            listOswAcls: vi.fn().mockResolvedValue([{ id: 'acl-3', description: 'Switch ACL' }]),
             deleteAcl: vi.fn().mockResolvedValue({ accepted: true }),
         } as unknown as OmadaClient;
     });
@@ -39,7 +40,7 @@ describe('tools/deleteAcl', () => {
                 mode: 'dry-run',
                 status: 'planned',
                 summary: 'Planned ACL deletion for acl-1.',
-                result: { accepted: true, dryRun: true, before: { id: 'acl-1', description: 'Gateway ACL' } },
+                result: { accepted: true, dryRun: true, aclType: 'gateway ACL', before: { id: 'acl-1', description: 'Gateway ACL' } },
             },
         });
         expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
@@ -62,9 +63,33 @@ describe('tools/deleteAcl', () => {
         expect(mockClient.deleteAcl).toHaveBeenCalledWith('acl-2', 'site-1', undefined);
     });
 
-    it('throws when the ACL does not exist in either list', async () => {
+    it('deletes switch ACLs and verifies they are gone', async () => {
+        vi.mocked(mockClient.listOswAcls)
+            .mockResolvedValueOnce([{ id: 'acl-3', description: 'Switch ACL' }] as never)
+            .mockResolvedValue([] as never);
+        registerDeleteAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, aclId: 'acl-3', siteId: 'site-1' }, { sessionId: 's1' });
+
+        expect(mockClient.deleteAcl).toHaveBeenCalledWith('acl-3', 'site-1', undefined);
+        expect(result.structuredContent).toMatchObject({
+            status: 'verified',
+            result: { id: 'acl-3', aclType: 'switch ACL', writeAcknowledged: true },
+        });
+    });
+
+    it('reports a mismatch when the ACL is still listed after deletion', async () => {
+        registerDeleteAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, aclId: 'acl-2' }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'mismatch', result: { aclType: 'EAP ACL' } });
+    });
+
+    it('throws when the ACL does not exist in any list', async () => {
         vi.mocked(mockClient.listOsgAcls).mockResolvedValue([] as never);
         vi.mocked(mockClient.listEapAcls).mockResolvedValue([] as never);
+        vi.mocked(mockClient.listOswAcls).mockResolvedValue([] as never);
         registerDeleteAclTool(mockServer, mockClient);
 
         await expect(toolHandler({ dryRun: false, aclId: 'missing' }, { sessionId: 's1' })).rejects.toThrow('No ACL exists for missing.');

@@ -198,6 +198,17 @@ describe('tools/updateDhcpReservation', () => {
         expect(mockClient.getDhcpReservationGrid).toHaveBeenNthCalledWith(1, 1, 1000, undefined, undefined);
         expect(mockClient.getDhcpReservationGrid).toHaveBeenNthCalledWith(2, 2, 1000, undefined, undefined);
     });
+    it('verifies the updated reservation on readback', async () => {
+        vi.mocked(mockClient.getDhcpReservationGrid)
+            .mockResolvedValueOnce({ data: [{ mac: 'AA:BB:CC:DD:EE:FF', ip: '192.168.10.40', status: true }] } as never)
+            .mockResolvedValue({ data: [{ mac: 'AA-BB-CC-DD-EE-FF', netId: 'net-1', ip: '192.168.10.40', status: false }] } as never);
+        registerUpdateDhcpReservationTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, reservationMac: 'AA:BB:CC:DD:EE:FF', netId: 'net-1', status: false }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'verified', result: { id: 'AA:BB:CC:DD:EE:FF' } });
+    });
+
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerUpdateDhcpReservationTool(mockServer, mockClient);
         const result = (await toolHandler(

@@ -64,7 +64,7 @@ describe('tools/createSwitchAcl', () => {
         expect(mockClient.createOswAcl).toHaveBeenCalledWith(payload, 'site-1', undefined);
     });
 
-    it('falls back to the raw create result when ACL cannot be found by description', async () => {
+    it('reports an unknown outcome when the created ACL never appears on readback', async () => {
         vi.mocked(mockClient.createOswAcl).mockResolvedValueOnce({ raw: true });
         vi.mocked(mockClient.listOswAcls).mockResolvedValue([] as never);
 
@@ -72,47 +72,44 @@ describe('tools/createSwitchAcl', () => {
 
         const result = await toolHandler({ dryRun: false, payload, siteId: 'site-1' }, { sessionId: 's1' });
 
-        expect(result).toEqual({
-            content: [{ type: 'text', text: expect.any(String) }],
-            structuredContent: {
-                action: 'create-switch-acl',
-                target: 'site-1',
-                siteId: 'site-1',
-                mode: 'apply',
-                status: 'submitted',
-                summary: 'Switch ACL creation requested.',
-                result: { raw: true },
-            },
+        expect(result.structuredContent).toMatchObject({
+            status: 'unknown',
+            result: { writeAcknowledged: true, applied: { raw: true }, verification: { status: 'unknown' } },
         });
-        expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
+        expect((result.structuredContent as { result: Record<string, unknown> }).result).not.toHaveProperty('aclId');
     });
 
-    it('hydrates the created switch ACL when the create response does not include an id', async () => {
+    it('creates the switch ACL once and verifies it on readback', async () => {
         vi.mocked(mockClient.createOswAcl).mockResolvedValueOnce({});
         vi.mocked(mockClient.listOswAcls)
             .mockResolvedValueOnce([])
-            .mockResolvedValueOnce([{ id: 'osw-acl-1', description: payload.description }] as never);
+            .mockResolvedValue([{ id: 'osw-acl-1', ...payload }] as never);
 
         registerCreateSwitchAclTool(mockServer, mockClient);
 
         const result = await toolHandler({ dryRun: false, payload, siteId: 'site-1' }, { sessionId: 's1' });
 
-        expect(result).toEqual({
-            content: [{ type: 'text', text: expect.any(String) }],
-            structuredContent: {
-                action: 'create-switch-acl',
-                target: 'site-1',
-                siteId: 'site-1',
-                mode: 'apply',
-                status: 'submitted',
-                summary: 'Switch ACL creation requested.',
-                result: {
-                    aclId: 'osw-acl-1',
-                    createdAcl: { id: 'osw-acl-1', description: payload.description },
-                },
-            },
+        expect(mockClient.createOswAcl).toHaveBeenCalledTimes(1);
+        expect(result.structuredContent).toMatchObject({
+            status: 'verified',
+            result: { aclId: 'osw-acl-1', verification: { status: 'verified' } },
         });
-        expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
+    });
+
+    it('reports an unknown outcome when two new ACLs share the description', async () => {
+        vi.mocked(mockClient.createOswAcl).mockResolvedValueOnce({});
+        vi.mocked(mockClient.listOswAcls)
+            .mockResolvedValueOnce([])
+            .mockResolvedValue([
+                { id: 'a', ...payload },
+                { id: 'b', ...payload },
+            ] as never);
+
+        registerCreateSwitchAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, payload, siteId: 'site-1' }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'unknown' });
     });
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerCreateSwitchAclTool(mockServer, mockClient);

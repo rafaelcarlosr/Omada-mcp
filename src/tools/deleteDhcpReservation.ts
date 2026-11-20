@@ -4,6 +4,7 @@ import { z } from 'zod';
 import type { OmadaClient } from '../omadaClient/index.js';
 import { deviceMacSchema, siteInputSchema, wrapMutationToolHandler } from '../server/common.js';
 import { findReservationByMac, getAllDhcpReservations } from './dhcpReservationShared.js';
+import { applyAndVerify, type RecordLike } from './resourceMutationShared.js';
 
 export function registerDeleteDhcpReservationTool(server: McpServer, client: OmadaClient): void {
     const inputSchema = siteInputSchema.extend({
@@ -49,7 +50,15 @@ export function registerDeleteDhcpReservationTool(server: McpServer, client: Oma
                     };
                 }
 
-                return await client.deleteDhcpReservation(reservationMac, siteId, customHeaders);
+                const result = await applyAndVerify({
+                    label: 'DHCP reservation',
+                    action: 'deletion',
+                    write: () => client.deleteDhcpReservation(reservationMac, siteId, customHeaders),
+                    read: async () =>
+                        findReservationByMac(await getAllDhcpReservations(client, siteId, customHeaders), reservationMac) as RecordLike | undefined,
+                    requested: undefined,
+                });
+                return { id: reservationMac, ...result };
             }
         )
     );

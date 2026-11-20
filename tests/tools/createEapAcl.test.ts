@@ -65,32 +65,23 @@ describe('tools/createEapAcl', () => {
         expect(mockClient.createEapAcl).toHaveBeenCalledWith(payload, 'site-1', undefined);
     });
 
-    it('hydrates the created EAP ACL when the create response does not include an id', async () => {
+    it('creates the EAP ACL once and verifies it on readback', async () => {
         vi.mocked(mockClient.createEapAcl).mockResolvedValueOnce({});
         vi.mocked(mockClient.listEapAcls)
             .mockResolvedValueOnce([])
-            .mockResolvedValueOnce([{ id: 'acl-2', description: payload.description }] as never);
+            .mockResolvedValue([{ id: 'acl-2', ...payload }] as never);
 
         registerCreateEapAclTool(mockServer, mockClient);
 
         const result = await toolHandler({ dryRun: false, payload, siteId: 'site-1' }, { sessionId: 's1' });
 
-        expect(result).toEqual({
-            content: [{ type: 'text', text: expect.any(String) }],
-            structuredContent: {
-                action: 'create-eap-acl',
-                target: 'site-1',
-                siteId: 'site-1',
-                mode: 'apply',
-                status: 'submitted',
-                summary: 'EAP ACL creation requested.',
-                result: {
-                    aclId: 'acl-2',
-                    createdAcl: { id: 'acl-2', description: payload.description },
-                },
-            },
+        expect(mockClient.createEapAcl).toHaveBeenCalledTimes(1);
+        expect(result.structuredContent).toMatchObject({
+            action: 'create-eap-acl',
+            mode: 'apply',
+            status: 'verified',
+            result: { writeAcknowledged: true, aclId: 'acl-2', verification: { status: 'verified' } },
         });
-        expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
     });
 
     it('rejects unknown SSID ids before mutating', async () => {

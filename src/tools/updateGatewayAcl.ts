@@ -2,7 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { wrapMutationToolHandler } from '../server/common.js';
-import { findAclById, updateGatewayAclInputSchema } from './gatewayAclShared.js';
+import { findAclById, updateAclVerified, updateGatewayAclInputSchema } from './gatewayAclShared.js';
 
 export function registerUpdateGatewayAclTool(server: McpServer, client: OmadaClient): void {
     server.registerTool(
@@ -40,7 +40,13 @@ export function registerUpdateGatewayAclTool(server: McpServer, client: OmadaCli
                     };
                 }
 
-                return await client.updateOsgAcl(aclId, payload, siteId, customHeaders);
+                return await updateAclVerified({
+                    label: 'gateway ACL',
+                    list: () => client.listOsgAcls(siteId, customHeaders),
+                    aclId,
+                    payload,
+                    write: () => client.updateOsgAcl(aclId, payload, siteId, customHeaders),
+                });
             }
         )
     );

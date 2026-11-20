@@ -2,13 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { wrapMutationToolHandler } from '../server/common.js';
-import {
-    createEapAclInputSchema,
-    eapAclPayloadSchema,
-    findCreatedAclByDescription,
-    getAclRecordId,
-    validateEapAclPayloadReferences,
-} from './gatewayAclShared.js';
+import { createAclVerified, createEapAclInputSchema, eapAclPayloadSchema, validateEapAclPayloadReferences } from './gatewayAclShared.js';
 
 export function registerCreateEapAclTool(server: McpServer, client: OmadaClient): void {
     server.registerTool(
@@ -44,33 +38,13 @@ export function registerCreateEapAclTool(server: McpServer, client: OmadaClient)
                     };
                 }
 
-                const createResult = await client.createEapAcl(parsedPayload, siteId, customHeaders);
-                const createdAclId = (() => {
-                    if (!createResult || typeof createResult !== 'object') {
-                        return undefined;
-                    }
-
-                    const maybeId =
-                        (createResult as { id?: string | number; aclId?: string | number }).id ??
-                        (createResult as { id?: string | number; aclId?: string | number }).aclId;
-                    return maybeId === undefined ? undefined : String(maybeId);
-                })();
-
-                if (createdAclId) {
-                    return createResult;
-                }
-
-                const aclsAfterCreate = await client.listEapAcls(siteId, customHeaders);
-                const createdAcl = findCreatedAclByDescription(existingAcls, aclsAfterCreate, parsedPayload.description);
-
-                if (createdAcl) {
-                    return {
-                        aclId: getAclRecordId(createdAcl),
-                        createdAcl,
-                    };
-                }
-
-                return createResult;
+                return await createAclVerified({
+                    label: 'EAP ACL',
+                    list: () => client.listEapAcls(siteId, customHeaders),
+                    before: existingAcls,
+                    payload: parsedPayload,
+                    write: () => client.createEapAcl(parsedPayload, siteId, customHeaders),
+                });
             }
         )
     );

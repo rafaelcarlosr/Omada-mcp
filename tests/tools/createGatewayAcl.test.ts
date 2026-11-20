@@ -32,7 +32,8 @@ describe('tools/createGatewayAcl', () => {
         } as unknown as McpServer;
 
         mockClient = {
-            createOsgAcl: vi.fn().mockResolvedValue({ id: 'acl-1' }),
+            listOsgAcls: vi.fn().mockResolvedValue([]),
+            createOsgAcl: vi.fn().mockResolvedValue({}),
         } as unknown as OmadaClient;
     });
 
@@ -56,12 +57,44 @@ describe('tools/createGatewayAcl', () => {
         expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
     });
 
-    it('creates the gateway ACL through the client', async () => {
+    it('creates the gateway ACL once and verifies it on readback', async () => {
+        vi.mocked(mockClient.listOsgAcls)
+            .mockResolvedValueOnce([{ id: 'old', description: 'Guests drop WAN' }] as never)
+            .mockResolvedValue([
+                { id: 'old', description: 'Guests drop WAN' },
+                { id: 'acl-1', ...payload },
+            ] as never);
         registerCreateGatewayAclTool(mockServer, mockClient);
 
-        await toolHandler({ dryRun: false, payload, siteId: 'site-1' }, { sessionId: 's1' });
+        const result = await toolHandler({ dryRun: false, payload, siteId: 'site-1' }, { sessionId: 's1' });
 
+        expect(mockClient.createOsgAcl).toHaveBeenCalledTimes(1);
         expect(mockClient.createOsgAcl).toHaveBeenCalledWith(payload, 'site-1', undefined);
+        expect(result.structuredContent).toMatchObject({
+            status: 'verified',
+            result: { writeAcknowledged: true, aclId: 'acl-1', verification: { status: 'verified' } },
+        });
+    });
+
+    it('reports a mismatch when the created rule reads back differently', async () => {
+        vi.mocked(mockClient.listOsgAcls)
+            .mockResolvedValueOnce([] as never)
+            .mockResolvedValue([{ id: 'acl-1', ...payload, policy: 1 }] as never);
+        registerCreateGatewayAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, payload }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'mismatch', result: { aclId: 'acl-1' } });
+    });
+
+    it('reports the controller rejection without verifying', async () => {
+        const { OmadaApiError } = await import('../../src/omadaClient/request.js');
+        vi.mocked(mockClient.createOsgAcl).mockRejectedValue(new OmadaApiError(-1001, 'Invalid Destination Type.'));
+        registerCreateGatewayAclTool(mockServer, mockClient);
+
+        await expect(toolHandler({ dryRun: false, payload }, { sessionId: 's1' })).rejects.toThrow(
+            'The controller rejected the gateway ACL creation (errorCode -1001): Invalid Destination Type.'
+        );
     });
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerCreateGatewayAclTool(mockServer, mockClient);

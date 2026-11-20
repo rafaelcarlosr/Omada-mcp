@@ -12,6 +12,10 @@ import {
     getAllDhcpReservations,
     validateReservationIpAgainstNetwork,
 } from './dhcpReservationShared.js';
+import { applyAndVerify, definedFields, type RecordLike } from './resourceMutationShared.js';
+
+// The MAC is the lookup key (the controller reformats it); conflict and options are write-only.
+const VERIFY_OMIT = ['mac', 'confirmConflict', 'options'];
 
 export function registerCreateDhcpReservationTool(server: McpServer, client: OmadaClient): void {
     const inputSchema = siteInputSchema.extend({
@@ -84,7 +88,16 @@ export function registerCreateDhcpReservationTool(server: McpServer, client: Oma
                     };
                 }
 
-                return await client.createDhcpReservation(reservationPayload, siteId, customHeaders);
+                return await applyAndVerify({
+                    label: 'DHCP reservation',
+                    action: 'creation',
+                    write: () => client.createDhcpReservation(reservationPayload, siteId, customHeaders),
+                    read: async () =>
+                        findReservationByMac(await getAllDhcpReservations(client, siteId, customHeaders), reservationPayload.mac) as
+                            | RecordLike
+                            | undefined,
+                    requested: definedFields(reservationPayload, VERIFY_OMIT),
+                });
             }
         )
     );

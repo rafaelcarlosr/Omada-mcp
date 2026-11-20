@@ -402,6 +402,33 @@ export async function runSettings(input: SettingsInput): Promise<RecordLike> {
     };
 }
 
+export interface VerifiedWriteInput {
+    label: string;
+    /** Noun used in rejection messages: "creation", "update" or "deletion". */
+    action: string;
+    write: () => Promise<unknown>;
+    /** Reads the target record back; undefined when it is absent. */
+    read: () => Promise<RecordLike | undefined>;
+    /** Fields that must read back, or undefined when the record must be gone. */
+    requested: RecordLike | undefined;
+    verify?: VerifyOptions;
+}
+
+/**
+ * Send a write once and confirm it by reading the record back, for tools that keep their own
+ * lookups and validation instead of the runCreate/runUpdate/runDelete engine.
+ */
+export async function applyAndVerify(input: VerifiedWriteInput): Promise<RecordLike> {
+    const outcome = await attemptWrite(input.label, input.action, input.write);
+    const verification = await pollVerification(input.read, input.requested, outcome.acknowledged, input.verify);
+    return { writeAcknowledged: outcome.acknowledged, ...(outcome.acknowledged ? { applied: outcome.applied } : {}), verification };
+}
+
+/** The requested fields to compare on readback: defined values only, minus write-only or lookup keys. */
+export function definedFields(payload: RecordLike, omit: readonly string[] = []): RecordLike {
+    return Object.fromEntries(Object.entries(payload).filter(([key, value]) => value !== undefined && !omit.includes(key)));
+}
+
 export interface ActionInput {
     label: string;
     dryRun: boolean;
