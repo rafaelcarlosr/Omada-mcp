@@ -46,7 +46,7 @@ describe('tools/getDashboardTopMemoryUsage', () => {
 
             const result = await toolHandler({}, { sessionId: 'test-session' });
 
-            expect(mockClient.getDashboardTopMemoryUsage).toHaveBeenCalledWith(undefined, undefined);
+            expect(mockClient.getDashboardTopMemoryUsage).toHaveBeenCalledWith(undefined, undefined, { start: undefined, end: undefined });
             expect(result).toEqual({
                 content: [{ type: 'text', text: JSON.stringify(mockData, null, 2) }],
             });
@@ -58,9 +58,9 @@ describe('tools/getDashboardTopMemoryUsage', () => {
 
             registerGetDashboardTopMemoryUsageTool(mockServer, mockClient);
 
-            await toolHandler({ siteId: 'test-site' }, { sessionId: 'test-session' });
+            await toolHandler({ siteId: 'test-site', start: 100, end: 200 }, { sessionId: 'test-session' });
 
-            expect(mockClient.getDashboardTopMemoryUsage).toHaveBeenCalledWith('test-site', undefined);
+            expect(mockClient.getDashboardTopMemoryUsage).toHaveBeenCalledWith('test-site', undefined, { start: 100, end: 200 });
         });
 
         it('should handle errors', async () => {

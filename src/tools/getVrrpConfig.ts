@@ -11,7 +11,7 @@ export function registerGetVrrpConfigTool(server: McpServer, client: OmadaClient
     server.registerTool(
         'getVrrpConfig',
         {
-            description: 'Get VRRP (Virtual Router Redundancy Protocol) configuration for OSW devices on the site.',
+            description: 'Get VRRP (Virtual Router Redundancy Protocol) configuration for OSW devices on the site. Returns every page.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getVrrpConfig', async ({ siteId, customHeaders }) => toToolResult(await client.getVrrpConfig(siteId, customHeaders)))

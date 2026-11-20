@@ -400,9 +400,9 @@ describe('omadaClient/device', () => {
     });
 
     describe('getApRadios', () => {
-        it('should get AP radio info', async () => {
-            const mockRadios = [{ band: '5GHz', channel: 36 }];
-            const mockResponse: OmadaApiResponse<unknown[]> = { errorCode: 0, result: mockRadios };
+        it('should return the per-band traffic object', async () => {
+            const mockRadios = { radioTraffic2g: { rxPkts: 1 }, radioTraffic5g: { rxPkts: 2 } };
+            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: mockRadios };
             (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
             (mockRequest.ensureSuccess as ReturnType<typeof vi.fn>).mockReturnValue(mockRadios);
 
@@ -410,24 +410,6 @@ describe('omadaClient/device', () => {
 
             expect(mockRequest.get).toHaveBeenCalledWith('/api/sites/site-1/aps/AA%3ABB%3ACC%3ADD%3AEE%3AFF/radios', undefined, undefined);
             expect(result).toEqual(mockRadios);
-        });
-
-        it('should return empty array when ensureSuccess returns null', async () => {
-            const mockResponse: OmadaApiResponse<unknown[]> = { errorCode: 0, result: [] };
-            (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
-            (mockRequest.ensureSuccess as ReturnType<typeof vi.fn>).mockReturnValue(null);
-
-            const result = await deviceOps.getApRadios('AA:BB:CC:DD:EE:FF', 'site-1');
-            expect(result).toEqual([]);
-        });
-
-        it('should return empty array when ensureSuccess returns a non-array object', async () => {
-            const mockResponse: OmadaApiResponse<unknown[]> = { errorCode: 0, result: [] };
-            (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
-            (mockRequest.ensureSuccess as ReturnType<typeof vi.fn>).mockReturnValue({});
-
-            const result = await deviceOps.getApRadios('AA:BB:CC:DD:EE:FF', 'site-1');
-            expect(result).toEqual([]);
         });
 
         it('should throw when apMac is empty', async () => {
@@ -1043,7 +1025,13 @@ describe('omadaClient/device', () => {
             const resp = mockSimpleResponse({ data: [] });
             (mockRequest.get as ReturnType<typeof vi.fn>).mockResolvedValue(resp);
             await deviceOps.listUpgradeOverviewFirmwares(1, 10);
-            expect(mockRequest.get).toHaveBeenCalledWith('/api/upgrade/overview/firmwares', { page: 1, pageSize: 10 }, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith('/api/upgrade/overview/firmwares', { channel: 0, page: 1, pageSize: 10 }, undefined);
+            await deviceOps.listUpgradeOverviewFirmwares(2, 5, { 'X-Custom': 'v' }, 2);
+            expect(mockRequest.get).toHaveBeenLastCalledWith(
+                '/api/upgrade/overview/firmwares',
+                { channel: 2, page: 2, pageSize: 5 },
+                { 'X-Custom': 'v' }
+            );
         });
     });
 

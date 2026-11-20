@@ -11,7 +11,7 @@ export function registerGetOspfProcessTool(server: McpServer, client: OmadaClien
     server.registerTool(
         'getOspfProcess',
         {
-            description: 'Get OSPF process configuration for the site gateway.',
+            description: 'Get OSPF process configuration for the site gateway. Returns every page.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getOspfProcess', async ({ siteId, customHeaders }) => toToolResult(await client.getOspfProcess(siteId, customHeaders)))

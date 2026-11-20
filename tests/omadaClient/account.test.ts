@@ -11,6 +11,7 @@ describe('AccountOperations', () => {
     beforeEach(() => {
         mockRequest = {
             get: vi.fn(),
+            fetchPaginated: vi.fn(),
             ensureSuccess: vi.fn((response: OmadaApiResponse<unknown>) => {
                 if (response.errorCode === 0) return response.result;
                 throw new Error(response.msg ?? 'API Error');
@@ -98,19 +99,17 @@ describe('AccountOperations', () => {
     });
 
     describe('getAllUsersApp', () => {
-        it('should call correct endpoint', async () => {
-            const mockResponse = { errorCode: 0, result: { users: [] } };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+        it('should fetch every page', async () => {
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([{ name: 'admin' }]);
             const result = await accountOps.getAllUsersApp();
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/all-users', undefined, undefined);
-            expect(result).toEqual({ users: [] });
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/all-users', {}, undefined);
+            expect(result).toEqual([{ name: 'admin' }]);
         });
 
         it('should pass customHeaders', async () => {
-            const mockResponse = { errorCode: 0, result: null };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([]);
             await accountOps.getAllUsersApp({ 'X-Custom': 'value' });
-            expect(mockRequest.get).toHaveBeenCalledWith(expect.any(String), undefined, { 'X-Custom': 'value' });
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith(expect.any(String), {}, { 'X-Custom': 'value' });
         });
     });
 

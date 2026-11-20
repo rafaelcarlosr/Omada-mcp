@@ -8,7 +8,8 @@ export function registerGetAllUsersAppTool(server: McpServer, client: OmadaClien
     server.registerTool(
         'getAllUsersApp',
         {
-            description: 'Get all users (both cloud and local) in a grid/app view format.',
+            description:
+                'List every controller user, cloud and local, with role and email. Returns every page. The controller allows this only for apps in authorization-code mode; client-credentials apps get -44118.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getAllUsersApp', async ({ customHeaders }) => toToolResult(await client.getAllUsersApp(customHeaders)))

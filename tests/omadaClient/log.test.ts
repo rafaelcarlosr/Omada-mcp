@@ -1,10 +1,13 @@
 import axios from 'axios';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LogOperations } from '../../src/omadaClient/log.js';
+import { DEFAULT_LOG_WINDOW_MS, LogOperations } from '../../src/omadaClient/log.js';
 import type { RequestHandler } from '../../src/omadaClient/request.js';
 import type { SiteOperations } from '../../src/omadaClient/site.js';
 import type { OmadaApiResponse, PaginatedResult } from '../../src/types/index.js';
+
+const NOW = 1_700_000_000_000;
+const LAST_DAY = { page: 1, pageSize: 10, 'filters.timeStart': NOW - DEFAULT_LOG_WINDOW_MS, 'filters.timeEnd': NOW };
 
 describe('LogOperations', () => {
     let logOps: LogOperations;
@@ -36,6 +39,10 @@ describe('LogOperations', () => {
         mockBuildPath = vi.fn((path: string, version = 'v1') => `/openapi/${version}/test-omadac${path}`);
 
         logOps = new LogOperations(mockRequest, mockSite, mockBuildPath);
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it.each([
@@ -103,10 +110,11 @@ describe('LogOperations', () => {
             const mockEvent = { id: 'event-1', type: 'info', message: 'Device connected' };
             vi.mocked(mockRequest.get).mockResolvedValue(makePaginatedResponse([mockEvent]));
 
+            vi.spyOn(Date, 'now').mockReturnValue(NOW);
             const result = await logOps.listSiteEvents({ page: 1, pageSize: 10 }, 'site-123');
 
             expect(mockSite.resolveSiteId).toHaveBeenCalledWith('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/logs/events', { page: 1, pageSize: 10 }, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/logs/events', LAST_DAY, undefined);
             expect(result.data).toEqual([mockEvent]);
         });
 
@@ -131,9 +139,10 @@ describe('LogOperations', () => {
         it('should list site alerts', async () => {
             vi.mocked(mockRequest.get).mockResolvedValue(makePaginatedResponse([{ id: 'alert-1' }]));
 
+            vi.spyOn(Date, 'now').mockReturnValue(NOW);
             const result = await logOps.listSiteAlerts({ page: 1, pageSize: 10 }, 'site-123');
 
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/logs/alerts', { page: 1, pageSize: 10 }, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/logs/alerts', LAST_DAY, undefined);
             expect(result.data).toHaveLength(1);
         });
     });
@@ -153,9 +162,10 @@ describe('LogOperations', () => {
         it('should list global events without a siteId', async () => {
             vi.mocked(mockRequest.get).mockResolvedValue(makePaginatedResponse([{ id: 'global-event-1' }]));
 
+            vi.spyOn(Date, 'now').mockReturnValue(NOW);
             const result = await logOps.listGlobalEvents({ page: 1, pageSize: 10 });
 
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/logs/events', { page: 1, pageSize: 10 }, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/logs/events', LAST_DAY, undefined);
             expect(result.data).toHaveLength(1);
         });
 
@@ -180,9 +190,10 @@ describe('LogOperations', () => {
         it('should list global alerts', async () => {
             vi.mocked(mockRequest.get).mockResolvedValue(makePaginatedResponse([{ id: 'global-alert-1' }]));
 
+            vi.spyOn(Date, 'now').mockReturnValue(NOW);
             const result = await logOps.listGlobalAlerts({ page: 1, pageSize: 10 });
 
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/logs/alerts', { page: 1, pageSize: 10 }, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/logs/alerts', LAST_DAY, undefined);
             expect(result.data).toHaveLength(1);
         });
     });

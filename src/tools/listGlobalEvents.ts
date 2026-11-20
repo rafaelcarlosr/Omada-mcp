@@ -13,15 +13,13 @@ export function registerListGlobalEventsTool(server: McpServer, client: OmadaCli
             .int()
             .optional()
             .describe(
-                'Filter events after this time. Unix timestamp in milliseconds (e.g. Date.now() - 86400000 for last 24h). Both startTime and endTime must be provided together.'
+                'Filter events after this time. Unix timestamp in milliseconds (e.g. Date.now() - 86400000 for last 24h). Defaults to 24 hours before endTime.'
             ),
         endTime: z
             .number()
             .int()
             .optional()
-            .describe(
-                'Filter events before this time. Unix timestamp in milliseconds (e.g. Date.now()). Both startTime and endTime must be provided together.'
-            ),
+            .describe('Filter events before this time. Unix timestamp in milliseconds (e.g. Date.now()). Defaults to now.'),
         searchKey: z.string().optional().describe('Keyword to filter events by description or device name.'),
         customHeaders: customHeadersSchema,
     });
@@ -30,7 +28,7 @@ export function registerListGlobalEventsTool(server: McpServer, client: OmadaCli
         'listGlobalEvents',
         {
             description:
-                'List system event logs across all sites on the controller. Returns device online/offline, client connect/disconnect, firmware upgrades, config changes, etc. Use startTime/endTime (both required if filtering by time) to narrow the range.',
+                'List system event logs across all sites on the controller. Returns device online/offline, client connect/disconnect, firmware upgrades, config changes, etc. The controller needs a time window: startTime/endTime default to the last 24 hours.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('listGlobalEvents', async (args) =>

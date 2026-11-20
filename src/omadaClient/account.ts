@@ -68,10 +68,9 @@ export class AccountOperations {
      * Get all users (app grid view).
      * OperationId: getAppGridUsers
      */
-    public async getAllUsersApp(customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getAllUsersApp(customHeaders?: CustomHeaders): Promise<unknown[]> {
         const path = this.buildPath('/all-users');
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**

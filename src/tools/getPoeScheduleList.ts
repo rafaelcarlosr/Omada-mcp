@@ -6,7 +6,7 @@ export function registerGetPoeScheduleListTool(server: McpServer, client: OmadaC
     server.registerTool(
         'getPoeScheduleList',
         {
-            description: 'Get the list of PoE (Power over Ethernet) schedules configured for a site.',
+            description: 'Get the list of PoE (Power over Ethernet) schedules configured for a site. Returns every page.',
             inputSchema: siteInputSchema.shape,
         },
         wrapToolHandler('getPoeScheduleList', async ({ siteId, customHeaders }) =>

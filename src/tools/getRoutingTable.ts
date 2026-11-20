@@ -7,8 +7,10 @@ import { siteInputSchema, toToolResult, wrapToolHandler } from '../server/common
 export function registerGetRoutingTableTool(server: McpServer, client: OmadaClient): void {
     const inputSchema = z.object({
         type: z
-            .enum(['static', 'policy', 'ospf'])
-            .describe('Routing table type: "static" for static routes, "policy" for policy-based routes, "ospf" for OSPF-learned routes.'),
+            .enum(['gateway', 'switch'])
+            .describe(
+                'Whose routing table to read: "gateway" for the gateway, "switch" for every routing switch (entries carry the switch MAC and name).'
+            ),
         ...siteInputSchema.shape,
     });
 
@@ -16,7 +18,7 @@ export function registerGetRoutingTableTool(server: McpServer, client: OmadaClie
         'getRoutingTable',
         {
             description:
-                'Get the live routing table for a site filtered by type. Use type="static" for manually configured static routes, type="policy" for policy-based routing entries, or type="ospf" for dynamically learned OSPF routes.',
+                'Get the live routing table of the site gateway or of its routing switches: destination, next hop, interface and metric. Returns every page.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getRoutingTable', async ({ type, siteId, customHeaders }) =>

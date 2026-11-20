@@ -6,8 +6,11 @@ import type { SiteOperations } from './site.js';
 export interface SiteThreatListOptions {
     page: number;
     pageSize: number;
+    /** Unix seconds; the controller requires a window, which defaults to the last 24 hours. */
     startTime?: number;
     endTime?: number;
+    /** Archived threats instead of current ones; defaults to false. */
+    archived?: boolean;
     searchKey?: string;
 }
 
@@ -34,17 +37,15 @@ export class InsightOperations {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/ips/grid/threat-management`);
 
+        const endTime = options.endTime ?? Math.floor(Date.now() / 1000);
         const params: Record<string, unknown> = {
+            archived: options.archived ?? false,
             page: options.page,
             pageSize: options.pageSize,
+            'filters.startTime': options.startTime ?? endTime - 86_400,
+            'filters.endTime': endTime,
         };
 
-        if (options.startTime !== undefined) {
-            params['filters.startTime'] = options.startTime;
-        }
-        if (options.endTime !== undefined) {
-            params['filters.endTime'] = options.endTime;
-        }
         if (options.searchKey) {
             params.searchKey = options.searchKey;
         }
@@ -57,11 +58,10 @@ export class InsightOperations {
      * Get WIDS (Wireless Intrusion Detection System) information for a site.
      * OperationId: getWids
      */
-    public async getWids(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getWids(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/insight/wids`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**

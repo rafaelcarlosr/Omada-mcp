@@ -93,10 +93,35 @@ describe('MonitorOperations', () => {
             const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: { totalSwitches: 3 } };
             vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
 
+            vi.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000);
             const result = await monitorOps.getDashboardSwitchSummary('site-123');
+            vi.restoreAllMocks();
 
             expect(result).toEqual({ totalSwitches: 3 });
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/dashboard/switch-summary', undefined, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith(
+                '/openapi/v1/test-omadac/sites/site-123/dashboard/switch-summary',
+                { start: 1_700_000_000 - 3600, end: 1_700_000_000 },
+                undefined
+            );
+        });
+
+        it.each([
+            'getDashboardSwitchSummary',
+            'getDashboardTrafficActivities',
+            'getDashboardTopCpuUsage',
+            'getDashboardTopMemoryUsage',
+            'getDashboardMostActiveSwitches',
+            'getDashboardMostActiveEaps',
+        ] as const)('%s sends the given period in seconds', async (method) => {
+            vi.mocked(mockRequest.get).mockResolvedValue({ errorCode: 0, result: [] });
+
+            await monitorOps[method]('site-123', undefined, { start: 100, end: 200 });
+
+            expect(mockRequest.get).toHaveBeenLastCalledWith(
+                expect.stringContaining('/sites/site-123/dashboard/'),
+                { start: 100, end: 200 },
+                undefined
+            );
         });
     });
 

@@ -12,6 +12,21 @@ export interface LogQueryOptions {
     searchKey?: string;
 }
 
+/** Event and alert lists require a time window in Unix milliseconds; it defaults to the last 24 hours. */
+export const DEFAULT_LOG_WINDOW_MS = 86_400_000;
+
+function windowParams(options: LogQueryOptions): Record<string, unknown> {
+    const timeEnd = options.endTime ?? Date.now();
+    const timeStart = options.startTime ?? timeEnd - DEFAULT_LOG_WINDOW_MS;
+    return {
+        page: options.page,
+        pageSize: options.pageSize,
+        'filters.timeStart': timeStart,
+        'filters.timeEnd': timeEnd,
+        ...(options.searchKey ? { searchKey: options.searchKey } : {}),
+    };
+}
+
 /**
  * Log operations for the Omada API.
  * Covers site events, alerts, and audit logs.
@@ -31,22 +46,7 @@ export class LogOperations {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/logs/events`);
 
-        const params: Record<string, unknown> = {
-            page: options.page,
-            pageSize: options.pageSize,
-        };
-
-        if (options.startTime !== undefined) {
-            params['filters.timeStart'] = options.startTime;
-        }
-        if (options.endTime !== undefined) {
-            params['filters.timeEnd'] = options.endTime;
-        }
-        if (options.searchKey) {
-            params.searchKey = options.searchKey;
-        }
-
-        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, params, customHeaders);
+        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, windowParams(options), customHeaders);
         return this.request.ensureSuccess(response);
     }
 
@@ -58,22 +58,7 @@ export class LogOperations {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/logs/alerts`);
 
-        const params: Record<string, unknown> = {
-            page: options.page,
-            pageSize: options.pageSize,
-        };
-
-        if (options.startTime !== undefined) {
-            params['filters.timeStart'] = options.startTime;
-        }
-        if (options.endTime !== undefined) {
-            params['filters.timeEnd'] = options.endTime;
-        }
-        if (options.searchKey) {
-            params.searchKey = options.searchKey;
-        }
-
-        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, params, customHeaders);
+        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, windowParams(options), customHeaders);
         return this.request.ensureSuccess(response);
     }
 
@@ -112,22 +97,7 @@ export class LogOperations {
     public async listGlobalEvents(options: LogQueryOptions, customHeaders?: CustomHeaders): Promise<PaginatedResult<unknown>> {
         const path = this.buildPath('/logs/events');
 
-        const params: Record<string, unknown> = {
-            page: options.page,
-            pageSize: options.pageSize,
-        };
-
-        if (options.startTime !== undefined) {
-            params['filters.timeStart'] = options.startTime;
-        }
-        if (options.endTime !== undefined) {
-            params['filters.timeEnd'] = options.endTime;
-        }
-        if (options.searchKey) {
-            params.searchKey = options.searchKey;
-        }
-
-        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, params, customHeaders);
+        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, windowParams(options), customHeaders);
         return this.request.ensureSuccess(response);
     }
 
@@ -138,22 +108,7 @@ export class LogOperations {
     public async listGlobalAlerts(options: LogQueryOptions, customHeaders?: CustomHeaders): Promise<PaginatedResult<unknown>> {
         const path = this.buildPath('/logs/alerts');
 
-        const params: Record<string, unknown> = {
-            page: options.page,
-            pageSize: options.pageSize,
-        };
-
-        if (options.startTime !== undefined) {
-            params['filters.timeStart'] = options.startTime;
-        }
-        if (options.endTime !== undefined) {
-            params['filters.timeEnd'] = options.endTime;
-        }
-        if (options.searchKey) {
-            params.searchKey = options.searchKey;
-        }
-
-        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, params, customHeaders);
+        const response = await this.request.get<OmadaApiResponse<PaginatedResult<unknown>>>(path, windowParams(options), customHeaders);
         return this.request.ensureSuccess(response);
     }
 

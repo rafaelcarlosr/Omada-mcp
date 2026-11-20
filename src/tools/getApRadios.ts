@@ -14,7 +14,7 @@ export function registerGetApRadiosTool(server: McpServer, client: OmadaClient):
         'getApRadios',
         {
             description:
-                'Get radio status for a specific access point: 2.4GHz and 5GHz band config, channel, TX power, channel utilization, and associated client count per radio. Use listDevices to get the apMac.',
+                'Get the radio traffic counters of one access point, per band (radioTraffic2g, radioTraffic5g and others the AP has): packets, bytes, drops, errors and retries. Use getRadiosConfig for channel and power. Use listDevices to get the apMac.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getApRadios', async ({ apMac, siteId, customHeaders }) =>

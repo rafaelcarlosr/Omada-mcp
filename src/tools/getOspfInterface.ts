@@ -11,7 +11,7 @@ export function registerGetOspfInterfaceTool(server: McpServer, client: OmadaCli
     server.registerTool(
         'getOspfInterface',
         {
-            description: 'Get OSPF interface configuration for the site gateway.',
+            description: 'Get OSPF interface configuration for the site gateway. Returns every page.',
             inputSchema: inputSchema.shape,
         },
         wrapToolHandler('getOspfInterface', async ({ siteId, customHeaders }) => toToolResult(await client.getOspfInterface(siteId, customHeaders)))

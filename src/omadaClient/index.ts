@@ -60,7 +60,7 @@ import { LogOperations, type LogQueryOptions } from './log.js';
 import { LogAdminOperations, type logNotificationBodySchema, type logSelectionSchema } from './logAdmin.js';
 import type { FileServerConfig, SiteFileRestoreInfo, SiteRestoreInfo } from './maintenance.js';
 import { MaintenanceOperations } from './maintenance.js';
-import { MonitorOperations } from './monitor.js';
+import { type DashboardWindow, MonitorOperations } from './monitor.js';
 import {
     type IncidentFilters,
     MonitoringOperations,
@@ -446,7 +446,7 @@ export class OmadaClient {
         return await this.deviceOps.getApDetail(apMac, siteId, customHeaders);
     }
 
-    public async getApRadios(apMac: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
+    public async getApRadios(apMac: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
         return await this.deviceOps.getApRadios(apMac, siteId, customHeaders);
     }
 
@@ -817,8 +817,8 @@ export class OmadaClient {
         return await this.deviceOps.listUpgradeFirmwares(page, pageSize, customHeaders);
     }
 
-    public async listUpgradeOverviewFirmwares(page: number, pageSize: number, customHeaders?: CustomHeaders): Promise<unknown> {
-        return await this.deviceOps.listUpgradeOverviewFirmwares(page, pageSize, customHeaders);
+    public async listUpgradeOverviewFirmwares(page: number, pageSize: number, customHeaders?: CustomHeaders, channel = 0): Promise<unknown> {
+        return await this.deviceOps.listUpgradeOverviewFirmwares(page, pageSize, customHeaders, channel);
     }
 
     public async listSitesStacks(siteId?: string, page?: number, pageSize?: number, customHeaders?: CustomHeaders): Promise<unknown> {
@@ -834,8 +834,8 @@ export class OmadaClient {
     }
 
     // Security operations (extended)
-    public async getTopThreats(customHeaders?: CustomHeaders): Promise<unknown[]> {
-        return await this.securityOps.getTopThreats(customHeaders);
+    public async getTopThreats(customHeaders?: CustomHeaders, window?: { startTime?: number; endTime?: number }): Promise<unknown> {
+        return await this.securityOps.getTopThreats(customHeaders, window);
     }
 
     public async getThreatSeverity(startTime: number, endTime: number, customHeaders?: CustomHeaders): Promise<unknown> {
@@ -1027,7 +1027,7 @@ export class OmadaClient {
         return await this.networkOps.getLanDnsRules(page, pageSize, siteId, customHeaders);
     }
 
-    public async getLanProfileEsUsage(profileId: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getLanProfileEsUsage(profileId: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.networkOps.getLanProfileEsUsage(profileId, siteId, customHeaders);
     }
 
@@ -1037,15 +1037,15 @@ export class OmadaClient {
 
     // --- network-routing (#74) ---
 
-    public async getOspfProcess(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getOspfProcess(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.networkOps.getOspfProcess(siteId, customHeaders);
     }
 
-    public async getOspfInterface(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getOspfInterface(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.networkOps.getOspfInterface(siteId, customHeaders);
     }
 
-    public async getVrrpConfig(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getVrrpConfig(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.networkOps.getVrrpConfig(siteId, customHeaders);
     }
 
@@ -1441,12 +1441,12 @@ export class OmadaClient {
     }
 
     // Monitor / dashboard operations
-    public async getDashboardWifiSummary(siteId?: string, customHeaders?: CustomHeaders, window?: { start: number; end: number }): Promise<unknown> {
+    public async getDashboardWifiSummary(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown> {
         return await this.monitorOps.getDashboardWifiSummary(siteId, customHeaders, window);
     }
 
-    public async getDashboardSwitchSummary(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
-        return await this.monitorOps.getDashboardSwitchSummary(siteId, customHeaders);
+    public async getDashboardSwitchSummary(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown> {
+        return await this.monitorOps.getDashboardSwitchSummary(siteId, customHeaders, window);
     }
 
     public async getTrafficDistribution(siteId?: string, start?: number, end?: number, customHeaders?: CustomHeaders): Promise<unknown> {
@@ -1457,28 +1457,28 @@ export class OmadaClient {
         return await this.monitorOps.getRetryAndDroppedRate(siteId, start, end, customHeaders);
     }
 
-    public async getDashboardTrafficActivities(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
-        return await this.monitorOps.getDashboardTrafficActivities(siteId, customHeaders);
+    public async getDashboardTrafficActivities(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown> {
+        return await this.monitorOps.getDashboardTrafficActivities(siteId, customHeaders, window);
     }
 
     public async getDashboardPoEUsage(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
         return await this.monitorOps.getDashboardPoEUsage(siteId, customHeaders);
     }
 
-    public async getDashboardTopCpuUsage(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
-        return await this.monitorOps.getDashboardTopCpuUsage(siteId, customHeaders);
+    public async getDashboardTopCpuUsage(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown[]> {
+        return await this.monitorOps.getDashboardTopCpuUsage(siteId, customHeaders, window);
     }
 
-    public async getDashboardTopMemoryUsage(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
-        return await this.monitorOps.getDashboardTopMemoryUsage(siteId, customHeaders);
+    public async getDashboardTopMemoryUsage(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown[]> {
+        return await this.monitorOps.getDashboardTopMemoryUsage(siteId, customHeaders, window);
     }
 
-    public async getDashboardMostActiveSwitches(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
-        return await this.monitorOps.getDashboardMostActiveSwitches(siteId, customHeaders);
+    public async getDashboardMostActiveSwitches(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown[]> {
+        return await this.monitorOps.getDashboardMostActiveSwitches(siteId, customHeaders, window);
     }
 
-    public async getDashboardMostActiveEaps(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
-        return await this.monitorOps.getDashboardMostActiveEaps(siteId, customHeaders);
+    public async getDashboardMostActiveEaps(siteId?: string, customHeaders?: CustomHeaders, window?: DashboardWindow): Promise<unknown[]> {
+        return await this.monitorOps.getDashboardMostActiveEaps(siteId, customHeaders, window);
     }
 
     public async getDashboardOverview(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
@@ -1881,7 +1881,7 @@ export class OmadaClient {
         return await this.accountOps.getAvailableRoles(customHeaders);
     }
 
-    public async getAllUsersApp(customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getAllUsersApp(customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.accountOps.getAllUsersApp(customHeaders);
     }
 
@@ -1985,11 +1985,11 @@ export class OmadaClient {
         return await this.scheduleOps.getRebootScheduleList(siteTemplateId, customHeaders);
     }
 
-    public async getPoeScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getPoeScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.scheduleOps.getPoeScheduleList(siteId, customHeaders);
     }
 
-    public async getPortScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getPortScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         return await this.scheduleOps.getPortScheduleList(siteId, customHeaders);
     }
 

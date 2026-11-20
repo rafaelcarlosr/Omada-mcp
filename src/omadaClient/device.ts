@@ -226,15 +226,15 @@ export class DeviceOperations {
      * Get radio information for a specific AP.
      * OperationId: getApRadios
      */
-    public async getApRadios(apMac: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
+    public async getApRadios(apMac: string, siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
         if (!apMac) {
             throw new Error('An apMac must be provided.');
         }
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/aps/${encodeURIComponent(apMac)}/radios`);
-        const response = await this.request.get<OmadaApiResponse<unknown[]>>(path, undefined, customHeaders);
-        const result = this.request.ensureSuccess(response);
-        return Array.isArray(result) ? result : [];
+        // 6.3 returns per-band traffic counters (radioTraffic2g, radioTraffic5g, ...) as one object.
+        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
+        return this.request.ensureSuccess(response);
     }
 
     /**
@@ -1019,9 +1019,9 @@ export class DeviceOperations {
         return this.request.ensureSuccess(response);
     }
 
-    public async listUpgradeOverviewFirmwares(page: number, pageSize: number, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async listUpgradeOverviewFirmwares(page: number, pageSize: number, customHeaders?: CustomHeaders, channel = 0): Promise<unknown> {
         const path = this.buildPath('/upgrade/overview/firmwares');
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, { page, pageSize }, customHeaders);
+        const response = await this.request.get<OmadaApiResponse<unknown>>(path, { channel, page, pageSize }, customHeaders);
         return this.request.ensureSuccess(response);
     }
 

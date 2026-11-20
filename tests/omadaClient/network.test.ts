@@ -2206,10 +2206,14 @@ describe('NetworkOperations', () => {
 
     describe('getLanProfileEsUsage', () => {
         it('should fetch LAN profile ES usage', async () => {
-            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: {} };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
-            await networkOps.getLanProfileEsUsage('profile-1', 'site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/lan-profiles/profile-1/es', undefined, undefined);
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([{ mac: 'AA-BB-CC-DD-EE-FF' }]);
+            const result = await networkOps.getLanProfileEsUsage('profile-1', 'site-123');
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith(
+                '/openapi/v1/test-omadac/sites/site-123/lan-profiles/profile-1/es',
+                {},
+                undefined
+            );
+            expect(result).toEqual([{ mac: 'AA-BB-CC-DD-EE-FF' }]);
         });
     });
 
@@ -2230,28 +2234,25 @@ describe('NetworkOperations', () => {
 
     describe('getOspfProcess', () => {
         it('should fetch OSPF process config', async () => {
-            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: {} };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([]);
             await networkOps.getOspfProcess('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/ospf/process', undefined, undefined);
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/ospf/process', {}, undefined);
         });
     });
 
     describe('getOspfInterface', () => {
         it('should fetch OSPF interface config', async () => {
-            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: {} };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([]);
             await networkOps.getOspfInterface('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/ospf/interface', undefined, undefined);
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/ospf/interface', {}, undefined);
         });
     });
 
     describe('getVrrpConfig', () => {
         it('should fetch VRRP config', async () => {
-            const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: {} };
-            vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
+            vi.mocked(mockRequest.fetchPaginated).mockResolvedValue([]);
             await networkOps.getVrrpConfig('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/osw-vrrp', undefined, undefined);
+            expect(mockRequest.fetchPaginated).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/osw-vrrp', {}, undefined);
         });
     });
 
@@ -2346,7 +2347,11 @@ describe('NetworkOperations', () => {
             const mockResponse: OmadaApiResponse<unknown> = { errorCode: 0, result: { enabled: false } };
             vi.mocked(mockRequest.get).mockResolvedValue(mockResponse);
             const result = await networkOps.getBandwidthCtrlDetail('site-123');
-            expect(mockRequest.get).toHaveBeenCalledWith('/openapi/v1/test-omadac/sites/site-123/qos/gateway/bwcs', undefined, undefined);
+            expect(mockRequest.get).toHaveBeenCalledWith(
+                '/openapi/v1/test-omadac/sites/site-123/qos/gateway/bwcs',
+                { page: 1, pageSize: 1000 },
+                undefined
+            );
             expect(result).toEqual({ enabled: false });
         });
     });

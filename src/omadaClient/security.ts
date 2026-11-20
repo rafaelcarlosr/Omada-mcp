@@ -62,11 +62,13 @@ export class SecurityOperations {
      * Get top threats from the global view threat management.
      * OperationId: getTopThreatList
      */
-    public async getTopThreats(customHeaders?: CustomHeaders): Promise<unknown[]> {
+    public async getTopThreats(customHeaders?: CustomHeaders, window?: { startTime?: number; endTime?: number }): Promise<unknown> {
         const path = this.buildPath('/security/threat-management/top');
-        const response = await this.request.get<OmadaApiResponse<unknown[]>>(path, undefined, customHeaders);
-        this.request.ensureSuccess(response);
-        return response.result ?? [];
+        // The window is required and in Unix seconds (milliseconds return nothing); it defaults to the last 24 hours.
+        const endTime = window?.endTime ?? Math.floor(Date.now() / 1000);
+        const startTime = window?.startTime ?? endTime - 86_400;
+        const response = await this.request.get<OmadaApiResponse<unknown>>(path, { startTime, endTime }, customHeaders);
+        return this.request.ensureSuccess(response);
     }
 
     /**

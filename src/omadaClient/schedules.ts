@@ -39,22 +39,20 @@ export class ScheduleOperations {
      * Get PoE schedule list for a site.
      * OperationId: getPoeScheduleList
      */
-    public async getPoeScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getPoeScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/poe-schedules`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**
      * Get port schedule list for a site.
      * OperationId: getPortScheduleList
      */
-    public async getPortScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown> {
+    public async getPortScheduleList(siteId?: string, customHeaders?: CustomHeaders): Promise<unknown[]> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const path = this.buildPath(`/sites/${encodeURIComponent(resolvedSiteId)}/port-schedules`);
-        const response = await this.request.get<OmadaApiResponse<unknown>>(path, undefined, customHeaders);
-        return this.request.ensureSuccess(response);
+        return await this.request.fetchPaginated<unknown>(path, {}, customHeaders);
     }
 
     /**
