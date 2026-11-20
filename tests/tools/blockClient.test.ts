@@ -4,60 +4,75 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import type { OmadaClient } from '../../src/omadaClient/index.js';
+import { OmadaApiError } from '../../src/omadaClient/request.js';
 import { registerBlockClientTool } from '../../src/tools/blockClient.js';
+
+const MAC = 'AA-BB-CC-DD-EE-FF';
 
 describe('tools/blockClient', () => {
     let mockServer: McpServer;
     let mockClient: OmadaClient;
     let toolHandler: (args: unknown, extra: { sessionId?: string }) => Promise<CallToolResult>;
+    let registered: { name?: string; config?: { description?: string } };
 
     beforeEach(() => {
+        registered = {};
         mockServer = {
-            registerTool: vi.fn((name, schema, handler) => {
-                toolHandler = (args, extra) => handler(z.object(schema.inputSchema).parse(args), extra);
+            registerTool: vi.fn((name, config, handler) => {
+                registered = { name, config };
+                toolHandler = (args, extra) => handler(z.object(config.inputSchema).parse(args), extra);
             }),
         } as unknown as McpServer;
-
         mockClient = {
-            blockClient: vi.fn().mockResolvedValue({ accepted: true }),
+            getClientDetail: vi.fn().mockResolvedValue({ mac: MAC, name: 'phone', wireless: true, blocked: false }),
+            blockClient: vi.fn().mockResolvedValue({}),
         } as unknown as OmadaClient;
+        registerBlockClientTool(mockServer, mockClient);
     });
 
-    it('calls the block client action when not in dry-run mode', async () => {
-        registerBlockClientTool(mockServer, mockClient);
-        await toolHandler({ dryRun: false, clientMac: 'AA:BB:CC:DD:EE:FF', siteId: 'site-1' }, { sessionId: 's1' });
-        expect(mockClient.blockClient).toHaveBeenCalledWith('AA:BB:CC:DD:EE:FF', 'site-1', undefined);
+    const structured = (result: CallToolResult): Record<string, unknown> => result.structuredContent as Record<string, unknown>;
+
+    it('registers the tool', () => {
+        expect(registered.name).toBe('blockClient');
+        expect(registered.config?.description).toContain('Preview');
     });
 
-    it('returns a dry-run summary without calling the controller', async () => {
-        registerBlockClientTool(mockServer, mockClient);
-        const result = await toolHandler({ clientMac: 'AA:BB:CC:DD:EE:FF', dryRun: true }, { sessionId: 's1' });
-
+    it('defaults omitted dryRun to a preview that sends nothing', async () => {
+        const result = await toolHandler({ clientMac: MAC }, { sessionId: 's1' });
+        expect(structured(result)).toMatchObject({ mode: 'dry-run', status: 'planned' });
         expect(mockClient.blockClient).not.toHaveBeenCalled();
-        expect(result).toEqual({
-            content: [{ type: 'text', text: expect.any(String) }],
-            structuredContent: {
-                action: 'block-client',
-                target: 'AA:BB:CC:DD:EE:FF',
-                mode: 'dry-run',
-                status: 'planned',
-                summary: 'Planned client block for AA:BB:CC:DD:EE:FF.',
-                result: { accepted: true, dryRun: true },
-            },
-        });
-        expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
     });
-    it('defaults omitted dryRun to preview through the registered schema', async () => {
-        registerBlockClientTool(mockServer, mockClient);
-        const result = (await toolHandler({ clientMac: 'AA:BB:CC:DD:EE:FF', siteId: 'site-1' }, { sessionId: 'preview' })) as {
-            content: { text: string }[];
-            structuredContent: Record<string, unknown>;
-        };
-        const summary = JSON.parse(result.content[0].text);
-        expect(summary).toMatchObject({ mode: 'dry-run', status: 'planned' });
-        expect(result.structuredContent).toEqual(expect.objectContaining(summary));
-        for (const [name, operation] of Object.entries(mockClient)) {
-            if (!/^(get|list|resolve)/.test(name)) expect(operation).not.toHaveBeenCalled();
-        }
+
+    it('refuses an unknown client before any write', async () => {
+        vi.mocked(mockClient.getClientDetail).mockResolvedValue(undefined as never);
+        await expect(toolHandler({ ...{ clientMac: MAC }, dryRun: false }, { sessionId: 's1' })).rejects.toThrow(`No client with MAC ${MAC}`);
+        expect(mockClient.blockClient).not.toHaveBeenCalled();
+    });
+
+    it('reports a controller rejection', async () => {
+        vi.mocked(mockClient.blockClient).mockRejectedValue(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        await expect(toolHandler({ ...{ clientMac: MAC }, dryRun: false }, { sessionId: 's1' })).rejects.toThrow('errorCode -1001');
+    });
+
+    it('blocks once and verifies the blocked state', async () => {
+        vi.mocked(mockClient.getClientDetail)
+            .mockResolvedValueOnce({ mac: MAC, blocked: false } as never)
+            .mockResolvedValue({ mac: MAC, blocked: true } as never);
+        const result = await toolHandler({ clientMac: MAC, siteId: 'site-1', dryRun: false }, { sessionId: 's1' });
+        expect(mockClient.blockClient).toHaveBeenCalledTimes(1);
+        expect(mockClient.blockClient).toHaveBeenCalledWith(MAC, 'site-1', undefined);
+        expect(structured(result)).toMatchObject({ status: 'verified', result: { writeAcknowledged: true } });
+    });
+
+    it('is a no-op for an already blocked client', async () => {
+        vi.mocked(mockClient.getClientDetail).mockResolvedValue({ mac: MAC, blocked: true } as never);
+        const result = await toolHandler({ clientMac: MAC, dryRun: false }, { sessionId: 's1' });
+        expect(mockClient.blockClient).not.toHaveBeenCalled();
+        expect(structured(result)).toMatchObject({ result: { noOp: true } });
+    });
+
+    it('previews the current block state', async () => {
+        const result = await toolHandler({ clientMac: MAC }, { sessionId: 's1' });
+        expect(structured(result)).toMatchObject({ result: { before: { blocked: false }, planned: { blocked: true } } });
     });
 });

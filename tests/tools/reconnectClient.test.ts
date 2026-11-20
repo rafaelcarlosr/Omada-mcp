@@ -4,60 +4,69 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import type { OmadaClient } from '../../src/omadaClient/index.js';
+import { OmadaApiError } from '../../src/omadaClient/request.js';
 import { registerReconnectClientTool } from '../../src/tools/reconnectClient.js';
+
+const MAC = 'AA-BB-CC-DD-EE-FF';
 
 describe('tools/reconnectClient', () => {
     let mockServer: McpServer;
     let mockClient: OmadaClient;
     let toolHandler: (args: unknown, extra: { sessionId?: string }) => Promise<CallToolResult>;
+    let registered: { name?: string; config?: { description?: string } };
 
     beforeEach(() => {
+        registered = {};
         mockServer = {
-            registerTool: vi.fn((name, schema, handler) => {
-                toolHandler = (args, extra) => handler(z.object(schema.inputSchema).parse(args), extra);
+            registerTool: vi.fn((name, config, handler) => {
+                registered = { name, config };
+                toolHandler = (args, extra) => handler(z.object(config.inputSchema).parse(args), extra);
             }),
         } as unknown as McpServer;
-
         mockClient = {
-            reconnectClient: vi.fn().mockResolvedValue({ accepted: true }),
+            getClientDetail: vi
+                .fn()
+                .mockResolvedValue({ mac: MAC, name: 'phone', wireless: true, ssid: 'lab', apMac: 'AP', active: true, rateLimit: {} }),
+            reconnectClient: vi.fn().mockResolvedValue({}),
         } as unknown as OmadaClient;
+        registerReconnectClientTool(mockServer, mockClient);
     });
 
-    it('calls the reconnect client action when not in dry-run mode', async () => {
-        registerReconnectClientTool(mockServer, mockClient);
-        await toolHandler({ dryRun: false, clientMac: 'AA:BB:CC:DD:EE:FF', siteId: 'site-1' }, { sessionId: 's1' });
-        expect(mockClient.reconnectClient).toHaveBeenCalledWith('AA:BB:CC:DD:EE:FF', 'site-1', undefined);
+    const structured = (result: CallToolResult): Record<string, unknown> => result.structuredContent as Record<string, unknown>;
+
+    it('registers the tool', () => {
+        expect(registered.name).toBe('reconnectClient');
+        expect(registered.config?.description).toContain('Preview');
     });
 
-    it('returns a dry-run summary without calling the controller', async () => {
-        registerReconnectClientTool(mockServer, mockClient);
-        const result = await toolHandler({ clientMac: 'AA:BB:CC:DD:EE:FF', dryRun: true }, { sessionId: 's1' });
-
+    it('defaults omitted dryRun to a preview that sends nothing', async () => {
+        const result = await toolHandler({ clientMac: MAC }, { sessionId: 's1' });
+        expect(structured(result)).toMatchObject({ mode: 'dry-run', status: 'planned' });
         expect(mockClient.reconnectClient).not.toHaveBeenCalled();
-        expect(result).toEqual({
-            content: [{ type: 'text', text: expect.any(String) }],
-            structuredContent: {
-                action: 'reconnect-client',
-                target: 'AA:BB:CC:DD:EE:FF',
-                mode: 'dry-run',
-                status: 'planned',
-                summary: 'Planned client reconnect for AA:BB:CC:DD:EE:FF.',
-                result: { accepted: true, dryRun: true },
-            },
-        });
-        expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
     });
-    it('defaults omitted dryRun to preview through the registered schema', async () => {
-        registerReconnectClientTool(mockServer, mockClient);
-        const result = (await toolHandler({ clientMac: 'AA:BB:CC:DD:EE:FF', siteId: 'site-1' }, { sessionId: 'preview' })) as {
-            content: { text: string }[];
-            structuredContent: Record<string, unknown>;
-        };
-        const summary = JSON.parse(result.content[0].text);
-        expect(summary).toMatchObject({ mode: 'dry-run', status: 'planned' });
-        expect(result.structuredContent).toEqual(expect.objectContaining(summary));
-        for (const [name, operation] of Object.entries(mockClient)) {
-            if (!/^(get|list|resolve)/.test(name)) expect(operation).not.toHaveBeenCalled();
-        }
+
+    it('refuses an unknown client before any write', async () => {
+        vi.mocked(mockClient.getClientDetail).mockResolvedValue(undefined as never);
+        await expect(toolHandler({ ...{ clientMac: MAC }, dryRun: false }, { sessionId: 's1' })).rejects.toThrow(`No client with MAC ${MAC}`);
+        expect(mockClient.reconnectClient).not.toHaveBeenCalled();
+    });
+
+    it('reports a controller rejection', async () => {
+        vi.mocked(mockClient.reconnectClient).mockRejectedValue(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        await expect(toolHandler({ ...{ clientMac: MAC }, dryRun: false }, { sessionId: 's1' })).rejects.toThrow('errorCode -1001');
+    });
+
+    it('shows the client in the preview without its other fields', async () => {
+        const result = await toolHandler({ clientMac: MAC }, { sessionId: 's1' });
+        expect(structured(result)).toMatchObject({
+            result: { target: { mac: MAC, name: 'phone', wireless: true, ssid: 'lab', apMac: 'AP', active: true } },
+        });
+        expect((structured(result).result as { target: Record<string, unknown> }).target).not.toHaveProperty('rateLimit');
+    });
+
+    it('sends the reconnect once', async () => {
+        const result = await toolHandler({ clientMac: MAC, siteId: 'site-1', dryRun: false }, { sessionId: 's1' });
+        expect(mockClient.reconnectClient).toHaveBeenCalledWith(MAC, 'site-1', undefined);
+        expect(structured(result)).toMatchObject({ status: 'submitted', result: { writeAcknowledged: true } });
     });
 });

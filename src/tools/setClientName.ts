@@ -7,7 +7,9 @@ import { dryRunSchema, mutationSummary, runSettings } from './resourceMutationSh
 
 const inputSchema = siteInputSchema.extend({
     clientMac: deviceMacSchema.describe('Client MAC address from listClients.'),
-    name: clientNameSetting05Schema.shape.name.describe('New display name; an empty string clears the custom name.'),
+    name: clientNameSetting05Schema.shape.name.describe(
+        "New display name. Controller 6.3 ignores an empty string (readback reports a mismatch); to go back to the device's own name, set it to the client's hostName."
+    ),
     dryRun: dryRunSchema,
 });
 

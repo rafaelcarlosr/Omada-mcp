@@ -349,7 +349,7 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `startSwitchCableTest` | Start a cable diagnostic; the uplink and ports with devices are refused unless allowDisruption is true. | `devices-switch:rw` |
 | `cancelSwitchCableTest` | Cancel a running cable test. | `devices-switch:rw` |
 | `clearSwitchPortCounters` | Reset the traffic and error counters of switch ports. | `devices-switch:rw` |
-| `setClientName` | Rename a client (its display name in the controller). Does not affect connectivity. | `clients:rw` |
+| `setClientName` | Rename a client (its display name in the controller). Does not affect connectivity; 6.3 ignores an empty name, so set the client's hostName to go back. | `clients:rw` |
 | `setClientLockToAp` | Pin a wireless client to specific APs (lock to AP) or remove the pin, e.g. to keep a static IoT device on its nearest AP. Locking to APs out of its range disconnects the client. | `clients:rw` |
 | `authorizeHotspotClient` | Authorize a client on a hotspot (captive portal) network without it completing the portal, granting it internet access. The API reports acceptance only. | `clients:rw` |
 | `unauthorizeHotspotClient` | Revoke hotspot (captive portal) authorization for a client; it must pass the portal again. The API reports acceptance only. | `clients:rw` |
@@ -598,12 +598,12 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `getClientLinkTopology` | Get the path from one client through APs and switches to the gateway. |
 | `getClientStats` | Get traffic and signal statistics of one client at 5-minute, hourly or daily granularity (epoch seconds). |
 | `getClientIncidentCounts` | Get incident counts for a set of clients. |
-| `setClientRateLimit` | Sets custom bandwidth limits for a specific client. |
-| `setClientRateLimitProfile` | Applies a predefined rate limit profile to a specific client. |
-| `disableClientRateLimit` | Disables bandwidth rate limiting for a specific client. |
-| `blockClient` | Blocks a client from network access with an auditable mutation summary. |
-| `unblockClient` | Restores a blocked client to network access with an auditable mutation summary. |
-| `reconnectClient` | Forces a client to reconnect with an auditable mutation summary. |
+| `setClientRateLimit` | Sets custom download/upload limits for a client, 1-1024 Kbps or Mbps, and verifies them by readback. |
+| `setClientRateLimitProfile` | Applies an existing rate limit profile to a client and verifies it by readback. |
+| `disableClientRateLimit` | Removes a client's custom limits or rate limit profile and verifies by readback. |
+| `blockClient` | Blocks a client from network access and verifies the blocked state by readback. |
+| `unblockClient` | Restores a blocked client to network access and verifies by readback. |
+| `reconnectClient` | Forces a wireless client to reconnect, after confirming the client exists. |
 | `rebootDevice` | Reboots a managed device with an auditable mutation summary. |
 | `setDeviceLed` | [DEPRECATED] Calls a route absent from the official Open API spec; use `setApConfig` (general-config) or `setGatewayConfig` for `ledSetting`. |
 ### Device

@@ -323,9 +323,10 @@ export class OmadaClient {
         downLimit: number,
         upLimit: number,
         siteId?: string,
-        customHeaders?: CustomHeaders
+        customHeaders?: CustomHeaders,
+        unit: 1 | 2 = 1
     ): Promise<ClientRateLimitSetting> {
-        return await this.clientOps.setClientRateLimit(clientMac, downLimit, upLimit, siteId, customHeaders);
+        return await this.clientOps.setClientRateLimit(clientMac, downLimit, upLimit, siteId, customHeaders, unit);
     }
 
     public async setClientRateLimitProfile(

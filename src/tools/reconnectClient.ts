@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { siteInputSchema, wrapMutationToolHandler } from '../server/common.js';
+import { pick, requireClientDetail, runAction } from './resourceMutationShared.js';
 
 const clientMacSchema = z
     .string()
@@ -18,7 +19,8 @@ export function registerReconnectClientTool(server: McpServer, client: OmadaClie
     server.registerTool(
         'reconnectClient',
         {
-            description: 'Force a client to reconnect through the official Omada Open API.',
+            description:
+                'Force a wireless client to disconnect and reconnect. Preview is the default and shows the client; set dryRun:false to send the request once. There is no readable end state to verify.',
             inputSchema: inputSchema.shape,
             annotations: {
                 destructiveHint: true,
@@ -35,12 +37,22 @@ export function registerReconnectClientTool(server: McpServer, client: OmadaClie
                 summary: mode === 'dry-run' ? `Planned client reconnect for ${clientMac}.` : `Client reconnect requested for ${clientMac}.`,
                 result,
             }),
-            async ({ clientMac, siteId, customHeaders, dryRun }) => {
-                if (dryRun) {
-                    return { accepted: true, dryRun: true };
-                }
-                return await client.reconnectClient(clientMac, siteId, customHeaders);
-            }
+            async ({ clientMac, siteId, customHeaders, dryRun }) =>
+                await runAction({
+                    label: 'client reconnect',
+                    dryRun,
+                    preflight: async () =>
+                        pick(await requireClientDetail(() => client.getClientDetail(clientMac, siteId, customHeaders), clientMac), [
+                            'mac',
+                            'name',
+                            'wireless',
+                            'ssid',
+                            'apMac',
+                            'active',
+                        ]),
+                    write: () => client.reconnectClient(clientMac, siteId, customHeaders),
+                    warnings: ['The client is briefly disconnected and must rejoin on its own.'],
+                })
         )
     );
 }
