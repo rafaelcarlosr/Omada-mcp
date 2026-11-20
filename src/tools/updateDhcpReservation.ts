@@ -12,6 +12,7 @@ import {
     getAllDhcpReservations,
     validateReservationIpAgainstNetwork,
 } from './dhcpReservationShared.js';
+import { applyAndVerify, definedFields, type RecordLike } from './resourceMutationShared.js';
 
 interface UpdateDhcpReservationPayload {
     netId: string;
@@ -107,7 +108,15 @@ export function registerUpdateDhcpReservationTool(server: McpServer, client: Oma
                     };
                 }
 
-                return await client.updateDhcpReservation(reservationMac, effectiveReservation, siteId, customHeaders);
+                const result = await applyAndVerify({
+                    label: 'DHCP reservation',
+                    action: 'update',
+                    write: () => client.updateDhcpReservation(reservationMac, effectiveReservation, siteId, customHeaders),
+                    read: async () =>
+                        findReservationByMac(await getAllDhcpReservations(client, siteId, customHeaders), reservationMac) as RecordLike | undefined,
+                    requested: definedFields(effectiveReservation, ['mac', 'confirmConflict', 'options']),
+                });
+                return { id: reservationMac, ...result };
             }
         )
     );

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { siteInputSchema } from '../server/common.js';
+import { applyAndVerify, definedFields, type RecordLike, toRecords } from './resourceMutationShared.js';
 
 export const aclIdSchema = z.string().trim().min(1, 'aclId is required.');
 
@@ -265,4 +266,49 @@ export async function validateEapAclPayloadReferences(
             throw new Error(`Unknown SSID ids in sourceIds: ${unknownSsidIds.join(', ')}. Use getWlanGroupList/getSsidList and pass each SSID id.`);
         }
     }
+}
+
+/** Create an ACL once and confirm it by finding the new rule (same description, unseen id) on readback. */
+export async function createAclVerified(input: {
+    label: string;
+    list: () => Promise<unknown>;
+    before: unknown;
+    payload: RecordLike & { description: string };
+    write: () => Promise<unknown>;
+}): Promise<RecordLike> {
+    const knownIds = new Set(toRecords(input.before).map((record) => getAclRecordId(record)));
+    let aclId: string | undefined;
+    const result = await applyAndVerify({
+        label: input.label,
+        action: 'creation',
+        write: input.write,
+        read: async () => {
+            const fresh = toRecords(await input.list()).filter(
+                (record) => !knownIds.has(getAclRecordId(record)) && record.description === input.payload.description
+            );
+            if (fresh.length > 1) throw new Error('ambiguous');
+            aclId = fresh[0] ? getAclRecordId(fresh[0]) : undefined;
+            return fresh[0];
+        },
+        requested: definedFields(input.payload),
+    });
+    return { ...result, ...(aclId ? { aclId } : {}) };
+}
+
+/** Update an ACL once and confirm the requested fields on readback. */
+export async function updateAclVerified(input: {
+    label: string;
+    list: () => Promise<unknown>;
+    aclId: string;
+    payload: RecordLike;
+    write: () => Promise<unknown>;
+}): Promise<RecordLike> {
+    const result = await applyAndVerify({
+        label: input.label,
+        action: 'update',
+        write: input.write,
+        read: async () => findAclById(await input.list(), input.aclId) as RecordLike | undefined,
+        requested: definedFields(input.payload),
+    });
+    return { id: input.aclId, ...result };
 }

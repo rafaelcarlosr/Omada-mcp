@@ -288,7 +288,7 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `deleteDdnsEntry` | Delete a dynamic DNS entry by ID. | `network-services:rw` |
 | `setUpnpSetting` | Enable or disable UPnP on the gateway. Enabling UPnP lets LAN devices open inbound ports automatically. | `network-services:rw` |
 | `setAlgSetting` | Enable or disable gateway application layer gateways (FTP, H.323, PPTP, SIP, IPsec passthrough). | `network-services:rw` |
-| `setSnmpSetting` | Enable or disable SNMPv1/v2c and SNMPv3 on site devices. The community string and v3 password are write-only and are not verified by readback. | `network-services:rw` |
+| `setSnmpSetting` | Enable or disable SNMPv1/v2c and SNMPv3 on site devices. The community string and v3 password are write-only and are not verified by readback; 6.3 requires them to mix letters, digits and a special character with no character repeated back to back. | `network-services:rw` |
 
 #### Filtering and threat management
 
@@ -817,7 +817,7 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `updateEapAcl` | Updates an EAP ACL rule with dry-run preview after confirming the ACL exists. |
 | `createSwitchAcl` | Creates a switch (OSW) ACL rule with dry-run preview using the official Omada SwitchACLConfig schema. |
 | `updateSwitchAcl` | Updates a switch (OSW) ACL rule with dry-run preview after confirming the ACL exists. |
-| `deleteAcl` | Deletes an ACL rule with dry-run preview after confirming the ACL exists. |
+| `deleteAcl` | Deletes a gateway, EAP or switch ACL rule with dry-run preview after confirming the ACL exists, then verifies it is gone. |
 | `listStaticRoutes` | [DEPRECATED] Use `getGridStaticRouting` instead. This tool aggregates all pages; getGridStaticRouting returns a single paginated page. |
 | `getStaticRoutingInterfaceList` | Gets available interfaces for static routing.                             |
 | `listPolicyRoutes` | [DEPRECATED] Use `getGridPolicyRouting` instead. This tool aggregates all pages; getGridPolicyRouting is paginated. |
@@ -1199,7 +1199,7 @@ With OAuth client credentials (the only mode this server uses), controller 6.3 r
 | `getOswAclList` | List switch ACL rules. | `getOswAclList` |
 | `createOswAcl` | Create a switch ACL with dry-run support. | `createSwitchAcl` |
 | `modifyOswAcl` | Update a switch ACL with dry-run support. | `updateSwitchAcl` |
-| `deleteAcl` | Delete an ACL rule with dry-run support. | `deleteAcl` |
+| `deleteAcl` | Delete a gateway, EAP or switch ACL rule with dry-run support. | `deleteAcl` |
 | `getStaticRoutingList` | List static routing rules.                                | `getGridStaticRouting` (prefer); ~~`listStaticRoutes`~~ [DEPRECATED] |
 | `getRadiusProfileList` | List RADIUS authentication profiles.                      | `listRadiusProfiles` |
 | `getGroupProfileList` | List group profiles (IP, MAC, port groups).               | `listGroupProfiles` |

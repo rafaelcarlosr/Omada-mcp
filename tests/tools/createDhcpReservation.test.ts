@@ -182,6 +182,26 @@ describe('tools/createDhcpReservation', () => {
             toolHandler({ dryRun: false, mac: 'AA:BB:CC:DD:EE:11', netId: 'net-1', status: true, ip: '192.168.10.1' }, { sessionId: 's1' })
         ).rejects.toThrow('IP 192.168.10.1 matches the LAN gateway address for Trusted. Choose a different reservation address.');
     });
+    it('verifies the new reservation on readback, matching the MAC in any format', async () => {
+        vi.mocked(mockClient.getDhcpReservationGrid)
+            .mockResolvedValueOnce({ data: [] } as never)
+            .mockResolvedValue({
+                data: [{ id: 'r1', mac: 'AA-BB-CC-DD-EE-11', netId: 'net-1', status: true, ip: '192.168.10.70', description: 'Printer' }],
+            } as never);
+        registerCreateDhcpReservationTool(mockServer, mockClient);
+
+        const result = await toolHandler(
+            { dryRun: false, mac: 'aa:bb:cc:dd:ee:11', netId: 'net-1', status: true, ip: '192.168.10.70', description: 'Printer' },
+            { sessionId: 's1' }
+        );
+
+        expect(mockClient.createDhcpReservation).toHaveBeenCalledTimes(1);
+        expect(result.structuredContent).toMatchObject({
+            status: 'verified',
+            result: { writeAcknowledged: true, verification: { differences: [] } },
+        });
+    });
+
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerCreateDhcpReservationTool(mockServer, mockClient);
         const result = (await toolHandler({ mac: 'AA:BB:CC:DD:EE:11', netId: 'net-1', status: true }, { sessionId: 'preview' })) as {

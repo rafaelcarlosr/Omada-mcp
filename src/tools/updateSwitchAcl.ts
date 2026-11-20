@@ -2,7 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { wrapMutationToolHandler } from '../server/common.js';
-import { findAclById, switchAclPayloadSchema, updateSwitchAclInputSchema } from './gatewayAclShared.js';
+import { findAclById, switchAclPayloadSchema, updateAclVerified, updateSwitchAclInputSchema } from './gatewayAclShared.js';
 
 export function registerUpdateSwitchAclTool(server: McpServer, client: OmadaClient): void {
     server.registerTool(
@@ -41,7 +41,13 @@ export function registerUpdateSwitchAclTool(server: McpServer, client: OmadaClie
                     };
                 }
 
-                return await client.updateOswAcl(aclId, parsedPayload, siteId, customHeaders);
+                return await updateAclVerified({
+                    label: 'switch ACL',
+                    list: () => client.listOswAcls(siteId, customHeaders),
+                    aclId,
+                    payload: parsedPayload,
+                    write: () => client.updateOswAcl(aclId, parsedPayload, siteId, customHeaders),
+                });
             }
         )
     );

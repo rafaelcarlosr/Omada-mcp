@@ -85,6 +85,17 @@ describe('tools/deleteDhcpReservation', () => {
             'No DHCP reservation exists for AA:BB:CC:DD:EE:FF.'
         );
     });
+    it('verifies the reservation is gone after deletion', async () => {
+        vi.mocked(mockClient.getDhcpReservationGrid)
+            .mockResolvedValueOnce({ data: [{ mac: 'AA:BB:CC:DD:EE:FF', ip: '192.168.10.40', status: true }] } as never)
+            .mockResolvedValue({ data: [] } as never);
+        registerDeleteDhcpReservationTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, reservationMac: 'AA:BB:CC:DD:EE:FF' }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'verified', result: { id: 'AA:BB:CC:DD:EE:FF', writeAcknowledged: true } });
+    });
+
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerDeleteDhcpReservationTool(mockServer, mockClient);
         const result = (await toolHandler({ reservationMac: 'AA:BB:CC:DD:EE:FF' }, { sessionId: 'preview' })) as {

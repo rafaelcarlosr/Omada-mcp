@@ -78,6 +78,17 @@ describe('tools/updateGatewayAcl', () => {
 
         expect(mockClient.updateOsgAcl).toHaveBeenCalledWith('acl-1', payload, 'site-1', undefined);
     });
+    it('verifies the gateway ACL update on readback', async () => {
+        vi.mocked(mockClient.listOsgAcls)
+            .mockResolvedValueOnce([{ id: 'acl-1', description: 'Old' }] as never)
+            .mockResolvedValue([{ id: 'acl-1', ...payload }] as never);
+        registerUpdateGatewayAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, aclId: 'acl-1', payload }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'verified', result: { id: 'acl-1' } });
+    });
+
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerUpdateGatewayAclTool(mockServer, mockClient);
         const result = (await toolHandler({ aclId: 'acl-1', payload }, { sessionId: 'preview' })) as {

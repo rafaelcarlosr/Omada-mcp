@@ -4,7 +4,9 @@ import { z } from 'zod';
 import { OmadaApiError } from '../../src/omadaClient/request.js';
 import { RequestNotSentError } from '../../src/omadaClient/templateScope.js';
 import {
+    applyAndVerify,
     attemptWrite,
+    definedFields,
     dryRunSchema,
     findRecord,
     mutationSummary,
@@ -450,6 +452,66 @@ describe('tools/resourceMutationShared', () => {
             await expect(runDelete({ spec: { label: 'x', list: snapshots([]) }, id: 'a', dryRun: true, write: vi.fn() })).rejects.toThrow(
                 'No x with id "a"'
             );
+        });
+    });
+
+    describe('applyAndVerify', () => {
+        it('verifies the requested fields after one write', async () => {
+            const write = vi.fn().mockResolvedValue({ id: 'x' });
+            const result = await applyAndVerify({
+                label: 'rule',
+                action: 'update',
+                write,
+                read: async () => ({ id: 'x', name: 'a' }),
+                requested: { name: 'a' },
+                verify: fast,
+            });
+            expect(write).toHaveBeenCalledTimes(1);
+            expect(result).toMatchObject({ writeAcknowledged: true, applied: { id: 'x' }, verification: { status: 'verified' } });
+        });
+
+        it('confirms a deletion when the record is gone', async () => {
+            const result = await applyAndVerify({
+                label: 'rule',
+                action: 'deletion',
+                write: async () => ({}),
+                read: async () => undefined,
+                requested: undefined,
+                verify: fast,
+            });
+            expect(result.verification).toMatchObject({ status: 'verified' });
+        });
+
+        it('leaves the outcome unknown when the write is not acknowledged', async () => {
+            const result = await applyAndVerify({
+                label: 'rule',
+                action: 'creation',
+                write: () => Promise.reject(new Error('socket hang up')),
+                read: async () => undefined,
+                requested: { name: 'a' },
+                verify: fast,
+            });
+            expect(result).not.toHaveProperty('applied');
+            expect(result).toMatchObject({ writeAcknowledged: false, verification: { status: 'unknown' } });
+        });
+
+        it('reports an explicit controller rejection as an error', async () => {
+            await expect(
+                applyAndVerify({
+                    label: 'rule',
+                    action: 'creation',
+                    write: () => Promise.reject(new OmadaApiError(-1001, 'Invalid request parameters.')),
+                    read: async () => undefined,
+                    requested: { name: 'a' },
+                })
+            ).rejects.toThrow('The controller rejected the rule creation (errorCode -1001)');
+        });
+    });
+
+    describe('definedFields', () => {
+        it('drops undefined values and omitted keys', () => {
+            expect(definedFields({ a: 1, b: undefined, c: 'x', mac: 'm' }, ['mac'])).toEqual({ a: 1, c: 'x' });
+            expect(definedFields({ a: false })).toEqual({ a: false });
         });
     });
 

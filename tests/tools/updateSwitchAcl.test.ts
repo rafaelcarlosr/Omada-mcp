@@ -77,6 +77,17 @@ describe('tools/updateSwitchAcl', () => {
 
         expect(mockClient.updateOswAcl).toHaveBeenCalledWith('osw-acl-1', payload, 'site-1', undefined);
     });
+    it('verifies the switch ACL update on readback', async () => {
+        vi.mocked(mockClient.listOswAcls)
+            .mockResolvedValueOnce([{ id: 'osw-acl-1', description: 'Block inter-VLAN' }] as never)
+            .mockResolvedValue([{ id: 'osw-acl-1', ...payload }] as never);
+        registerUpdateSwitchAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, aclId: 'osw-acl-1', payload }, { sessionId: 's1' });
+
+        expect(result.structuredContent).toMatchObject({ status: 'verified', result: { id: 'osw-acl-1' } });
+    });
+
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerUpdateSwitchAclTool(mockServer, mockClient);
         const result = (await toolHandler({ aclId: 'osw-acl-1', payload }, { sessionId: 'preview' })) as {

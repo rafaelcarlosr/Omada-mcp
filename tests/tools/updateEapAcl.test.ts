@@ -88,6 +88,18 @@ describe('tools/updateEapAcl', () => {
         );
         expect(mockClient.updateEapAcl).not.toHaveBeenCalled();
     });
+    it('verifies the EAP ACL update on readback', async () => {
+        vi.mocked(mockClient.listEapAcls)
+            .mockResolvedValueOnce([{ id: 'acl-2', description: 'Old wireless' }] as never)
+            .mockResolvedValue([{ id: 'acl-2', ...payload }] as never);
+        registerUpdateEapAclTool(mockServer, mockClient);
+
+        const result = await toolHandler({ dryRun: false, aclId: 'acl-2', payload }, { sessionId: 's1' });
+
+        expect(mockClient.updateEapAcl).toHaveBeenCalledTimes(1);
+        expect(result.structuredContent).toMatchObject({ status: 'verified', result: { id: 'acl-2', writeAcknowledged: true } });
+    });
+
     it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerUpdateEapAclTool(mockServer, mockClient);
         const result = (await toolHandler({ aclId: 'acl-2', payload }, { sessionId: 'preview' })) as {

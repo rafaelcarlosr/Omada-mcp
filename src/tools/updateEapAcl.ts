@@ -2,7 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { wrapMutationToolHandler } from '../server/common.js';
-import { eapAclPayloadSchema, findAclById, updateEapAclInputSchema, validateEapAclPayloadReferences } from './gatewayAclShared.js';
+import { eapAclPayloadSchema, findAclById, updateAclVerified, updateEapAclInputSchema, validateEapAclPayloadReferences } from './gatewayAclShared.js';
 
 export function registerUpdateEapAclTool(server: McpServer, client: OmadaClient): void {
     server.registerTool(
@@ -43,7 +43,13 @@ export function registerUpdateEapAclTool(server: McpServer, client: OmadaClient)
                     };
                 }
 
-                return await client.updateEapAcl(aclId, parsedPayload, siteId, customHeaders);
+                return await updateAclVerified({
+                    label: 'EAP ACL',
+                    list: () => client.listEapAcls(siteId, customHeaders),
+                    aclId,
+                    payload: parsedPayload,
+                    write: () => client.updateEapAcl(aclId, parsedPayload, siteId, customHeaders),
+                });
             }
         )
     );
