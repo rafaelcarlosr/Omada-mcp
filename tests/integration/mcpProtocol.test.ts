@@ -73,7 +73,9 @@ describe('MCP protocol over in-memory transports', () => {
 
     it.each(['standard', 'compact'] as const)('previews omitted dryRun and applies only literal false in %s mode', async (catalogMode) => {
         const blockClient = vi.fn().mockResolvedValue({ accepted: true });
-        const client = await connect('clients:rw', { blockClient }, { catalogMode });
+        // The client reads back as blocked only after the block was sent.
+        const getClientDetail = vi.fn(async () => ({ mac: 'AA-BB-CC-DD-EE-FF', blocked: blockClient.mock.calls.length > 0 }));
+        const client = await connect('clients:rw', { blockClient, getClientDetail }, { catalogMode });
         const call = (args: Record<string, unknown>) =>
             client.callTool(
                 catalogMode === 'compact'
@@ -92,8 +94,8 @@ describe('MCP protocol over in-memory transports', () => {
         expect(blockClient).not.toHaveBeenCalled();
         expect(payload(await call({ clientMac: 'AA:BB:CC:DD:EE:FF', dryRun: false, siteId: 'site-1' }))).toMatchObject({
             mode: 'apply',
-            status: 'submitted',
-            result: { accepted: true },
+            status: 'verified',
+            result: { writeAcknowledged: true, applied: { accepted: true } },
         });
         expect(blockClient).toHaveBeenCalledExactlyOnceWith('AA:BB:CC:DD:EE:FF', 'site-1', undefined);
     });

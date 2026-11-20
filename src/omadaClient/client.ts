@@ -206,9 +206,10 @@ export class ClientOperations {
      * Configures download and upload bandwidth limits directly without using a profile.
      *
      * @param clientMac - MAC address of the client
-     * @param downLimit - Download limit in Kbps
-     * @param upLimit - Upload limit in Kbps
+     * @param downLimit - Download limit, 1-1024 in the given unit
+     * @param upLimit - Upload limit, 1-1024 in the given unit
      * @param siteId - Optional site ID, uses default from config if not provided
+     * @param unit - 1 = Kbps (default), 2 = Mbps
      * @returns Updated rate limit setting
      */
     public async setClientRateLimit(
@@ -216,7 +217,8 @@ export class ClientOperations {
         downLimit: number,
         upLimit: number,
         siteId?: string,
-        customHeaders?: CustomHeaders
+        customHeaders?: CustomHeaders,
+        unit: 1 | 2 = 1
     ): Promise<ClientRateLimitSetting> {
         const resolvedSiteId = await this.site.resolveSiteId(siteId);
         const requestBody: UpdateClientRateLimitRequest = {
@@ -225,8 +227,10 @@ export class ClientOperations {
                 enable: true,
                 upEnable: true,
                 upLimit: upLimit,
+                upUnit: unit,
                 downEnable: true,
                 downLimit: downLimit,
+                downUnit: unit,
             },
         };
 
