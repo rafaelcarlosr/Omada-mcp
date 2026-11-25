@@ -514,13 +514,28 @@ describe('omadaClient/client', () => {
                         enable: true,
                         upEnable: true,
                         upLimit: 5120,
+                        upUnit: 1,
                         downEnable: true,
                         downLimit: 10240,
+                        downUnit: 1,
                     },
                 },
                 undefined
             );
             expect(mockRequest.ensureSuccess).toHaveBeenCalledWith(mockResponse);
+        });
+
+        it('sends the Mbps unit for both directions when asked', async () => {
+            (mockRequest.patch as ReturnType<typeof vi.fn>).mockResolvedValue({ errorCode: 0, msg: 'Success', result: {} });
+            (mockRequest.ensureSuccess as ReturnType<typeof vi.fn>).mockReturnValue({});
+
+            await clientOps.setClientRateLimit('00:11:22:33:44:55', 10, 5, 'test-site', undefined, 2);
+
+            expect(mockRequest.patch).toHaveBeenCalledWith(
+                expect.any(String),
+                { mode: 0, customRateLimit: expect.objectContaining({ upLimit: 5, upUnit: 2, downLimit: 10, downUnit: 2 }) },
+                undefined
+            );
         });
 
         it('should use default siteId if not provided', async () => {

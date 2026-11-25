@@ -149,7 +149,7 @@ HTTP is not part of the supported container baseline. It only starts when both o
 | `diagnoseCameraConnectivity` | Resolves a camera client and reads its detail/session evidence; reports missing data and network drilldowns without claiming to diagnose Frigate inference. |
 | `setApRadio` | Previews or updates one supported AP band with advertised channel/width validation, preserved sibling settings and bounded readback verification. |
 | `updateSsid` | Previews or updates SSID name, broadcast visibility, guest status or sharing policy while preserving required security fields. Broadcast visibility is not SSID enable/disable. |
-| `setSwitchPorts` | Previews or updates name, status, PoE, profile or override for 1–32 explicit ports. Checks existence, guards known LAG disruption and reports per-port verification/partial completion. |
+| `setSwitchPorts` | Previews or updates name, status, PoE, profile or override for 1–32 explicit ports. Checks existence, guards known LAG disruption and reports per-port verification/partial completion. 6.3 cannot bind the built-in Disable profile; use the status operation. |
 | `searchOperations` | Searches only enabled operations by name, description or category. |
 | `describeOperation` | Returns an enabled operation's exact argument schema and permission. |
 | `getServerCapabilities` | Reports version, effective catalog, profile and validation limits. |
@@ -349,7 +349,7 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 | `startSwitchCableTest` | Start a cable diagnostic; the uplink and ports with devices are refused unless allowDisruption is true. | `devices-switch:rw` |
 | `cancelSwitchCableTest` | Cancel a running cable test. | `devices-switch:rw` |
 | `clearSwitchPortCounters` | Reset the traffic and error counters of switch ports. | `devices-switch:rw` |
-| `setClientName` | Rename a client (its display name in the controller). Does not affect connectivity. | `clients:rw` |
+| `setClientName` | Rename a client (its display name in the controller). Does not affect connectivity; 6.3 ignores an empty name, so set the client's hostName to go back. | `clients:rw` |
 | `setClientLockToAp` | Pin a wireless client to specific APs (lock to AP) or remove the pin, e.g. to keep a static IoT device on its nearest AP. Locking to APs out of its range disconnects the client. | `clients:rw` |
 | `authorizeHotspotClient` | Authorize a client on a hotspot (captive portal) network without it completing the portal, granting it internet access. The API reports acceptance only. | `clients:rw` |
 | `unauthorizeHotspotClient` | Revoke hotspot (captive portal) authorization for a client; it must pass the portal again. The API reports acceptance only. | `clients:rw` |
@@ -450,8 +450,8 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 
 | Tool | Description | Category |
 | --- | --- | --- |
-| `createPoeSchedule` | Power switch PoE ports only inside a time range profile. | `schedules:rw` |
-| `updatePoeSchedule` | Replace a PoE schedule (status, time range, ports). | `schedules:rw` |
+| `createPoeSchedule` | Power switch PoE ports only inside a time range profile. Rejects ports that do not supply PoE before sending. | `schedules:rw` |
+| `updatePoeSchedule` | Replace a PoE schedule (status, time range, ports). Rejects ports that do not supply PoE before sending. | `schedules:rw` |
 | `deletePoeSchedule` | Delete a PoE schedule; its ports return to always-on PoE. | `schedules:rw` |
 | `createIpMacBinding` | Create a gateway IP-MAC (ARP) binding on a LAN network or WAN port. | `network-lan:rw` |
 | `updateIpMacBinding` | Replace an IP-MAC binding; fields left out, such as the description, are cleared. | `network-lan:rw` |
@@ -598,12 +598,12 @@ The controller, portal and upgrade port writes are not implemented on purpose: a
 | `getClientLinkTopology` | Get the path from one client through APs and switches to the gateway. |
 | `getClientStats` | Get traffic and signal statistics of one client at 5-minute, hourly or daily granularity (epoch seconds). |
 | `getClientIncidentCounts` | Get incident counts for a set of clients. |
-| `setClientRateLimit` | Sets custom bandwidth limits for a specific client. |
-| `setClientRateLimitProfile` | Applies a predefined rate limit profile to a specific client. |
-| `disableClientRateLimit` | Disables bandwidth rate limiting for a specific client. |
-| `blockClient` | Blocks a client from network access with an auditable mutation summary. |
-| `unblockClient` | Restores a blocked client to network access with an auditable mutation summary. |
-| `reconnectClient` | Forces a client to reconnect with an auditable mutation summary. |
+| `setClientRateLimit` | Sets custom download/upload limits for a client, 1-1024 Kbps or Mbps, and verifies them by readback. |
+| `setClientRateLimitProfile` | Applies an existing rate limit profile to a client and verifies it by readback. |
+| `disableClientRateLimit` | Removes a client's custom limits or rate limit profile and verifies by readback. |
+| `blockClient` | Blocks a client from network access and verifies the blocked state by readback. |
+| `unblockClient` | Restores a blocked client to network access and verifies by readback. |
+| `reconnectClient` | Forces a wireless client to reconnect, after confirming the client exists. |
 | `rebootDevice` | Reboots a managed device with an auditable mutation summary. |
 | `setDeviceLed` | [DEPRECATED] Calls a route absent from the official Open API spec; use `setApConfig` (general-config) or `setGatewayConfig` for `ledSetting`. |
 ### Device

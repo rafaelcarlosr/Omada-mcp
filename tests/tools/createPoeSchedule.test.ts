@@ -21,6 +21,11 @@ describe('tools/createPoeSchedule', () => {
     beforeEach(() => {
         rows = [{ id: 'poe-1', name: 'old', status: false, turnOnTime: 'tr-1', poePortsMap: {} }];
         client = {
+            listSwitchPortOverview: vi.fn(async () => [
+                { switchMac: 'AA-BB-CC-DD-EE-01', port: 2, supportPoe: true },
+                { switchMac: 'AA-BB-CC-DD-EE-01', port: 3, supportPoe: true },
+                { switchMac: 'AA-BB-CC-DD-EE-01', port: 5, supportPoe: false },
+            ]),
             listPoeSchedules: vi.fn(async () => rows),
             createPoeSchedule: vi.fn((body: Record<string, unknown>) => {
                 rows = [...rows, { ...body, id: 'new-1' }];
@@ -66,6 +71,13 @@ describe('tools/createPoeSchedule', () => {
         await expect(
             handler({ payload: { name: 'old', status: true, turnOnTime: 'tr-1', poePortsMap: { 'AA-BB-CC-DD-EE-01': [2, 3] } }, dryRun: false }, {})
         ).rejects.toThrow('already exists');
+        expect(client.createPoeSchedule).not.toHaveBeenCalled();
+    });
+
+    it('refuses a port without PoE before sending, even in preview', async () => {
+        const bad = { ...payload, poePortsMap: { 'aa:bb:cc:dd:ee:01': [2, 5] } };
+        await expect(handler({ payload: bad }, {})).rejects.toThrow('port 5 on switch aa:bb:cc:dd:ee:01 does not supply PoE');
+        await expect(handler({ payload: bad, dryRun: false }, {})).rejects.toThrow('No request was sent');
         expect(client.createPoeSchedule).not.toHaveBeenCalled();
     });
 

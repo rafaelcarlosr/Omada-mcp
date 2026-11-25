@@ -2,8 +2,10 @@
  * Rate limit profile information from Omada API
  */
 export interface RateLimitProfile {
-    /** Profile ID */
-    id: string;
+    /** Profile ID (controller 6.3 returns it as profileId) */
+    profileId?: string;
+    /** Profile ID on older controllers */
+    id?: string;
     /** Profile name (1-64 characters) */
     name: string;
     /** Whether download limit is enabled */
@@ -48,11 +50,15 @@ export interface UpdateClientRateLimitRequest {
         enable: boolean;
         /** Whether upload limit is enabled */
         upEnable?: boolean;
-        /** Upload limit in Kbps */
+        /** Upload limit, 1-1024 in upUnit */
         upLimit?: number;
+        /** Upload limit unit: 1 = Kbps, 2 = Mbps */
+        upUnit?: 1 | 2;
         /** Whether download limit is enabled */
         downEnable?: boolean;
-        /** Download limit in Kbps */
+        /** Download limit, 1-1024 in downUnit */
         downLimit?: number;
+        /** Download limit unit: 1 = Kbps, 2 = Mbps */
+        downUnit?: 1 | 2;
     };
 }

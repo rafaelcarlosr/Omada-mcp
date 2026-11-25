@@ -13,6 +13,14 @@ type Handler = (
 const payload = { name: 'night-off-2', status: false, turnOnTime: 'tr-2', poePortsMap: {} };
 
 describe('tools/updatePoeSchedule', () => {
+    it('refuses a port missing from the port overview before sending', async () => {
+        const bad = { ...payload, poePortsMap: { 'AA-BB-CC-DD-EE-02': [1] } };
+        await expect(handler({ poeScheduleId: 'poe-1', payload: bad, dryRun: false }, {})).rejects.toThrow(
+            "port 1 on switch AA-BB-CC-DD-EE-02 is not in this site's switch port overview"
+        );
+        expect(client.updatePoeSchedule).not.toHaveBeenCalled();
+    });
+
     let handler: Handler;
     let definition: { inputSchema: Record<string, { parse: (value: unknown) => unknown }> };
     let client: Record<string, ReturnType<typeof vi.fn>>;
@@ -21,6 +29,11 @@ describe('tools/updatePoeSchedule', () => {
     beforeEach(() => {
         rows = [{ id: 'poe-1', name: 'old', status: false, turnOnTime: 'tr-1', poePortsMap: {} }];
         client = {
+            listSwitchPortOverview: vi.fn(async () => [
+                { switchMac: 'AA-BB-CC-DD-EE-01', port: 2, supportPoe: true },
+                { switchMac: 'AA-BB-CC-DD-EE-01', port: 3, supportPoe: true },
+                { switchMac: 'AA-BB-CC-DD-EE-01', port: 5, supportPoe: false },
+            ]),
             listPoeSchedules: vi.fn(async () => rows),
             createPoeSchedule: vi.fn((body: Record<string, unknown>) => {
                 rows = [...rows, { ...body, id: 'new-1' }];

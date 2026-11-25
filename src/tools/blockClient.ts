@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import type { OmadaClient } from '../omadaClient/index.js';
 import { siteInputSchema, wrapMutationToolHandler } from '../server/common.js';
+import { pick, requireClientDetail, runSettings } from './resourceMutationShared.js';
 
 const clientMacSchema = z
     .string()
@@ -18,7 +19,8 @@ export function registerBlockClientTool(server: McpServer, client: OmadaClient):
     server.registerTool(
         'blockClient',
         {
-            description: 'Block a client from network access through the official Omada Open API.',
+            description:
+                'Block a client from network access; it is disconnected until unblocked. Preview is the default and shows the current block state; set dryRun:false to apply once and verify by reading the client back.',
             inputSchema: inputSchema.shape,
             annotations: {
                 destructiveHint: true,
@@ -35,12 +37,16 @@ export function registerBlockClientTool(server: McpServer, client: OmadaClient):
                 summary: mode === 'dry-run' ? `Planned client block for ${clientMac}.` : `Client block requested for ${clientMac}.`,
                 result,
             }),
-            async ({ clientMac, siteId, customHeaders, dryRun }) => {
-                if (dryRun) {
-                    return { accepted: true, dryRun: true };
-                }
-                return await client.blockClient(clientMac, siteId, customHeaders);
-            }
+            async ({ clientMac, siteId, customHeaders, dryRun }) =>
+                await runSettings({
+                    label: 'client block state',
+                    read: async () =>
+                        pick(await requireClientDetail(() => client.getClientDetail(clientMac, siteId, customHeaders), clientMac), ['blocked']),
+                    payload: { blocked: true },
+                    dryRun,
+                    write: () => client.blockClient(clientMac, siteId, customHeaders),
+                    warnings: ['A blocked client is disconnected and cannot rejoin until it is unblocked.'],
+                })
         )
     );
 }

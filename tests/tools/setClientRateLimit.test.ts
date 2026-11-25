@@ -1,113 +1,88 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
+
 import type { OmadaClient } from '../../src/omadaClient/index.js';
+import { OmadaApiError } from '../../src/omadaClient/request.js';
 import { registerSetClientRateLimitTool } from '../../src/tools/setClientRateLimit.js';
-import * as loggerModule from '../../src/utils/logger.js';
+
+const MAC = 'AA-BB-CC-DD-EE-FF';
 
 describe('tools/setClientRateLimit', () => {
     let mockServer: McpServer;
     let mockClient: OmadaClient;
     let toolHandler: (args: unknown, extra: { sessionId?: string }) => Promise<CallToolResult>;
+    let registered: { name?: string; config?: { description?: string } };
 
     beforeEach(() => {
+        registered = {};
         mockServer = {
-            registerTool: vi.fn((name, schema, handler) => {
-                toolHandler = (args, extra) => handler(z.object(schema.inputSchema).parse(args), extra);
+            registerTool: vi.fn((name, config, handler) => {
+                registered = { name, config };
+                toolHandler = (args, extra) => handler(z.object(config.inputSchema).parse(args), extra);
             }),
         } as unknown as McpServer;
-
         mockClient = {
-            setClientRateLimit: vi.fn(),
+            getClientDetail: vi.fn().mockResolvedValue({
+                mac: MAC,
+                name: 'phone',
+                wireless: true,
+                rateLimit: { enable: false, upEnable: false, upUnit: 1, upLimit: 0, downEnable: false, downUnit: 1, downLimit: 0 },
+            }),
+            setClientRateLimit: vi.fn().mockResolvedValue({}),
         } as unknown as OmadaClient;
-
-        vi.spyOn(loggerModule.logger, 'info').mockImplementation(() => {
-            // Mock implementation
-        });
-        vi.spyOn(loggerModule.logger, 'error').mockImplementation(() => {
-            // Mock implementation
-        });
-    });
-
-    afterEach(() => {
-        vi.restoreAllMocks();
-    });
-
-    describe('registerSetClientRateLimitTool', () => {
-        it('should register the setClientRateLimit tool with correct schema', () => {
-            registerSetClientRateLimitTool(mockServer, mockClient);
-            expect(mockServer.registerTool).toHaveBeenCalledWith('setClientRateLimit', expect.any(Object), expect.any(Function));
-        });
-
-        it('should execute successfully with required args', async () => {
-            const mockData = { success: true };
-            (mockClient.setClientRateLimit as ReturnType<typeof vi.fn>).mockResolvedValue(mockData);
-
-            registerSetClientRateLimitTool(mockServer, mockClient);
-
-            const result = await toolHandler(
-                { dryRun: false, clientMac: 'AA:BB:CC:DD:EE:FF', downLimit: 10240, upLimit: 5120 },
-                { sessionId: 'test-session' }
-            );
-
-            expect(mockClient.setClientRateLimit).toHaveBeenCalledWith('AA:BB:CC:DD:EE:FF', 10240, 5120, undefined, undefined);
-            expect(result).toEqual({
-                content: [{ type: 'text', text: expect.any(String) }],
-                structuredContent: {
-                    action: 'setClientRateLimit',
-                    target: 'AA:BB:CC:DD:EE:FF',
-                    mode: 'apply',
-                    status: 'submitted',
-                    summary: 'Client rate-limit change submitted.',
-                    result: mockData,
-                },
-            });
-            expect(JSON.parse(result.content[0].text as string)).toEqual(result.structuredContent);
-        });
-
-        it('should pass siteId when provided', async () => {
-            const mockData = { success: true };
-            (mockClient.setClientRateLimit as ReturnType<typeof vi.fn>).mockResolvedValue(mockData);
-
-            registerSetClientRateLimitTool(mockServer, mockClient);
-
-            await toolHandler(
-                { dryRun: false, clientMac: 'AA:BB:CC:DD:EE:FF', downLimit: 10240, upLimit: 5120, siteId: 'test-site' },
-                { sessionId: 'test-session' }
-            );
-
-            expect(mockClient.setClientRateLimit).toHaveBeenCalledWith('AA:BB:CC:DD:EE:FF', 10240, 5120, 'test-site', undefined);
-        });
-
-        it('should handle errors', async () => {
-            const error = new Error('API error');
-            (mockClient.setClientRateLimit as ReturnType<typeof vi.fn>).mockRejectedValue(error);
-
-            registerSetClientRateLimitTool(mockServer, mockClient);
-
-            await expect(
-                toolHandler({ dryRun: false, clientMac: 'AA:BB:CC:DD:EE:FF', downLimit: 10240, upLimit: 5120 }, { sessionId: 'test-session' })
-            ).rejects.toThrow('API error');
-
-            expect(loggerModule.logger.error).toHaveBeenCalledWith('Tool failed', {
-                tool: 'setClientRateLimit',
-                sessionId: 'test-session',
-                error: 'API error',
-            });
-        });
-    });
-    it('defaults omitted dryRun to preview through the registered schema', async () => {
         registerSetClientRateLimitTool(mockServer, mockClient);
-        const result = (await toolHandler({ clientMac: 'AA:BB:CC:DD:EE:FF', downLimit: 10240, upLimit: 5120 }, { sessionId: 'preview' })) as {
-            content: { text: string }[];
-            structuredContent: Record<string, unknown>;
-        };
-        const summary = JSON.parse(result.content[0].text);
-        expect(summary).toMatchObject({ mode: 'dry-run', status: 'planned' });
-        expect(result.structuredContent).toEqual(expect.objectContaining(summary));
-        for (const [name, operation] of Object.entries(mockClient)) {
-            if (!/^(get|list|resolve)/.test(name)) expect(operation).not.toHaveBeenCalled();
-        }
+    });
+
+    const structured = (result: CallToolResult): Record<string, unknown> => result.structuredContent as Record<string, unknown>;
+
+    it('registers the tool', () => {
+        expect(registered.name).toBe('setClientRateLimit');
+        expect(registered.config?.description).toContain('Preview');
+    });
+
+    it('defaults omitted dryRun to a preview that sends nothing', async () => {
+        const result = await toolHandler({ clientMac: MAC, downLimit: 1000, upLimit: 500 }, { sessionId: 's1' });
+        expect(structured(result)).toMatchObject({ mode: 'dry-run', status: 'planned' });
+        expect(mockClient.setClientRateLimit).not.toHaveBeenCalled();
+    });
+
+    it('refuses an unknown client before any write', async () => {
+        vi.mocked(mockClient.getClientDetail).mockResolvedValue(undefined as never);
+        await expect(toolHandler({ ...{ clientMac: MAC, downLimit: 1000, upLimit: 500 }, dryRun: false }, { sessionId: 's1' })).rejects.toThrow(
+            `No client with MAC ${MAC}`
+        );
+        expect(mockClient.setClientRateLimit).not.toHaveBeenCalled();
+    });
+
+    it('reports a controller rejection', async () => {
+        vi.mocked(mockClient.setClientRateLimit).mockRejectedValue(new OmadaApiError(-1001, 'Invalid request parameters.'));
+        await expect(toolHandler({ ...{ clientMac: MAC, downLimit: 1000, upLimit: 500 }, dryRun: false }, { sessionId: 's1' })).rejects.toThrow(
+            'errorCode -1001'
+        );
+    });
+
+    it('applies Kbps limits once and verifies them', async () => {
+        vi.mocked(mockClient.getClientDetail)
+            .mockResolvedValueOnce({ mac: MAC, rateLimit: { upEnable: false, downEnable: false } } as never)
+            .mockResolvedValue({
+                mac: MAC,
+                rateLimit: { enable: true, upEnable: true, upUnit: 1, upLimit: 500, downEnable: true, downUnit: 1, downLimit: 1000 },
+            } as never);
+        const result = await toolHandler({ clientMac: MAC, downLimit: 1000, upLimit: 500, siteId: 'site-1', dryRun: false }, { sessionId: 's1' });
+        expect(mockClient.setClientRateLimit).toHaveBeenCalledWith(MAC, 1000, 500, 'site-1', undefined, 1);
+        expect(structured(result)).toMatchObject({ status: 'verified' });
+    });
+
+    it('sends the Mbps unit code', async () => {
+        await toolHandler({ clientMac: MAC, downLimit: 10, upLimit: 5, unit: 'mbps', dryRun: false }, { sessionId: 's1' });
+        expect(mockClient.setClientRateLimit).toHaveBeenCalledWith(MAC, 10, 5, undefined, undefined, 2);
+    });
+
+    it('rejects limits outside 1-1024 before any request', async () => {
+        await expect(async () => toolHandler({ clientMac: MAC, downLimit: 2048, upLimit: 5 }, { sessionId: 's1' })).rejects.toThrow();
+        await expect(async () => toolHandler({ clientMac: MAC, downLimit: 1.5, upLimit: 5 }, { sessionId: 's1' })).rejects.toThrow();
+        expect(mockClient.getClientDetail).not.toHaveBeenCalled();
     });
 });

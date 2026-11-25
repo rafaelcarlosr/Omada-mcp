@@ -490,6 +490,13 @@ export function requireByMac(records: unknown, mac: string, label: string): Reco
     return match;
 }
 
+/** Read one client's detail, failing before any write when the controller returns nothing usable. */
+export async function requireClientDetail(read: () => Promise<unknown>, mac: string): Promise<RecordLike> {
+    const detail = await read();
+    if (!isRecord(detail)) throw new Error(`No client with MAC ${mac} exists in this site. No request was sent.`);
+    return detail;
+}
+
 /** Keep previews small: echo only identifying and state fields of a device or client. */
 export function pick(record: RecordLike, keys: readonly string[]): RecordLike {
     return Object.fromEntries(keys.filter((key) => record[key] !== undefined).map((key) => [key, record[key]]));
