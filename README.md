@@ -199,7 +199,7 @@ npm run inspector:build
 | `diagnoseCameraConnectivity` | Resolves a camera client and reads its detail/session evidence; reports missing data and network drilldowns without claiming to diagnose Frigate inference. |
 | `setApRadio` | Previews or updates one supported AP band with advertised channel/width validation, preserved sibling settings and bounded readback verification. |
 | `updateSsid` | Previews or updates SSID name, broadcast visibility, guest status or sharing policy while preserving required security fields. Broadcast visibility is not SSID enable/disable. |
-| `setSwitchPorts` | Previews or updates name, status, PoE, profile or override for 1–32 explicit ports. Checks existence, guards known LAG disruption and reports per-port verification/partial completion. |
+| `setSwitchPorts` | Previews or updates name, status, PoE, profile or override for 1–32 explicit ports. Checks existence, guards known LAG disruption and reports per-port verification/partial completion. 6.3 cannot bind the built-in Disable profile; use the status operation. |
 | `searchOperations` | Searches only enabled operations by name, description or category. |
 | `describeOperation` | Returns an enabled operation's exact argument schema and permission. |
 | `getServerCapabilities` | Reports version, effective catalog, profile and validation limits. |
@@ -504,8 +504,8 @@ Every write previews by default (`dryRun` omitted or `true`), validates its payl
 
 | Tool | Description | Category |
 | --- | --- | --- |
-| `createPoeSchedule` | Power switch PoE ports only inside a time range profile. | `schedules:rw` |
-| `updatePoeSchedule` | Replace a PoE schedule (status, time range, ports). | `schedules:rw` |
+| `createPoeSchedule` | Power switch PoE ports only inside a time range profile. Rejects ports that do not supply PoE before sending. | `schedules:rw` |
+| `updatePoeSchedule` | Replace a PoE schedule (status, time range, ports). Rejects ports that do not supply PoE before sending. | `schedules:rw` |
 | `deletePoeSchedule` | Delete a PoE schedule; its ports return to always-on PoE. | `schedules:rw` |
 | `createIpMacBinding` | Create a gateway IP-MAC (ARP) binding on a LAN network or WAN port. | `network-lan:rw` |
 | `updateIpMacBinding` | Replace an IP-MAC binding; fields left out, such as the description, are cleared. | `network-lan:rw` |

@@ -281,7 +281,7 @@ export function registerSetSwitchPortsTool(server: McpServer, client: SwitchPort
         'setSwitchPorts',
         {
             description:
-                'Preview or apply name, status, PoE mode, profile assignment, or profile override to 1–32 explicit switch ports, with preflight and bounded per-port verification.',
+                'Preview or apply name, status, PoE mode, profile assignment, or profile override to 1–32 explicit switch ports, with preflight and bounded per-port verification. Controller 6.3 refuses to bind a profile whose VLAN configuration is disabled, such as the built-in Disable profile (-33854); disable a port with the status operation instead.',
             inputSchema: inputSchema.shape,
             annotations: { destructiveHint: true, readOnlyHint: false, idempotentHint: false },
         },

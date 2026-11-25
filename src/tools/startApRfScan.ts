@@ -23,7 +23,7 @@ export function registerStartApRfScanTool(server: McpServer, client: Client): vo
         'startApRfScan',
         {
             description:
-                'Start an RF scan on an access point; read the outcome with getApRfScanResult. Wireless clients on the scanned bands lose service while the scan runs. The controller rejects bands without an SSID (-34800). Defaults to a preview of the last result; set dryRun:false to send.',
+                'Start an RF scan on an access point; read the outcome with getApRfScanResult. Wireless clients on the scanned bands lose service while the scan runs. The controller rejects bands without an SSID (-34800) and APs that cannot scan (-34809; seen on an EAP610 v3). Defaults to a preview of the last result; set dryRun:false to send.',
             inputSchema: inputSchema.shape,
             annotations: { destructiveHint: true },
         },
